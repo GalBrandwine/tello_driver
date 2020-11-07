@@ -16,9 +16,12 @@ include_directories(
   include
 )
 
-add_library(TelloDriver src/TelloDriver.cpp)
+add_library(TelloDriver 
+  src/TelloDriver.cpp
+  ${TELLO_TELEMETRY_SOURES}
+)
 
-target_include_directories(TelloDriver PRIVATE
+target_include_directories(TelloDriver PUBLIC
   ${CMAKE_SOURCE_DIR}/src/packet_parser
   ${CMAKE_SOURCE_DIR}/src/tello_telemetry
 )
@@ -42,24 +45,37 @@ if(NOT EXISTS "${PROJECT_SOURCE_DIR}/lib/spdlog/CMakeLists.txt")
     message(FATAL_ERROR "The submodules were not downloaded! GIT_SUBMODULE was turned off or failed. Please update submodules and try again.")
 endif()
 
-# add_subdirectory(lib/spdlog)
-# find_library(spdlog PATH ${PROJECT_BINARY_DIR}/lib/spdlog)
-# message(${PROJECT_BINARY_DIR})
-# message(WARNING ==============>${spdlog})
-# add_dependencies(TelloDriver spdlog)
 file(COPY  ${PROJECT_SOURCE_DIR}/lib/spdlog DESTINATION ${PROJECT_BINARY_DIR}/lib)
 target_include_directories(TelloDriver PUBLIC ${PROJECT_BINARY_DIR}/lib/spdlog/include)
-# target_link_libraries(TelloDriver ${PROJECT_BINARY_DIR}/lib/spdlog/libspdlog.a)
-# ## Download and unpack spdlog at configure time
-# configure_file(CMakeLists.txt.in ${CMAKE_SOURCE_DIR}/lib/spdlogdownload/CMakeLists.txt @ONLY) 
-# add_subdirectory(lib/spdlogdownload)
 
-# # Wait for spdlog to download and compile.
-# add_dependencies(TelloDriver spdlog_download)
+# add_custom_target( unZip ALL)
+# add_custom_command(TARGET unZip PRE_BUILD
+#    COMMAND ${CMAKE_COMMAND} -E remove_directory ${CMAKE_BINARY_DIR}/abc/
+#    COMMAND ${CMAKE_COMMAND} -E tar xzf {CMAKE_SOURCE_DIR}/abc.zip
+# WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+# DEPENDS ${CMAKE_SOURCE_DIR}/abc.zip
+# COMMENT "Unpacking abc.zip"
+# VERBATIM)
+
+add_custom_target( unZip ALL)
+add_custom_command(
+  TARGET unZip PRE_BUILD
+  COMMAND ${CMAKE_COMMAND} -E remove_directory ${PROJECT_BINARY_DIR}/lib/asio-1.18.0
+  COMMAND ${CMAKE_COMMAND} -E tar xzf ${PROJECT_SOURCE_DIR}/lib/asio-1.18.0.tar.bz2
+  WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/lib/
+  DEPENDS ${PROJECT_SOURCE_DIR}/lib/asio-1.18.0.tar.bz2
+  COMMENT "Unpacking asio-1.18.0.tar.bz2"
+  VERBATIM
+)
 
 
-# target_include_directories(TelloDriver PUBLIC ${CMAKE_BINARY_DIR}/external/include)
-# target_link_libraries(TelloDriver PUBLIC ${CMAKE_BINARY_DIR}/external/lib)
+
+
+# Force CMake to take libraries from build, and not from system.
+set(NO_DEFAULT_PATH true)
+target_include_directories(TelloDriver PUBLIC ${PROJECT_BINARY_DIR}/lib/asio-1.18.0/include)
+# asio requires pthread
+target_link_libraries(TelloDriver pthread)
 
 add_subdirectory(examples)
 add_subdirectory(test)

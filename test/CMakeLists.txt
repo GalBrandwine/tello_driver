@@ -15,9 +15,11 @@ add_executable(${BINARY} ${TEST_SOURCES})
 
 add_test(NAME ${BINARY} COMMAND ${BINARY})
 
-target_link_libraries(${BINARY} PUBLIC ${CMAKE_PROJECT_NAME} gtest) #${CMAKE_PROJECT_NAME}_lib
+# Link againts our gtest submodule, not the one installed in '/usr/local'
+# Gtest require pthread, so we need to link against this one also.
+target_link_libraries (${BINARY} PUBLIC ${CMAKE_PROJECT_NAME} ${PROJECT_BINARY_DIR}/lib/libgtestd.a pthread)
 
 target_include_directories(${BINARY} PRIVATE
-${CMAKE_SOURCE_DIR}/src/packet_parser
-${CMAKE_SOURCE_DIR}/src/tello_telemetry
+  ${CMAKE_SOURCE_DIR}/src/packet_parser
+  ${CMAKE_SOURCE_DIR}/src/tello_telemetry
 )

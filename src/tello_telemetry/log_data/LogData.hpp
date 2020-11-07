@@ -1,8 +1,6 @@
 #pragma once
 #include "protocol.hpp"
-#include "spdlog/spdlog.h"
-#include "spdlog/fmt/bin_to_hex.h"
-#include "spdlog/sinks/stdout_color_sinks.h"
+
 
 #include "log_data/LogNewMvoFeedback.hpp"
 #include "log_data/LogNewImuAttiFeedback.hpp"

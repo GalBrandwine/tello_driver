@@ -67,6 +67,7 @@ namespace tello_protocol
           m_LogMvoFeedback(logger),
           m_LogImuAtti(logger)
     {
+        m_logger->info(m_logger->name() + " Initiated!");
     }
 
     LogData::~LogData()
