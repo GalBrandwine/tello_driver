@@ -1,7 +1,5 @@
 #pragma once
 #include "protocol.hpp"
-
-
 #include "log_data/LogNewMvoFeedback.hpp"
 #include "log_data/LogNewImuAttiFeedback.hpp"
 #define ID_NEW_MVO_FEEDBACK 29

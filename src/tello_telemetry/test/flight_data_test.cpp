@@ -79,7 +79,7 @@ TEST(TelloTelemetryTest, ReceiveLogHeaderOnce)
     int received_counter;
     auto buffer_ = std::vector<unsigned char>(1024);
     size_t r = 0;
-    auto telloTelemerty = tello_protocol::TelloTelemetry(spdlog::stdout_color_mt("tellemetry"));
+    tello_protocol::TelloTelemetry telloTelemerty(spdlog::stdout_color_mt("tellemetry"));
     //Run
 
     // Connect
@@ -174,7 +174,7 @@ TEST(TelloTelemetryTest, ReceiveLogDataMvoMsg)
     auto buffer_ = std::vector<unsigned char>(1024);
     size_t r = 0;
     // Create TelloTelemetry instance.
-    auto telloTelemerty = tello_protocol::TelloTelemetry(spdlog::stdout_color_mt("tellemetry"));
+    tello_protocol::TelloTelemetry telloTelemerty(spdlog::stdout_color_mt("tellemetry"));
     auto logdata = std::make_shared<tello_protocol::LogData>(spdlog::stdout_color_mt("logdata"));
     telloTelemerty.SetLogData(logdata);
 
@@ -262,7 +262,7 @@ TEST(TelloTelemetryTest, ReceiveLogDataImuMsg)
     auto buffer_ = std::vector<unsigned char>(1024);
 
     // Create TelloTelemetry instance.
-    auto telloTelemerty = tello_protocol::TelloTelemetry(spdlog::stdout_color_mt("tellemetry"));
+    tello_protocol::TelloTelemetry telloTelemerty(spdlog::stdout_color_mt("tellemetry"));
     auto logdata = std::make_shared<tello_protocol::LogData>(spdlog::stdout_color_mt("logdata"));
     telloTelemerty.SetLogData(logdata);
 
@@ -394,7 +394,7 @@ TEST(TelloTelemetryTest, ReceiveWifiStrength)
     tello_socket.send_to(asio::buffer(pkt.GetBuffer()), remote_endpoint_);
     std::this_thread::sleep_for(0.5s);
 
-    auto tello_telemetry = tello_protocol::TelloTelemetry(spdlog::stdout_color_mt("tello_telemetry"));
+    tello_protocol::TelloTelemetry tello_telemetry(spdlog::stdout_color_mt("tello_telemetry"));
     auto flight_data = std::make_shared<tello_protocol::FlightData>(spdlog::stdout_color_mt("flight_data"));
     tello_telemetry.SetFlightData(flight_data);
 
@@ -526,7 +526,7 @@ TEST(TelloTelemetryTest, SET_ALT_LIMIT_MSG)
         send_pkt(pkt);
     };
 
-    auto tello_telemetry = tello_protocol::TelloTelemetry(spdlog::stdout_color_mt("tello_telemetry"));
+    tello_protocol::TelloTelemetry tello_telemetry(spdlog::stdout_color_mt("tello_telemetry"));
     auto flight_data = std::make_shared<tello_protocol::FlightData>(spdlog::stdout_color_mt("flight_data"));
     tello_telemetry.SetFlightData(flight_data);
 
@@ -594,7 +594,7 @@ TEST(TelloTelemetryTest, GET_ATT_LIMIT_MSG)
         send_pkt(pkt);
     };
 
-    auto tello_telemetry = tello_protocol::TelloTelemetry(spdlog::stdout_color_mt("tello_telemetry"));
+    tello_protocol::TelloTelemetry tello_telemetry(spdlog::stdout_color_mt("tello_telemetry"));
     auto flight_data = std::make_shared<tello_protocol::FlightData>(spdlog::stdout_color_mt("flight_data"));
     tello_telemetry.SetFlightData(flight_data);
 
@@ -685,7 +685,7 @@ TEST(TelloTelemetryTest, SET_ATT_LIMIG_MSG)
         send_pkt(pkt);
     };
 
-    auto tello_telemetry = tello_protocol::TelloTelemetry(spdlog::stdout_color_mt("tello_telemetry"));
+    tello_protocol::TelloTelemetry tello_telemetry(spdlog::stdout_color_mt("tello_telemetry"));
     auto flight_data = std::make_shared<tello_protocol::FlightData>(spdlog::stdout_color_mt("flight_data"));
     tello_telemetry.SetFlightData(flight_data);
 
@@ -752,7 +752,7 @@ TEST(TelloTelemetryTest, GET_LOW_BAT_THRESHOLD)
         send_pkt(pkt);
     };
 
-    auto tello_telemetry = tello_protocol::TelloTelemetry(spdlog::stdout_color_mt("tello_telemetry"));
+    tello_protocol::TelloTelemetry tello_telemetry(spdlog::stdout_color_mt("tello_telemetry"));
     auto flight_data = std::make_shared<tello_protocol::FlightData>(spdlog::stdout_color_mt("flight_data"));
     tello_telemetry.SetFlightData(flight_data);
 
@@ -827,7 +827,7 @@ TEST(TelloTelemetryTest, SET_LOW_BAT_THRESHOLD)
         send_pkt(pkt);
     };
 
-    auto tello_telemetry = tello_protocol::TelloTelemetry(spdlog::stdout_color_mt("tello_telemetry"));
+    tello_protocol::TelloTelemetry tello_telemetry(spdlog::stdout_color_mt("tello_telemetry"));
     auto flight_data = std::make_shared<tello_protocol::FlightData>(spdlog::stdout_color_mt("flight_data"));
     tello_telemetry.SetFlightData(flight_data);
 
@@ -838,7 +838,7 @@ TEST(TelloTelemetryTest, SET_LOW_BAT_THRESHOLD)
     {
         get_low_bat_threshold();
         r = tello_socket.receive(asio::buffer(buffer_));
-
+        
         std::vector<unsigned char> data(buffer_.begin(), buffer_.begin() + r); // Strip last 2 bytes. they are CRC16
 
         auto received = tello_protocol::Packet(data);

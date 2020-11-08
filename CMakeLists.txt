@@ -10,6 +10,8 @@ set(TELLO_TELEMETRY_SOURES
   ${CMAKE_SOURCE_DIR}/src/tello_telemetry/log_data/LogNewMvoFeedback.cpp
   ${CMAKE_SOURCE_DIR}/src/tello_telemetry/log_data/LogNewImuAttiFeedback.cpp
   ${CMAKE_SOURCE_DIR}/src/tello_telemetry/TelloTelemetry.cpp
+  ${CMAKE_SOURCE_DIR}/src/tello_telemetry/TelloCommander.cpp
+  ${CMAKE_SOURCE_DIR}/src/tello_telemetry/utils/TelloSocket.cpp
 )
 
 include_directories(
