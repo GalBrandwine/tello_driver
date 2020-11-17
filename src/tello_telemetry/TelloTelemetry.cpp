@@ -8,10 +8,10 @@ namespace tello_protocol
         auto received = tello_protocol::Packet(data);
 
         auto cmd = uint16(received.GetBuffer()[5], received.GetBuffer()[6]);
-        m_logger->info("cmd: {}", cmd);
+        m_logger->debug(m_logger->name() + "::" + __FUNCTION__ + " cmd: {}", cmd);
         if (cmd == tello_protocol::LOG_HEADER_MSG)
         {
-            m_logger->info("LOG_HEADER_MSG received");
+            m_logger->debug("LOG_HEADER_MSG received");
             // LOG HEADER MSG is the biggest log message.
             // Drone will continue to send log_header connection requests with incremental ID.
             // Until sending back to drone 'ack_conn'.
@@ -30,14 +30,46 @@ namespace tello_protocol
         }
         else if (cmd == tello_protocol::LOG_DATA_MSG)
         {
-            m_logger->info("LOG_DATA_MSG received");
+            m_logger->debug("LOG_DATA_MSG received");
             /* 
             Is cmd  is LOG_DATA_MSG.
             It means that a LOG_DATA connections has been already assured. 
-            So this test is pseudo-passed.
             */
-            // is_log_header_received = true;
-            // keep_receiving = false;
+            GetLogData()->Update(received.GetBuffer().substr(10));
+
+            // It is possible that a connection was open from a previous session.
+            SetLogHeaderReceived();
+        }
+        else if (cmd == tello_protocol::WIFI_MSG)
+        {
+            m_logger->debug("WIFI_MSG received: {}", int(received.GetData()[0]));
+            m_FlightData->SetWifiStrength(received.GetData()[0]);
+        }
+        else if (cmd == tello_protocol::ALT_LIMIT_MSG)
+        {
+            m_logger->debug("ALT_LIMIT_MSG received: {}", short(received.GetData()[1]));
+            m_FlightData->SetAltLimit(received.GetData());
+        }
+        if (cmd == tello_protocol::ATT_LIMIT_MSG)
+        {
+            m_logger->debug("ATT_LIMIT_MSG received: {}", float(received.GetData()[1]));
+            m_FlightData->SetAttLimit(received.GetData());
+        }
+        if (cmd == LOW_BAT_THRESHOLD_MSG)
+        {
+            m_logger->debug("recv: low battery threshold: {}",received.GetData());
+        }
+
+        if (cmd == tello_protocol::FLIGHT_MSG)
+        {
+            // This message suppose to contain all technical flight data
+            if (!m_FlightData->SetData(received.GetData()))
+            {
+                std::stringstream wrnSS;
+                wrnSS << __FUNCTION__ << "[" << __LINE__ << "]::"
+                      << "Data packet didnt math its expected length. dropping.";
+                m_logger->warn(wrnSS.str());
+            }
         }
 
         std::fill(m_buffer.begin(), m_buffer.end(), 0);
@@ -49,7 +81,7 @@ namespace tello_protocol
         while (m_keep_receiving) // && !is_log_header_received
         {
             m_BytesReceived = m_socket->Recieve(m_buffer);
-            m_logger->info("Bytes received: {}", m_BytesReceived);
+            m_logger->debug("Bytes received: {}", m_BytesReceived);
             std::vector<unsigned char> data(m_buffer.begin(), m_buffer.begin() + m_BytesReceived);
             if (!process_data(data))
             {
@@ -120,10 +152,12 @@ namespace tello_protocol
         m_socket = socket;
     }
 
-    TelloTelemetry::TelloTelemetry(std::shared_ptr<spdlog::logger> logger)
+    TelloTelemetry::TelloTelemetry(std::shared_ptr<spdlog::logger> logger, spdlog::level::level_enum lvl)
         : m_logger(logger)
     {
+        m_logger->set_level(lvl);
         m_logger->info(m_logger->name() + " Initiated.");
+
         // m_buffer.reserve(1024);
         m_buffer = std::vector<unsigned char>(1024);
     }

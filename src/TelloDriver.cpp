@@ -1,6 +1,24 @@
 
 #include "TelloDriver/TelloDriver.hpp"
 
+const float TelloDriver::GetAttLimit()
+{
+    return m_TelloTelemetry.GetFlightData()->GetAttLimit();
+}
+
+const short TelloDriver::GetAltLimit()
+{
+    return m_TelloTelemetry.GetFlightData()->GetAltLimit();
+}
+const short TelloDriver::GetWifiStrength()
+{
+
+    return m_TelloTelemetry.GetFlightData()->GetWifiStrength();
+}
+const tello_protocol::Vec3 TelloDriver::GetPos()
+{
+    return m_TelloTelemetry.GetLogData()->GetLogMvo().GetPos();
+}
 tello_protocol::TelloCommander &TelloDriver::GetTelloCommander()
 {
     return m_TelloCommander;
@@ -30,19 +48,19 @@ bool TelloDriver::WaitForConnection()
     return true;
 }
 
-TelloDriver::TelloDriver()
+TelloDriver::TelloDriver(spdlog::level::level_enum lvl)
     : m_BaseLogger(spdlog::stdout_color_mt("TelloDriver")),
-      m_TelloTelemetry(spdlog::stdout_color_mt("tello_telemetry")),
+      m_TelloTelemetry(spdlog::stdout_color_mt("tello_telemetry"), lvl),
       m_TelloCommander(spdlog::stdout_color_mt("tello_commander"))
 {
-    m_BaseLogger->info("TelloDriver created!");
+    m_BaseLogger->info("TelloDriver created! version: {}",TelloDriverVersion);
 
     auto flight_data = std::make_shared<tello_protocol::FlightData>(spdlog::stdout_color_mt("flight_data"));
     m_TelloTelemetry.SetFlightData(std::move(flight_data));
 
     auto log_data = std::make_shared<tello_protocol::LogData>(spdlog::stdout_color_mt("log_data"));
     m_TelloTelemetry.SetLogData(std::move(log_data));
-    
+
     auto shared_socket = std::make_shared<TelloSocket>("192.168.10.1", 8889, 9000);
     m_TelloTelemetry.SetSocket(shared_socket);
     m_TelloCommander.SetSocket(shared_socket);

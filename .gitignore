@@ -1,4 +1,5 @@
-
+*.log
+/log
 build/
 # Created by https://www.toptal.com/developers/gitignore/api/c++
 # Edit at https://www.toptal.com/developers/gitignore?templates=c++
@@ -39,3 +40,4 @@ build/
 
 # End of https://www.toptal.com/developers/gitignore/api/c++
 *.json
+log/latest

@@ -11,7 +11,7 @@
 #include "asio.hpp"
 #include <thread>
 #include "TelloCommander.hpp"
-
+#include "utils/telemetry_data/TelemetryData.hpp"
 namespace tello_protocol
 {
     class TelloTelemetry
@@ -19,8 +19,8 @@ namespace tello_protocol
     public:
         void SetTelloCommander(std::shared_ptr<tello_protocol::TelloCommander>);
         void SetSocket(std::shared_ptr<IReciever>);
-        
-        TelloTelemetry(std::shared_ptr<spdlog::logger>);
+
+        TelloTelemetry(std::shared_ptr<spdlog::logger>, spdlog::level::level_enum lvl = spdlog::level::info);
         ~TelloTelemetry();
 
         void StartListening();
@@ -52,7 +52,7 @@ namespace tello_protocol
         bool m_keep_receiving = true;
         int m_BytesReceived;
         std::thread m_Listener;
-        std::vector<unsigned char>m_buffer;// = std::vector<unsigned char>(1024); //std::vector<unsigned char>
+        std::vector<unsigned char> m_buffer; // = std::vector<unsigned char>(1024); //std::vector<unsigned char>
     };
 
 } // namespace tello_protocol

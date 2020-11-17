@@ -4,26 +4,60 @@
 #include "spdlog/spdlog.h"
 #include "spdlog/fmt/bin_to_hex.h"
 #include "spdlog/sinks/stdout_color_sinks.h"
+#include "utils/telemetry_data/TelemetryData.hpp"
 namespace tello_protocol
 {
 
     class FlightData
     {
     public:
-        const short GetLowBatThreshold()const {return m_low_battery_threhold;};
+        const double GetNorthSpeed() const;
+        const double GetEastSpeed() const;
+        const double GetGroundSpeed() const;
+        const tello_protocol::Vec3 GetNEDSpeeds() const; 
+        const double GetFlyTime() const;
+        const double GetIMUState() const;
+        const double GetPressureState() const;
+        const double GetDownVisualState() const;
+        const double GetPowerState() const;
+        const double GetBatteryState() const;
+        const double GetGravityState() const;
+        const double GetWindState() const;
+        const double GetIMUCalibrationState() const;
+        const double GetBatteryPrecentage() const;
+        const double GetDroneBatteryLeft() const;
+        const double GetDroneFLyTime() const;
+        const double GetEmSky() const;
+        const double GetEmGround() const;
+        const double GetEmOpen() const;
+        const double GetDroneHover() const;
+        const double GetOutageRecording() const;
+        const double GetBatteryLow() const;
+        const double GetBatteryLower() const;
+        const double GetFactoryMode() const;
+        const double GetThrowFlyTimer() const;
+        const double GetCameraState() const;
+        const double GetElectricalMachineryState() const;
+        const double GetFrontIn() const;
+        const double GetFrontOut() const;
+        const double GetFrontLsc() const;
+        const double GetTemperatureHeight() const;
+        // Height member is unknown
+        const double GetHeight() const;
+        const short GetLowBatThreshold() const { return m_low_battery_threhold; };
         void SetLowBatThreshold(const std::string &);
 
-        const float GetAttLimit() const{return m_attitude_limit;};
+        const float GetAttLimit() const { return m_attitude_limit; };
         void SetAttLimit(const std::string &);
 
         const short GetAltLimit() { return m_alt_limit; };
         void SetAltLimit(const std::string &);
-        
+
         void SetWifiStrength(short strength) { m_wifi_strength = strength; };
         const short GetWifiStrength() const { return m_wifi_strength; };
-        
+
         const double GetFlightMode() const;
-        
+
         bool SetData(const std::string &data);
 
         FlightData(std::shared_ptr<spdlog::logger>);

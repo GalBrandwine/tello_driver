@@ -827,7 +827,7 @@ TEST(TelloTelemetryTest, SET_LOW_BAT_THRESHOLD)
         send_pkt(pkt);
     };
 
-    tello_protocol::TelloTelemetry tello_telemetry(spdlog::stdout_color_mt("tello_telemetry"));
+    tello_protocol::TelloTelemetry tello_telemetry(spdlog::stdout_color_mt("tello_telemetry"),spdlog::level::debug);
     auto flight_data = std::make_shared<tello_protocol::FlightData>(spdlog::stdout_color_mt("flight_data"));
     tello_telemetry.SetFlightData(flight_data);
 

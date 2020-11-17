@@ -1,6 +1,6 @@
-<mxfile host="65bd71144e" modified="2020-10-29T17:01:45.446Z" agent="5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Code/1.50.1 Chrome/83.0.4103.122 Electron/9.2.1 Safari/537.36" etag="l1OctzEP9uQW4Yzr1PI8" version="13.6.5" pages="2">
+<mxfile host="65bd71144e" modified="2020-11-17T21:24:59.338Z" agent="5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Code/1.51.1 Chrome/83.0.4103.122 Electron/9.3.3 Safari/537.36" etag="2jGpgMJbS619_ut3VmKG" version="13.6.5" pages="2">
     <diagram id="eaUMyx7dPOAa2al45QBv" name="HighLevel">
-        <mxGraphModel dx="988" dy="440" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+        <mxGraphModel dx="947" dy="517" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -11,12 +11,12 @@
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
                 <mxCell id="2" value="TelloTelemetry" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#6a00ff;strokeColor=#3700CC;fontColor=#ffffff;" parent="1" vertex="1">
-                    <mxGeometry x="245" y="160" width="120" height="60" as="geometry"/>
+                    <mxGeometry x="350" y="160" width="120" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="8" value="" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=diamond;endFill=0;" parent="1" source="7" target="3" edge="1">
+                <mxCell id="8" value="" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=diamond;endFill=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="20" target="24" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="16" value="" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=diamond;endFill=0;" parent="1" source="15" target="3" edge="1">
+                <mxCell id="16" value="" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=diamond;endFill=0;entryX=0.75;entryY=1;entryDx=0;entryDy=0;" parent="1" source="15" target="24" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
                 <mxCell id="3" value="TelloFlightData" style="whiteSpace=wrap;html=1;rounded=1;fillColor=#60a917;strokeColor=#2D7600;fontColor=#ffffff;" parent="1" vertex="1">
@@ -26,34 +26,67 @@
                     <mxGeometry x="310" y="310" width="40" height="20" as="geometry"/>
                 </mxCell>
                 <mxCell id="6" value="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
-                    <mxGeometry x="310" y="220" width="40" height="20" as="geometry"/>
+                    <mxGeometry x="365" y="220" width="40" height="20" as="geometry"/>
                 </mxCell>
                 <mxCell id="7" value="MVO" style="whiteSpace=wrap;html=1;rounded=1;fontColor=#ffffff;strokeColor=#005700;fillColor=#008a00;" parent="1" vertex="1">
-                    <mxGeometry x="160" y="480" width="120" height="60" as="geometry"/>
+                    <mxGeometry x="410" y="480" width="120" height="60" as="geometry"/>
                 </mxCell>
                 <mxCell id="15" value="IMU_ATTI" style="whiteSpace=wrap;html=1;rounded=1;fontColor=#ffffff;strokeColor=#005700;fillColor=#008a00;" parent="1" vertex="1">
-                    <mxGeometry x="340" y="480" width="120" height="60" as="geometry"/>
+                    <mxGeometry x="580" y="480" width="120" height="60" as="geometry"/>
                 </mxCell>
                 <mxCell id="17" value="1" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;" parent="1" vertex="1">
-                    <mxGeometry x="330" y="390" width="20" height="20" as="geometry"/>
+                    <mxGeometry x="580" y="390" width="20" height="20" as="geometry"/>
                 </mxCell>
                 <mxCell id="18" value="1" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;" parent="1" vertex="1">
-                    <mxGeometry x="380" y="460" width="20" height="20" as="geometry"/>
+                    <mxGeometry x="620" y="460" width="20" height="20" as="geometry"/>
                 </mxCell>
                 <mxCell id="19" value="1" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;" parent="1" vertex="1">
-                    <mxGeometry x="280" y="390" width="20" height="20" as="geometry"/>
-                </mxCell>
-                <mxCell id="20" value="1" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;" parent="1" vertex="1">
-                    <mxGeometry x="245" y="460" width="20" height="20" as="geometry"/>
+                    <mxGeometry x="510" y="390" width="20" height="20" as="geometry"/>
                 </mxCell>
                 <mxCell id="21" value="SPDLOGGER" style="whiteSpace=wrap;html=1;rounded=1;fillColor=#d80073;strokeColor=#A50040;fontColor=#ffffff;" parent="1" vertex="1">
                     <mxGeometry x="40" y="160" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="24" value="TelloLogData" style="whiteSpace=wrap;html=1;rounded=1;fillColor=#0050ef;strokeColor=#001DBC;fontColor=#ffffff;" vertex="1" parent="1">
+                    <mxGeometry x="480" y="330" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="25" value="" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=diamondThin;endFill=0;startArrow=none;startFill=0;entryX=0.75;entryY=1;entryDx=0;entryDy=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" edge="1" parent="1" source="24" target="2">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="315" y="340" as="sourcePoint"/>
+                        <mxPoint x="315" y="230" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="26" value="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+                    <mxGeometry x="530" y="310" width="40" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="27" value="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+                    <mxGeometry x="420" y="220" width="40" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="20" value="1" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;" parent="1" vertex="1">
+                    <mxGeometry x="470" y="460" width="20" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="29" value="" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=diamond;endFill=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="7" target="20">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="487.5" y="480" as="sourcePoint"/>
+                        <mxPoint x="540" y="390" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="30" value="&lt;div style=&quot;line-height: 19px&quot;&gt;TelloCommander&lt;/div&gt;" style="whiteSpace=wrap;html=1;rounded=1;fillColor=#0050ef;strokeColor=#001DBC;fontColor=#ffffff;" vertex="1" parent="1">
+                    <mxGeometry x="600" y="160" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="31" value="" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=diamondThin;endFill=0;startArrow=none;startFill=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="30" target="2">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="550" y="340" as="sourcePoint"/>
+                        <mxPoint x="450" y="230" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="33" value="For sending ACK commands" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;fillColor=#a20025;strokeColor=#6F0000;fontColor=#ffffff;rounded=1;" vertex="1" parent="1">
+                    <mxGeometry x="570" y="130" width="170" height="20" as="geometry"/>
                 </mxCell>
             </root>
         </mxGraphModel>
     </diagram>
     <diagram name="MSGActivityDiagram" id="P-N2ksKgzLIH1Jo4JEOq">
-        <mxGraphModel dx="988" dy="440" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+        <mxGraphModel dx="947" dy="517" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
             <root>
                 <mxCell id="fFh5n_tCsRmxz2UFtYTy-0"/>
                 <mxCell id="fFh5n_tCsRmxz2UFtYTy-1" parent="fFh5n_tCsRmxz2UFtYTy-0"/>
@@ -181,10 +214,10 @@
                 <mxCell id="fFh5n_tCsRmxz2UFtYTy-42" value="&lt;div style=&quot;line-height: 19px&quot;&gt;&lt;div style=&quot;line-height: 19px&quot;&gt;tello_telemetry.GetFlightData()-&amp;gt;SetWifiStrength(data[9]);&lt;/div&gt;&lt;/div&gt;" style="whiteSpace=wrap;html=1;fontColor=#ffffff;strokeColor=#2D7600;fillColor=#60a917;" parent="fFh5n_tCsRmxz2UFtYTy-1" vertex="1">
                     <mxGeometry x="880" y="590" width="360" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="ghU2878MjdMfd1t0x72Y-1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="fFh5n_tCsRmxz2UFtYTy-1" source="fFh5n_tCsRmxz2UFtYTy-45" target="ghU2878MjdMfd1t0x72Y-0">
+                <mxCell id="ghU2878MjdMfd1t0x72Y-1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="fFh5n_tCsRmxz2UFtYTy-1" source="fFh5n_tCsRmxz2UFtYTy-45" target="ghU2878MjdMfd1t0x72Y-0" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="ghU2878MjdMfd1t0x72Y-2" value="YES" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="ghU2878MjdMfd1t0x72Y-1">
+                <mxCell id="ghU2878MjdMfd1t0x72Y-2" value="YES" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="ghU2878MjdMfd1t0x72Y-1" vertex="1" connectable="0">
                     <mxGeometry x="-0.254" y="-2" relative="1" as="geometry">
                         <mxPoint as="offset"/>
                     </mxGeometry>
@@ -192,7 +225,7 @@
                 <mxCell id="fFh5n_tCsRmxz2UFtYTy-45" value="cmd ==&amp;nbsp;ATT_LIMIT_MSG&amp;nbsp;" style="rhombus;whiteSpace=wrap;html=1;fillColor=#60a917;strokeColor=#2D7600;fontColor=#ffffff;" parent="fFh5n_tCsRmxz2UFtYTy-1" vertex="1">
                     <mxGeometry x="630" y="740" width="180" height="80" as="geometry"/>
                 </mxCell>
-                <mxCell id="ghU2878MjdMfd1t0x72Y-0" value="&lt;div style=&quot;line-height: 19px&quot;&gt;tello_telemetry.GetFlightData()-&amp;gt;SetAttLimit(received.GetData())&lt;/div&gt;" style="whiteSpace=wrap;html=1;fontColor=#ffffff;strokeColor=#2D7600;fillColor=#60a917;" vertex="1" parent="fFh5n_tCsRmxz2UFtYTy-1">
+                <mxCell id="ghU2878MjdMfd1t0x72Y-0" value="&lt;div style=&quot;line-height: 19px&quot;&gt;tello_telemetry.GetFlightData()-&amp;gt;SetAttLimit(received.GetData())&lt;/div&gt;" style="whiteSpace=wrap;html=1;fontColor=#ffffff;strokeColor=#2D7600;fillColor=#60a917;" parent="fFh5n_tCsRmxz2UFtYTy-1" vertex="1">
                     <mxGeometry x="870" y="750" width="420" height="60" as="geometry"/>
                 </mxCell>
             </root>

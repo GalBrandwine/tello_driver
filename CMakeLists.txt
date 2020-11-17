@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(TelloDriver VERSION "0.0.1")
+project(TelloDriver VERSION "0.0.12")
 
 set(CMAKE_CXX_STANDARD 14)
 
@@ -75,12 +75,17 @@ add_custom_command(
 
 # Force CMake to take libraries from build, and not from system.
 set(NO_DEFAULT_PATH true)
-target_include_directories(TelloDriver PUBLIC ${PROJECT_BINARY_DIR}/lib/asio-1.18.0/include)
+target_include_directories(TelloDriver PUBLIC IMPORTED ${PROJECT_BINARY_DIR}/lib/asio-1.18.0/include)
 # asio requires pthread
 target_link_libraries(TelloDriver pthread)
+
+configure_file(TelloDriverConfig.hpp.in TelloDriverConfig.hpp)
+target_include_directories(TelloDriver PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
+
+include(CTest)
+enable_testing()
 
 add_subdirectory(examples)
 add_subdirectory(test)
 add_subdirectory(lib/googletest)
 
-enable_testing()

@@ -21,6 +21,134 @@ namespace tello_protocol
     {
         return m_fly_mode;
     }
+    const double FlightData::GetHeight() const
+    {
+        return m_height;
+    }
+    const double FlightData::GetNorthSpeed() const
+    {
+        return m_north_speed;
+    }
+    const double FlightData::GetEastSpeed() const
+    {
+        return m_east_speed;
+    }
+    const double FlightData::GetGroundSpeed() const
+    {
+        return m_ground_speed;
+    }
+    const tello_protocol::Vec3 FlightData::GetNEDSpeeds() const
+    {
+        return tello_protocol::Vec3{m_north_speed, m_east_speed, m_ground_speed};
+    }
+    const double FlightData::GetFlyTime() const
+    {
+        return m_fly_time;
+    }
+    const double FlightData::GetIMUState() const
+    {
+        return m_imu_state;
+    }
+    const double FlightData::GetPressureState() const
+    {
+        return m_pressure_state;
+    }
+    const double FlightData::GetDownVisualState() const
+    {
+        return m_down_visual_state;
+    }
+    const double FlightData::GetPowerState() const
+    {
+        return m_power_state;
+    }
+    const double FlightData::GetBatteryState() const
+    {
+        return m_battery_state;
+    }
+    const double FlightData::GetGravityState() const
+    {
+        return m_gravity_state;
+    }
+    const double FlightData::GetWindState() const
+    {
+        return m_wind_state;
+    }
+    const double FlightData::GetIMUCalibrationState() const
+    {
+        return m_imu_calibration_state;
+    }
+    const double FlightData::GetBatteryPrecentage() const
+    {
+        return m_battery_percentage;
+    }
+    const double FlightData::GetDroneBatteryLeft() const
+    {
+        return m_drone_battery_left;
+    }
+    const double FlightData::GetDroneFLyTime() const
+    {
+        return m_drone_fly_time_left;
+    }
+    const double FlightData::GetEmSky() const
+    {
+        return m_em_sky;
+    }
+    const double FlightData::GetEmGround() const
+    {
+        return m_em_ground;
+    }
+    const double FlightData::GetEmOpen() const
+    {
+        return m_em_open;
+    }
+    const double FlightData::GetDroneHover() const
+    {
+        return m_drone_hover;
+    }
+    const double FlightData::GetOutageRecording() const
+    {
+        return m_outage_recording;
+    }
+    const double FlightData::GetBatteryLow() const
+    {
+        return m_battery_low;
+    }
+    const double FlightData::GetBatteryLower() const
+    {
+        return m_battery_lower;
+    }
+    const double FlightData::GetFactoryMode() const
+    {
+        return m_factory_mode;
+    }
+    const double FlightData::GetThrowFlyTimer() const
+    {
+        return m_throw_fly_timer;
+    }
+    const double FlightData::GetCameraState() const
+    {
+        return m_camera_state;
+    }
+    const double FlightData::GetElectricalMachineryState() const
+    {
+        return m_electrical_machinery_state;
+    }
+    const double FlightData::GetFrontIn() const
+    {
+        return m_front_in;
+    }
+    const double FlightData::GetFrontOut() const
+    {
+        return m_front_out;
+    }
+    const double FlightData::GetFrontLsc() const
+    {
+        return m_front_lsc;
+    }
+    const double FlightData::GetTemperatureHeight() const
+    {
+        return m_temperature_height;
+    }
 
     bool FlightData::SetData(const std::string &data)
     {
@@ -32,9 +160,16 @@ namespace tello_protocol
         }
 
         m_height = int16(data[0], data[1]);
+        // NED speeds
         m_north_speed = int16(data[2], data[3]);
         m_east_speed = int16(data[4], data[5]);
+
+        // Other method for storing data from buffer to reference:
+        // short temp;
+        // std::memcpy(&temp, &data[6], sizeof(short));
+
         m_ground_speed = int16(data[6], data[7]);
+
         m_fly_time = int16(data[8], data[9]);
         m_imu_state = ((data[10] >> 0) & 0x1);
         m_pressure_state = ((data[10] >> 1) & 0x1);
@@ -64,10 +199,10 @@ namespace tello_protocol
         m_front_lsc = ((data[22] >> 2) & 0x1);
         m_temperature_height = ((data[23] >> 0) & 0x1);
 
-        if (m_logger)
-        {
-            m_logger->info("Binary : {}", spdlog::to_hex(data));
-        }
+        // if (m_logger)
+        // {
+        //     m_logger->info("Binary : {}", spdlog::to_hex(data));
+        // }
 
         return true;
     };
