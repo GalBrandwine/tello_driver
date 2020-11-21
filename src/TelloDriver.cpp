@@ -29,31 +29,50 @@ tello_protocol::TelloTelemetry &TelloDriver::GetTelloTelemetry()
     return m_TelloTelemetry;
 }
 
+void TelloDriver::Land()
+{
+    m_TelloCommander.SendLandReq();
+}
+void TelloDriver::Takeoff()
+{
+    m_TelloCommander.SendTakeoffReq();
+}
 void TelloDriver::Connect()
 {
     m_TelloCommander.SendConnReq();
     m_TelloTelemetry.StartListening();
 }
 
-bool TelloDriver::WaitForConnection()
+bool TelloDriver::WaitForConnection(int timeout)
 {
-    int timeout_counter = 0;
+
+    typedef std::chrono::high_resolution_clock Time;
+    typedef std::chrono::milliseconds ms;
+    typedef std::chrono::duration<float> fsec;
+    fsec fs;
+    auto t0 = Time::now();
+
     while (!m_TelloTelemetry.IsLogHeaderReceived())
     {
-        m_BaseLogger->info("Waiting for connection... {}", CONNECTION_TIMEOUT - timeout_counter);
-        if (timeout_counter++ > CONNECTION_TIMEOUT)
+
+        auto t1 = Time::now();
+        fs = t1 - t0;
+        m_BaseLogger->info("Waiting for connection... {}", fs.count());
+        if (fs.count() > timeout)
             return false;
-        std::this_thread::sleep_for(0.5s);
     }
+
+    // After sending back ack. the drone will not sent LOG_HEADER_MSG anymore.
+    m_TelloCommander.SendAckLog(m_TelloTelemetry.GetLogHeaderId());
     return true;
 }
 
 TelloDriver::TelloDriver(spdlog::level::level_enum lvl)
     : m_BaseLogger(spdlog::stdout_color_mt("TelloDriver")),
       m_TelloTelemetry(spdlog::stdout_color_mt("tello_telemetry"), lvl),
-      m_TelloCommander(spdlog::stdout_color_mt("tello_commander"))
+      m_TelloCommander(spdlog::stdout_color_mt("tello_commander"), lvl)
 {
-    m_BaseLogger->info("TelloDriver created! version: {}",TelloDriverVersion);
+    m_BaseLogger->info("TelloDriver created! version: {}", TelloDriverVersion);
 
     auto flight_data = std::make_shared<tello_protocol::FlightData>(spdlog::stdout_color_mt("flight_data"));
     m_TelloTelemetry.SetFlightData(std::move(flight_data));
@@ -66,7 +85,7 @@ TelloDriver::TelloDriver(spdlog::level::level_enum lvl)
     m_TelloCommander.SetSocket(shared_socket);
 
     // Inject TelloTelemtry the TelloCommander, so upon special messages TelloTelemetry could respond with ACK.
-    m_TelloTelemetry.SetTelloCommander(std::make_shared<tello_protocol::TelloCommander>(m_TelloCommander));
+    // m_TelloTelemetry.SetTelloCommander(std::make_shared<tello_protocol::TelloCommander>(m_TelloCommander));
 }
 
 TelloDriver::~TelloDriver()

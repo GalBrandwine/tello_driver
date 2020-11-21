@@ -26,7 +26,7 @@ namespace tello_protocol
         const double GetIMUCalibrationState() const;
         const double GetBatteryPrecentage() const;
         const double GetDroneBatteryLeft() const;
-        const double GetDroneFLyTime() const;
+        const double GetDroneFLyTimeLeft() const;
         const double GetEmSky() const;
         const double GetEmGround() const;
         const double GetEmOpen() const;

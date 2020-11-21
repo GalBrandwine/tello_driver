@@ -85,7 +85,7 @@ namespace tello_protocol
     {
         return m_drone_battery_left;
     }
-    const double FlightData::GetDroneFLyTime() const
+    const double FlightData::GetDroneFLyTimeLeft() const
     {
         return m_drone_fly_time_left;
     }

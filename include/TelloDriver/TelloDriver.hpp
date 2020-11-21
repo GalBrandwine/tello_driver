@@ -1,5 +1,6 @@
 #pragma once
 #include <memory>
+#include <chrono>
 
 #include "spdlog/spdlog.h"
 #include "spdlog/fmt/bin_to_hex.h"
@@ -23,8 +24,10 @@ public:
     ~TelloDriver();
     tello_protocol::TelloCommander &GetTelloCommander();
     tello_protocol::TelloTelemetry &GetTelloTelemetry();
+    void Takeoff();
+    void Land();
     void Connect();
-    bool WaitForConnection();
+    bool WaitForConnection(int);
 
 private:
     tello_protocol::TelloCommander m_TelloCommander;

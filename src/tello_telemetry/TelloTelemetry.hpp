@@ -17,7 +17,8 @@ namespace tello_protocol
     class TelloTelemetry
     {
     public:
-        void SetTelloCommander(std::shared_ptr<tello_protocol::TelloCommander>);
+        const int GetLogHeaderId() const;
+        // void SetTelloCommander(std::shared_ptr<tello_protocol::TelloCommander>);
         void SetSocket(std::shared_ptr<IReciever>);
 
         TelloTelemetry(std::shared_ptr<spdlog::logger>, spdlog::level::level_enum lvl = spdlog::level::info);
@@ -50,7 +51,7 @@ namespace tello_protocol
         std::shared_ptr<IReciever> m_socket;
         bool m_IsLogHeaderReceived = false;
         bool m_keep_receiving = true;
-        int m_BytesReceived;
+        int m_BytesReceived, m_IsLogHeaderReceivedId;
         std::thread m_Listener;
         std::vector<unsigned char> m_buffer; // = std::vector<unsigned char>(1024); //std::vector<unsigned char>
     };

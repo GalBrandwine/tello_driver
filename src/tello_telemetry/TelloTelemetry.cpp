@@ -8,7 +8,7 @@ namespace tello_protocol
         auto received = tello_protocol::Packet(data);
 
         auto cmd = uint16(received.GetBuffer()[5], received.GetBuffer()[6]);
-        m_logger->debug(m_logger->name() + "::" + __FUNCTION__ + " cmd: {}", cmd);
+        // m_logger->debug(m_logger->name() + "::" + __FUNCTION__ + " cmd: {}", cmd);
         if (cmd == tello_protocol::LOG_HEADER_MSG)
         {
             m_logger->debug("LOG_HEADER_MSG received");
@@ -21,11 +21,6 @@ namespace tello_protocol
             // DJI LOG VERSION something like this: DJI_LOG_V3I��Rc
             auto f = received.GetBuffer().find("DJI");
             SetDJILogVersion(received.GetBuffer().substr(f, 15));
-
-            // After sending back ack. the drone will not sent LOG_HEADER_MSG anymore.
-            if (m_TelloCommander)
-                m_TelloCommander->SendAckLog(id);
-
             SetLogHeaderReceived();
         }
         else if (cmd == tello_protocol::LOG_DATA_MSG)
@@ -57,7 +52,7 @@ namespace tello_protocol
         }
         if (cmd == LOW_BAT_THRESHOLD_MSG)
         {
-            m_logger->debug("recv: low battery threshold: {}",received.GetData());
+            m_logger->debug("recv: low battery threshold: {}", received.GetData());
         }
 
         if (cmd == tello_protocol::FLIGHT_MSG)
@@ -91,11 +86,16 @@ namespace tello_protocol
         }
     }
 
-    void TelloTelemetry::SetTelloCommander(std::shared_ptr<tello_protocol::TelloCommander> telloCommander)
-    {
-        m_TelloCommander = telloCommander;
-    };
+    // This capability is aborted duo to SOLID principels.
+    // void TelloTelemetry::SetTelloCommander(std::shared_ptr<tello_protocol::TelloCommander> telloCommander)
+    // {
+    //     m_TelloCommander = telloCommander;
+    // };
 
+    const int TelloTelemetry::GetLogHeaderId()const
+    {
+        return m_IsLogHeaderReceivedId;
+    };
     void TelloTelemetry::SetLogHeaderReceived()
     {
         m_IsLogHeaderReceived = true;

@@ -59,6 +59,7 @@ target_include_directories(TelloDriver PUBLIC ${PROJECT_BINARY_DIR}/lib/spdlog/i
 # COMMENT "Unpacking abc.zip"
 # VERBATIM)
 
+# Unzip at build-time
 add_custom_target( unZip ALL)
 add_custom_command(
   TARGET unZip PRE_BUILD
@@ -79,7 +80,7 @@ target_include_directories(TelloDriver PUBLIC IMPORTED ${PROJECT_BINARY_DIR}/lib
 # asio requires pthread
 target_link_libraries(TelloDriver pthread)
 
-configure_file(TelloDriverConfig.hpp.in TelloDriverConfig.hpp)
+configure_file(${PROJECT_SOURCE_DIR}/conf/TelloDriverConfig.hpp.in TelloDriverConfig.hpp)
 target_include_directories(TelloDriver PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
 
 include(CTest)
