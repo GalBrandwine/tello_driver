@@ -72,5 +72,6 @@ namespace tello_protocol
 
     LogData::~LogData()
     {
+        m_logger->info(m_logger->name() + " Destructing.");
     }
 } // namespace tello_protocol

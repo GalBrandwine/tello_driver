@@ -57,7 +57,9 @@ bool TelloDriver::WaitForConnection(int timeout)
 
         auto t1 = Time::now();
         fs = t1 - t0;
-        m_BaseLogger->info("Waiting for connection... {}", fs.count());
+        auto passed = fs.count();
+        if (passed == (int)passed) // Print once a  second
+            m_BaseLogger->info("Waiting for connection... {}", timeout - fs.count());
         if (fs.count() > timeout)
             return false;
     }
@@ -73,7 +75,8 @@ TelloDriver::TelloDriver(spdlog::level::level_enum lvl)
       m_TelloCommander(spdlog::stdout_color_mt("tello_commander"), lvl)
 {
     m_BaseLogger->info("TelloDriver created! version: {}", TelloDriverVersion);
-
+    m_BaseLogger->set_level(lvl);
+    
     auto flight_data = std::make_shared<tello_protocol::FlightData>(spdlog::stdout_color_mt("flight_data"));
     m_TelloTelemetry.SetFlightData(std::move(flight_data));
 
@@ -83,11 +86,9 @@ TelloDriver::TelloDriver(spdlog::level::level_enum lvl)
     auto shared_socket = std::make_shared<TelloSocket>("192.168.10.1", 8889, 9000);
     m_TelloTelemetry.SetSocket(shared_socket);
     m_TelloCommander.SetSocket(shared_socket);
-
-    // Inject TelloTelemtry the TelloCommander, so upon special messages TelloTelemetry could respond with ACK.
-    // m_TelloTelemetry.SetTelloCommander(std::make_shared<tello_protocol::TelloCommander>(m_TelloCommander));
 }
 
 TelloDriver::~TelloDriver()
 {
+    m_BaseLogger->info(m_BaseLogger->name() + " Destructing!");
 }

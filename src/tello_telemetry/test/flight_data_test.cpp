@@ -108,7 +108,7 @@ TEST(TelloTelemetryTest, ReceiveLogHeaderOnce)
         pkt.AddByte(byte.LeftNibble);
         pkt.AddByte(byte.RightNibble);
         pkt.Fixup();
-        log_header_logger->info("Senging conn_ack msg: {}", spdlog::to_hex(pkt.GetBuffer()));
+        log_header_logger->info("Sending conn_ack msg: {}", spdlog::to_hex(pkt.GetBuffer()));
         tello_socket.send_to(asio::buffer(pkt.GetBuffer()), remote_endpoint_);
     };
 

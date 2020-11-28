@@ -210,5 +210,8 @@ namespace tello_protocol
         : m_logger(logger)
     {
     }
-    FlightData::~FlightData(){};
+    FlightData::~FlightData()
+    {
+        m_logger->info(m_logger->name() + " Destructing.");
+    };
 } // namespace tello_protocol

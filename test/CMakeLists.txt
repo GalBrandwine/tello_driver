@@ -23,3 +23,14 @@ target_include_directories(${BINARY} PRIVATE
   ${CMAKE_SOURCE_DIR}/src/packet_parser
   ${CMAKE_SOURCE_DIR}/src/tello_telemetry
 )
+
+
+## "wet" tests require connection to the drone
+set(WET_TEST_SOURCES
+    TelloDriverTest_wet.cpp
+    ${CMAKE_SOURCE_DIR}/src/tello_telemetry/test/commands_test.cpp
+  ${TELLO_TELEMETRY_SOURES}
+)
+
+add_executable(${BINARY}_wet ${WET_TEST_SOURCES})
+target_link_libraries (${BINARY}_wet PUBLIC ${CMAKE_PROJECT_NAME} ${PROJECT_BINARY_DIR}/lib/libgtestd.a pthread)

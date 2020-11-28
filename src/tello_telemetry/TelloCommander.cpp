@@ -66,7 +66,7 @@ namespace tello_protocol
         pkt.AddByte(byte.LeftNibble);
         pkt.AddByte(byte.RightNibble);
         pkt.Fixup();
-        m_logger->info("Senging conn_ack msg: {}", spdlog::to_hex(pkt.GetBuffer()));
+        m_logger->info("Sending conn_ack msg: {}", spdlog::to_hex(pkt.GetBuffer()));
         m_socket->Send(pkt.GetBuffer());
         // tello_socket.send_to(asio::buffer(pkt.GetBuffer()), remote_endpoint_);
     }
@@ -82,11 +82,12 @@ namespace tello_protocol
     TelloCommander::TelloCommander(std::shared_ptr<spdlog::logger> logger,spdlog::level::level_enum lvl)
         : m_logger(logger)
     {
-        m_logger->info(m_logger->name() + " Initiated!.");
+        m_logger->info(m_logger->name() + " Initiated.");
         m_logger->set_level(lvl);
     }
 
     TelloCommander::~TelloCommander()
     {
+        m_logger->info(m_logger->name() + " Destructing.");
     }
 } // namespace tello_protocol

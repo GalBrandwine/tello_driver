@@ -24,9 +24,9 @@ namespace tello_protocol
         TelloTelemetry(std::shared_ptr<spdlog::logger>, spdlog::level::level_enum lvl = spdlog::level::info);
         ~TelloTelemetry();
 
+        void StopListening();
         void StartListening();
         void Listener(); // Listener thread
-        void StopListening() { m_keep_receiving = false; };
         void SetBuildDate(const std::string &);
         const std::string &GetBuildDate() const;
         void SetDJILogVersion(const std::string &);
@@ -51,6 +51,7 @@ namespace tello_protocol
         std::shared_ptr<IReciever> m_socket;
         bool m_IsLogHeaderReceived = false;
         bool m_keep_receiving = true;
+        bool m_anyDataReceived = false;
         int m_BytesReceived, m_IsLogHeaderReceivedId;
         std::thread m_Listener;
         std::vector<unsigned char> m_buffer; // = std::vector<unsigned char>(1024); //std::vector<unsigned char>
