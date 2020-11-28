@@ -13,6 +13,7 @@ set(SOURCES ${TEST_SOURCES})
 
 add_executable(${BINARY} ${TEST_SOURCES})
 
+# Not neccesery
 add_test(NAME ${BINARY} COMMAND ${BINARY})
 
 # Link againts our gtest submodule, not the one installed in '/usr/local'
@@ -34,3 +35,9 @@ set(WET_TEST_SOURCES
 
 add_executable(${BINARY}_wet ${WET_TEST_SOURCES})
 target_link_libraries (${BINARY}_wet PUBLIC ${CMAKE_PROJECT_NAME} ${PROJECT_BINARY_DIR}/lib/libgtestd.a pthread)
+
+add_executable(TelloSocketTest
+  TelloSocketTest.cpp
+  ${CMAKE_SOURCE_DIR}/src/tello_telemetry/utils/test/socket_test.cpp
+ )
+target_link_libraries (TelloSocketTest PUBLIC ${CMAKE_PROJECT_NAME} ${PROJECT_BINARY_DIR}/lib/libgtestd.a pthread)

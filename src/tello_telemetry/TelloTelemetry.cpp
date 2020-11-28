@@ -75,24 +75,31 @@ namespace tello_protocol
     {
         while (m_keep_receiving) // && !is_log_header_received
         {
-            m_BytesReceived = m_socket->Recieve(m_buffer);
-            m_logger->debug("Bytes received: {}", m_BytesReceived);
-            std::vector<unsigned char> data(m_buffer.begin(), m_buffer.begin() + m_BytesReceived);
-            if (!process_data(data))
+            if (m_socket != nullptr)
             {
-                m_logger->error("Could not process data! Dumping:\n {DATA SUPPOSE TO BE HERE}");
-                // StopListening();
+                m_BytesReceived = m_socket->AsyncReceive(m_buffer);
             }
+            // m_BytesReceived = m_socket->Receive(m_buffer);
+            m_logger->debug("Bytes received: {}", m_BytesReceived);
+            if (m_anyDataReceived > 0)
+            {
+                std::vector<unsigned char> data(m_buffer.begin(), m_buffer.begin() + m_BytesReceived);
+                if (!process_data(data))
+                {
+                    m_logger->error("Could not process data! Dumping:\n {DATA SUPPOSE TO BE HERE}");
+                }
+            }
+            std::this_thread::sleep_for(50ms);
         }
     }
 
-    // This capability is aborted duo to SOLID principels.
+    // This capability is aborted duo to SOLID principles.
     // void TelloTelemetry::SetTelloCommander(std::shared_ptr<tello_protocol::TelloCommander> telloCommander)
     // {
     //     m_TelloCommander = telloCommander;
     // };
 
-    const int TelloTelemetry::GetLogHeaderId()const
+    const int TelloTelemetry::GetLogHeaderId() const
     {
         return m_IsLogHeaderReceivedId;
     };
@@ -168,6 +175,7 @@ namespace tello_protocol
         m_keep_receiving = false;
         if (m_Listener.joinable())
             m_Listener.join();
+        m_logger->info(m_logger->name() + " thread joined");
     }
 
 } // namespace tello_protocol

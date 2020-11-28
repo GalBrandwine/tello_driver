@@ -89,5 +89,6 @@ namespace tello_protocol
     TelloCommander::~TelloCommander()
     {
         m_logger->info(m_logger->name() + " Destructing.");
+        m_logger->info(m_logger->name() + " m_socket==nullptr?: " + std::to_string(m_socket==nullptr));
     }
 } // namespace tello_protocol

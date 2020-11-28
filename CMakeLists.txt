@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(TelloDriver VERSION "0.0.13")
+project(TelloDriver VERSION "0.0.14")
 
 set(CMAKE_CXX_STANDARD 14)
 
@@ -80,6 +80,7 @@ target_include_directories(TelloDriver PUBLIC IMPORTED ${PROJECT_BINARY_DIR}/lib
 # asio requires pthread
 target_link_libraries(TelloDriver pthread)
 
+# Add Cmake current version as header in the project.
 configure_file(${PROJECT_SOURCE_DIR}/conf/TelloDriverConfig.hpp.in TelloDriverConfig.hpp)
 target_include_directories(TelloDriver PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
 
