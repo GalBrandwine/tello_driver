@@ -7,6 +7,11 @@ namespace tello_protocol
     {
         auto received = tello_protocol::Packet(data);
 
+        if (received.GetBuffer().substr(0, 8) == "conn_ack")
+        {
+            m_connReqAckRecieved = true;
+        }
+
         auto cmd = uint16(received.GetBuffer()[5], received.GetBuffer()[6]);
         // m_logger->debug(m_logger->name() + "::" + __FUNCTION__ + " cmd: {}", cmd);
         if (cmd == tello_protocol::LOG_HEADER_MSG)
@@ -77,11 +82,12 @@ namespace tello_protocol
         {
             if (m_socket != nullptr)
             {
-                m_BytesReceived = m_socket->AsyncReceive(m_buffer);
+
+                m_BytesReceived = m_socket->Receive(m_buffer);
             }
-            // m_BytesReceived = m_socket->Receive(m_buffer);
+
             m_logger->debug("Bytes received: {}", m_BytesReceived);
-            if (m_anyDataReceived > 0)
+            if (m_BytesReceived > 0)
             {
                 std::vector<unsigned char> data(m_buffer.begin(), m_buffer.begin() + m_BytesReceived);
                 if (!process_data(data))
@@ -89,7 +95,7 @@ namespace tello_protocol
                     m_logger->error("Could not process data! Dumping:\n {DATA SUPPOSE TO BE HERE}");
                 }
             }
-            std::this_thread::sleep_for(50ms);
+            std::this_thread::sleep_for(200ms);
         }
     }
 
@@ -107,6 +113,11 @@ namespace tello_protocol
     {
         m_IsLogHeaderReceived = true;
     };
+
+    bool TelloTelemetry::IsConnReqAckReceived() const
+    {
+        return m_connReqAckRecieved;
+    }
     bool TelloTelemetry::IsLogHeaderReceived() const
     {
         return m_IsLogHeaderReceived;

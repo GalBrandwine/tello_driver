@@ -39,6 +39,7 @@ namespace tello_protocol
         std::shared_ptr<LogData> GetLogData() const;
         void SetLogData(std::shared_ptr<LogData>);
 
+        bool IsConnReqAckReceived() const;
         bool IsLogHeaderReceived() const;
         void SetLogHeaderReceived();
 
@@ -53,6 +54,7 @@ namespace tello_protocol
         bool m_IsLogHeaderReceived = false;
         bool m_keep_receiving = true;
         bool m_anyDataReceived = false;
+        bool m_connReqAckRecieved = false;
         int m_BytesReceived, m_IsLogHeaderReceivedId;
         std::thread m_Listener;
         std::vector<unsigned char> m_buffer; // = std::vector<unsigned char>(1024); //std::vector<unsigned char>

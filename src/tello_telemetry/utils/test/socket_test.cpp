@@ -1,78 +1,10 @@
 #include "socket_test.hpp"
 using namespace std::chrono_literals;
-
-//
-// async_udp_echo_server.cpp
-// ~~~~~~~~~~~~~~~~~~~~~~~~~
-//
-// Copyright (c) 2003-2020 Christopher M. Kohlhoff (chris at kohlhoff dot com)
-//
-// Distributed under the Boost Software License, Version 1.0. (See accompanying
-// file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
-//
-
 #include <cstdlib>
 #include <iostream>
 #include "asio.hpp"
 #include <thread>
-// #include <asio/io_context.hpp>
-// #include <asio/ip/udp.hpp>
-// #include <asio/use_future.hpp>
 using asio::ip::udp;
-
-class server
-{
-public:
-    server(asio::io_context &io_context, short port)
-        : socket_(io_context, udp::endpoint(udp::v4(), port)),
-          sender_endpoint_(asio::ip::address_v4::from_string("192.168.10.1"), 8889)
-    {
-        std::string conn = "conn_req:\x96\x17";
-        int index = 0;
-        for (auto &letter : conn)
-            data_[index++] = letter;
-        do_send(conn.length());
-        do_receive();
-    }
-
-    void do_receive()
-    {
-        socket_.async_receive_from(
-            asio::buffer(data_, max_length), sender_endpoint_,
-            [this](std::error_code ec, std::size_t bytes_recvd) {
-                if (!ec && bytes_recvd > 0)
-                {
-                    do_send(bytes_recvd);
-                    std::cout << "bytes_recvd: " << bytes_recvd << "\n";
-                    is_bytes_recvd = true;
-                }
-                else
-                {
-                    do_receive();
-                }
-            });
-    }
-
-    void do_send(std::size_t length)
-    {
-        socket_.async_send_to(
-            asio::buffer(data_, length), sender_endpoint_,
-            [this](std::error_code /*ec*/, std::size_t /*bytes_sent*/) {
-                do_receive();
-            });
-    }
-    bool is_bytes_recvd = false;
-
-private:
-    udp::socket socket_;
-    udp::endpoint sender_endpoint_;
-
-    enum
-    {
-        max_length = 1024
-    };
-    char data_[max_length];
-};
 
 // Lowest level testing: test aisio liobrary async capabilities
 TEST(AsioSocketAsyncOperations, TrySendConnReq)
@@ -85,7 +17,12 @@ TEST(AsioSocketAsyncOperations, TrySendConnReq)
     std::thread thread(std::thread([&io_context]() { io_context.run(); std::cout << "work_io_context_ finished!\n"; }));
 
     server s(io_context, std::atoi("9000"));
-
+    char connreq[1024];
+    std::string conn = "conn_req:\x96\x17";
+    int index = 0;
+    for (auto &letter : conn)
+        connreq[index++] = letter;
+    s.do_send(connreq, conn.length());
     // io_context.run(); // <--- BLOKING
 
     int timeout_ticks = 500;
@@ -106,15 +43,9 @@ TEST(AsioSocketAsyncOperations, TrySendConnReq)
 // Mid-level testing: test if 'connReq' being sent correctly
 TEST(TelloSocketAsync, TrySendConnReq)
 {
-    // asio::io_context io_context;
-
-    // We run the io_context off in its own thread so that it operates
-    // completely asynchronously with respect to the rest of the program.
-    asio::io_context io_context;
-    asio::executor_work_guard<asio::io_context::executor_type> work_(asio::make_work_guard(io_context));
-    std::thread thread(std::thread([&io_context]() { io_context.run(); std::cout << "work_io_context_ finished!\n"; }));
-
-    TelloSocket tello_socket(io_context, "192.168.10.1", 8889, 9000);
+    // Implememted using this example:
+    // https://www.boost.org/doc/libs/1_66_0/doc/html/boost_asio/example/cpp03/services/logger_service.hpp
+    TelloSocket tello_socket("192.168.10.1", 8889, 9000);
 
     tello_socket.Send("conn_req:\x96\x17");
 
@@ -129,8 +60,8 @@ TEST(TelloSocketAsync, TrySendConnReq)
     }
     EXPECT_TRUE(tello_socket.IsBytesReceived());
 
-    io_context.stop();
-    thread.join();
+    // io_context.stop();
+    // thread.join();
     std::cout << "Done " << testing::UnitTest::GetInstance()->current_test_info()->name() << std::endl;
 }
 
@@ -140,16 +71,8 @@ TEST(TelloSocketAsync, TrySendConnReq)
  *  */
 TEST(TelloSocketAsync, TrySendRecieveConnReq)
 {
-    // asio::io_context io_context;
+    TelloSocket tello_socket("192.168.10.1", 8889, 9000);
 
-    // We run the io_context off in its own thread so that it operates
-    // completely asynchronously with respect to the rest of the program.
-    asio::io_context io_context;
-    auto work = asio::require(io_context.get_executor(),
-                              asio::execution::outstanding_work.tracked);
-    std::thread thread([&io_context]() { io_context.run(); });
-
-    TelloSocket tello_socket(io_context, "192.168.10.1", 8889, 9000);
     std::string msg("conn_req:\x96\x17");
     tello_socket.Send(msg);
     int timeout_ticks = 500;
@@ -161,7 +84,7 @@ TEST(TelloSocketAsync, TrySendRecieveConnReq)
     {
         tello_socket.Send(msg);
         std::this_thread::sleep_for(20ms);
-        bytes_recieve = tello_socket.AsyncReceive(received_data);
+        bytes_recieve = tello_socket.Receive(received_data);
         if (timeout_ticks-- < 0)
         {
             break;
@@ -173,19 +96,16 @@ TEST(TelloSocketAsync, TrySendRecieveConnReq)
     std::vector<unsigned char> sended(msg.begin(), msg.begin() + 4);
     EXPECT_EQ(sended, rec);
 
-    io_context.stop();
-    thread.join();
+    // io_context.stop();
+    // thread.join();
     std::cout << "Done " << testing::UnitTest::GetInstance()->current_test_info()->name() << std::endl;
 }
 
-/* High-level testing: 
- * Initiate io_context within TelloSocket.
- * */
-// TEST(FullTelloSocketAsync, TrySendRecieveConnReq)
+// TEST(TelloSocketAsync, TryTakeoffThroughSocketDirectly)
 // {
-//     // asio::io_context io_context;
-
+//     // This is a 'active' test - the drone will Takeoff!!
 //     TelloSocket tello_socket("192.168.10.1", 8889, 9000);
+
 //     std::string msg("conn_req:\x96\x17");
 //     tello_socket.Send(msg);
 //     int timeout_ticks = 500;
@@ -197,7 +117,7 @@ TEST(TelloSocketAsync, TrySendRecieveConnReq)
 //     {
 //         tello_socket.Send(msg);
 //         std::this_thread::sleep_for(20ms);
-//         bytes_recieve = tello_socket.AsyncReceive(received_data);
+//         bytes_recieve = tello_socket.Receive(received_data);
 //         if (timeout_ticks-- < 0)
 //         {
 //             break;
@@ -205,11 +125,7 @@ TEST(TelloSocketAsync, TrySendRecieveConnReq)
 //     }
 
 //     // Test
-//     std::vector<unsigned char> rec(received_data.begin(), received_data.begin() + 4);
-//     std::vector<unsigned char> sended(msg.begin(), msg.begin() + 4);
-//     EXPECT_EQ(sended, rec);
-
-//     io_context.stop();
-//     thread.join();
-//     std::cout << "Done " << testing::UnitTest::GetInstance()->current_test_info()->name() << std::endl;
+//     auto pkt = tello_protocol::Packet(tello_protocol::TAKEOFF_CMD);
+//     pkt.Fixup();
+//     tello_socket.Send(pkt.GetBuffer());
 // }

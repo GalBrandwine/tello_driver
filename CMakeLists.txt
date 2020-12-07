@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(TelloDriver VERSION "0.0.14")
+project(TelloDriver VERSION "0.0.15")
 
 set(CMAKE_CXX_STANDARD 14)
 
@@ -12,6 +12,7 @@ set(TELLO_TELEMETRY_SOURES
   ${CMAKE_SOURCE_DIR}/src/tello_telemetry/TelloTelemetry.cpp
   ${CMAKE_SOURCE_DIR}/src/tello_telemetry/TelloCommander.cpp
   ${CMAKE_SOURCE_DIR}/src/tello_telemetry/utils/TelloSocket.cpp
+  ${CMAKE_SOURCE_DIR}/src/tello_telemetry/utils/async_server/AsyncServer.cpp
 )
 
 include_directories(
@@ -59,26 +60,34 @@ target_include_directories(TelloDriver PUBLIC ${PROJECT_BINARY_DIR}/lib/spdlog/i
 # COMMENT "Unpacking abc.zip"
 # VERBATIM)
 
-# Unzip at build-time
-add_custom_target( unZip ALL)
-add_custom_command(
-  TARGET unZip PRE_BUILD
-  COMMAND ${CMAKE_COMMAND} -E remove_directory ${PROJECT_BINARY_DIR}/lib/asio-1.18.0
-  COMMAND ${CMAKE_COMMAND} -E tar xzf ${PROJECT_SOURCE_DIR}/lib/asio-1.18.0.tar.bz2
-  WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/lib/
-  DEPENDS ${PROJECT_SOURCE_DIR}/lib/asio-1.18.0.tar.bz2
-  COMMENT "Unpacking asio-1.18.0.tar.bz2"
-  VERBATIM
-)
+# # Unzip at build-time
+# add_custom_target( unZip ALL)
+# add_custom_command(
+#   TARGET unZip PRE_BUILD
+#   COMMAND ${CMAKE_COMMAND} -E remove_directory ${PROJECT_BINARY_DIR}/lib/asio-1.18.0
+#   COMMAND ${CMAKE_COMMAND} -E tar xzf ${PROJECT_SOURCE_DIR}/lib/asio-1.18.0.tar.bz2
+#   WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/lib/
+#   DEPENDS ${PROJECT_SOURCE_DIR}/lib/asio-1.18.0.tar.bz2
+#   COMMENT "Unpacking asio-1.18.0.tar.bz2"
+#   VERBATIM
+# )
 
 
 
 
-# Force CMake to take libraries from build, and not from system.
-set(NO_DEFAULT_PATH true)
-target_include_directories(TelloDriver PUBLIC IMPORTED ${PROJECT_BINARY_DIR}/lib/asio-1.18.0/include)
-# asio requires pthread
-target_link_libraries(TelloDriver pthread)
+# # Force CMake to take libraries from build, and not from system.
+# set(NO_DEFAULT_PATH true)
+# target_include_directories(TelloDriver PUBLIC IMPORTED ${PROJECT_BINARY_DIR}/lib/asio-1.18.0/include)
+# # asio requires pthread
+
+
+
+# Fing Specific compenents from boost.
+find_package(Boost 1.71.0 REQUIRED) 
+
+target_link_libraries(TelloDriver ${Boost_LIBRARIES} pthread)
+target_include_directories(TelloDriver PUBLIC ${Boost_LIBRARIES})
+
 
 # Add Cmake current version as header in the project.
 configure_file(${PROJECT_SOURCE_DIR}/conf/TelloDriverConfig.hpp.in TelloDriverConfig.hpp)

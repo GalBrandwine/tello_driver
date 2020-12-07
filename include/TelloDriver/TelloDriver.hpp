@@ -37,15 +37,6 @@ public:
     bool WaitForConnection(int);
 
 private:
-    /// Work for the private io_context to perform. If we do not give the
-    /// io_context some work to do then the io_context::run() function will exit
-    /// immediately.
-    // asio::executor_work_guard<asio::io_context::executor_type> *work_;
-    /// Thread used for running the work io_context's run loop.
-    // std::thread work_thread_;
-    // Private io_context used for performing socket operations.
-    // asio::io_context work_io_context_;
-
     tello_protocol::TelloCommander m_TelloCommander;
     tello_protocol::TelloTelemetry m_TelloTelemetry;
     std::shared_ptr<spdlog::logger> m_BaseLogger;

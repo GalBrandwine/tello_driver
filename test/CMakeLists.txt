@@ -39,5 +39,6 @@ target_link_libraries (${BINARY}_wet PUBLIC ${CMAKE_PROJECT_NAME} ${PROJECT_BINA
 add_executable(TelloSocketTest
   TelloSocketTest.cpp
   ${CMAKE_SOURCE_DIR}/src/tello_telemetry/utils/test/socket_test.cpp
+  ${CMAKE_SOURCE_DIR}/src/tello_telemetry/utils/async_server/AsyncServer.cpp
  )
 target_link_libraries (TelloSocketTest PUBLIC ${CMAKE_PROJECT_NAME} ${PROJECT_BINARY_DIR}/lib/libgtestd.a pthread)

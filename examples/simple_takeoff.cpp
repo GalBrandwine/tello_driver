@@ -3,7 +3,8 @@
 
 /*******************************************
  * Perform simple takeoff, then land.
- * No close loop operations.
+ * No stick stimulations.
+ * No close-loop operations.
  * *******************************************/
 
 int main()
@@ -11,17 +12,13 @@ int main()
     TelloDriver tello(spdlog::level::debug);
     tello.Connect();
     std::cout << "Starting simple Takeff\n";
-    if (!tello.WaitForConnection(10))
+    if (!tello.WaitForConnection(60))
     {
         std::cout << "Connection error. exiting!\n";
         exit(1);
     }
     tello.Takeoff();
-    std::this_thread::sleep_for(5s);
+    std::this_thread::sleep_for(10s);
     tello.Land();
-    // while (1)
-    // {
-
-    //     std::this_thread::sleep_for(0.01s);
-    // }
+    std::this_thread::sleep_for(10s);
 }
