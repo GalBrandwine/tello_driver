@@ -95,8 +95,19 @@ namespace tello_protocol
                     m_logger->error("Could not process data! Dumping:\n {DATA SUPPOSE TO BE HERE}");
                 }
             }
+            reset_bytes_received();
             std::this_thread::sleep_for(200ms);
         }
+    }
+
+    void TelloTelemetry::reset_bytes_received()
+    {
+        m_BytesReceived = 0;
+    }
+
+    const int TelloTelemetry::AmountOfBytesReceived() const
+    {
+        return m_BytesReceived;
     }
 
     // This capability is aborted duo to SOLID principles.

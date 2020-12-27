@@ -19,6 +19,7 @@ namespace tello_protocol
     {
     public:
         const int GetLogHeaderId() const;
+        const int AmountOfBytesReceived() const;
         // void SetTelloCommander(std::shared_ptr<tello_protocol::TelloCommander>);
         void SetSocket(std::shared_ptr<IReciever>);
 
@@ -44,6 +45,7 @@ namespace tello_protocol
         void SetLogHeaderReceived();
 
     private:
+        void reset_bytes_received();
         std::shared_ptr<tello_protocol::TelloCommander> m_TelloCommander;
         std::string m_BuildDate, m_DJI_LOG_VERSION;
         std::shared_ptr<spdlog::logger> m_logger;

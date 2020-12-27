@@ -42,3 +42,15 @@ add_executable(TelloSocketTest
   ${CMAKE_SOURCE_DIR}/src/tello_telemetry/utils/async_server/AsyncServer.cpp
  )
 target_link_libraries (TelloSocketTest PUBLIC ${CMAKE_PROJECT_NAME} ${PROJECT_BINARY_DIR}/lib/libgtestd.a pthread)
+
+
+add_executable(MovementCommandsManagerTest
+  ${CMAKE_SOURCE_DIR}/src/tello_telemetry/utils/movement_commands/test/movement_commands_manager_test.cpp
+  ${CMAKE_SOURCE_DIR}/src/tello_telemetry/utils/movement_commands/test/MovementCommandsManagerTest.cpp
+  ${CMAKE_SOURCE_DIR}/src/tello_telemetry/utils/movement_commands/MovementCommandsManager.cpp
+ )
+ target_include_directories(MovementCommandsManagerTest PUBLIC
+ ${CMAKE_SOURCE_DIR}/src/tello_telemetry/utils/movement_commands/test/
+ ${CMAKE_SOURCE_DIR}/src/tello_telemetry/utils/movement_commands/
+ )
+target_link_libraries (MovementCommandsManagerTest PUBLIC ${CMAKE_PROJECT_NAME} ${PROJECT_BINARY_DIR}/lib/libgtestd.a pthread)
