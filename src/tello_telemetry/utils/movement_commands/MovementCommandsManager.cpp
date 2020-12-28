@@ -1,12 +1,24 @@
 #include "MovementCommandsManager.hpp"
 
-bool MovementCommandsManager::SetMovementCommand(Movements movement, float amount)
-{ //Accept only values between 0 to 100.
-    if (amount < 0 || amount > 100)
-        return false;
+namespace tello_protocol
+{
+    const std::unordered_map<Sticks, float> &MovementCommandsManager::GetStickMovements() const
+    {
+        return m_SticksDict;
+    }
 
-    std::cout << __PRETTY_FUNCTION__ << movement_to_string(movement).c_str() <<"\n";
-    /* 
+    bool MovementCommandsManager::SetMovementCommand(Movements movement, float amount)
+    {
+        /**
+         * These movements imitate stick movements, hence  'amount' is how much stick was given to the desired direction
+         * This function accept only values between 0 to 100.
+        **/
+
+        if (amount < 0 || amount > 100)
+            return false;
+
+        std::cout << __PRETTY_FUNCTION__ << movement_to_string(movement).c_str() << "\n";
+        /* 
        def up(self, val):
         """Up tells the drone to ascend. Pass in an int from 0-100."""
         log.info('up(val=%d)' % val)
@@ -48,52 +60,47 @@ bool MovementCommandsManager::SetMovementCommand(Movements movement, float amoun
         log.info('counter_clockwise(val=%d)' % val)
         self.left_x = val / 100.0 * -1
          */
-    switch (movement)
-    {
-    case Movements::BACKWARD:
-        // Backward tells the drone to go in reverse. Pass in an int from 0-100.
-        set_backward(amount);
-        return true;
-        break;
+        switch (movement)
+        {
+        case Movements::BACKWARD:
+            // Backward tells the drone to go in reverse. Pass in an int from 0-100.
+            set_backward(amount);
+            return true;
+            break;
 
-    default:
-        return false;
-        break;
+        default:
+            return false;
+            break;
+        }
     }
-}
 
-void MovementCommandsManager::set_backward(float amount)
-{
-    /* 
+    void MovementCommandsManager::set_backward(float amount)
+    {
+        /* 
     Backward movements interpreted via right stick, in Y axes (Movements are stick-wise) 
     */
 
-    /* 
+        /* 
         def backward(self, val):
         """Backward tells the drone to go in reverse. Pass in an int from 0-100."""
         log.info('backward(val=%d)' % val)
         self.right_y = val / 100.0 * -1
          */
-    std::cout << "Setting backward(" << amount << ")\n";
-    m_SticksDict[Sticks::RIGHT_Y] = amount / 100 * -1;
-}
-
-MovementCommandsManager::MovementCommandsManager(/* args */)
-{
-    std::cout << __PRETTY_FUNCTION__ << "::" << __LINE__ << "::Initiated";
-
-    for (int possible_stick_movement = Movements::FORWARD; possible_stick_movement != Movements::COUNTER_CLOCKWISE; possible_stick_movement++)
-    {
-        Movements movement = static_cast<Movements>(possible_stick_movement);
-        m_MovementsDict[movement] = 0;
+        std::cout << "Setting backward(" << amount << ")\n";
+        m_SticksDict[Sticks::RIGHT_Y] = amount / 100 * -1;
     }
-    for (int possible_stick_movement = Sticks::RIGHT_Y; possible_stick_movement != Sticks::LEFT_X; possible_stick_movement++)
-    {
-        Sticks movement = static_cast<Sticks>(possible_stick_movement);
-        m_SticksDict[movement] = 0;
-    }
-}
 
-MovementCommandsManager::~MovementCommandsManager()
-{
-}
+    MovementCommandsManager::MovementCommandsManager(/* args */)
+    {
+        std::cout << __PRETTY_FUNCTION__ << "::" << __LINE__ << "::Initiated";
+        for (int possible_stick_movement = Sticks::RIGHT_Y; possible_stick_movement != Sticks::LEFT_X; possible_stick_movement++)
+        {
+            Sticks movement = static_cast<Sticks>(possible_stick_movement);
+            m_SticksDict[movement] = STICK_NEUTRAL_VALUE;
+        }
+    }
+
+    MovementCommandsManager::~MovementCommandsManager()
+    {
+    }
+} // namespace tello_protocol
