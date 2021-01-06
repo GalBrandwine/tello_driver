@@ -50,6 +50,7 @@ add_executable(MovementCommandsManagerTest
   ${CMAKE_SOURCE_DIR}/src/tello_telemetry/utils/movement_commands/MovementsToPacketConverter.cpp
  )
  target_include_directories(MovementCommandsManagerTest PUBLIC
+ ${CMAKE_SOURCE_DIR}/lib/spdlog/include
  ${CMAKE_SOURCE_DIR}/src/tello_telemetry/utils/movement_commands/test/
  ${CMAKE_SOURCE_DIR}/src/tello_telemetry/utils/movement_commands/
  ${CMAKE_SOURCE_DIR}src/packet_parser/

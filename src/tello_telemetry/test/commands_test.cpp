@@ -17,6 +17,13 @@ TEST(WetTelloCommandTest, TrySendRecieveConnReq)
     std::cout << "Done " << testing::UnitTest::GetInstance()->current_test_info()->name() << std::endl;
 }
 
+TEST(WetTelloSticksCommandTest, TakeoffAndMoveForward)
+{
+    TelloDriver tello(spdlog::level::debug);
+    tello.Connect();
+    EXPECT_TRUE(tello.WaitForConnection(10));
+    std::cout << "Done " << testing::UnitTest::GetInstance()->current_test_info()->name() << std::endl;
+}
 // tello.GetTelloTelemetry().StopListening();
 // TearDownTestCase();
 

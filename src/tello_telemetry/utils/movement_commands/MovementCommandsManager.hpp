@@ -11,7 +11,8 @@ namespace tello_protocol
         RIGHT_Y = 0,
         RIGHT_X,
         LEFT_Y,
-        LEFT_X
+        LEFT_X,
+        FAST_MODE
     };
 
     enum Movements
@@ -26,8 +27,9 @@ namespace tello_protocol
         COUNTER_CLOCKWISE
 
     };
-    
-    static int STICK_NEUTRAL_VALUE = 1024;
+
+    static int STICK_NEUTRAL_VALUE = 0;
+    static int STICK_NEUTRAL_CONVERTION_VALUE = 1024;
     static const std::string movement_to_string(Movements movement)
     {
         switch (movement)
@@ -67,6 +69,7 @@ namespace tello_protocol
     public:
         const std::unordered_map<Sticks, float> &GetStickMovements() const;
         bool SetMovementCommand(Movements, float);
+        bool SetFastMode(bool);
 
         MovementCommandsManager(/* args */);
         ~MovementCommandsManager();

@@ -40,7 +40,7 @@ TEST(StickMovementsConverter, PacketEmptynessTest)
     ASSERT_FALSE(converter.Convert(manager.GetStickMovements(), pkt));
 }
 
-TEST(StickMovementsConverter, PacketEmptynessTest)
+TEST(StickMovementsConverter, ConvertStickMovementsToPacketTest)
 {
     /*************************************************************
      * Test converted stick movements, if the packet looks like It 
@@ -57,5 +57,17 @@ TEST(StickMovementsConverter, PacketEmptynessTest)
     auto pkt = tello_protocol::Packet(tello_protocol::STICK_CMD, 0x60);
     converter.Convert(manager.GetStickMovements(), pkt);
 
-    ASSERT_FALSE();
+    // Representation of the data as it should be in bits.
+    // Decimal: 8800389952512
+    // Hex: 0x801001df400
+
+    auto log_header_logger = spdlog::stdout_color_mt("log_header_message");
+    log_header_logger->info("Converted Sticks command: {}", spdlog::to_hex(pkt.GetBuffer()));
+
+    auto test = 8800389952512;
+    // Data without timestamp
+    char data[8];
+    std::memcpy(&data, &test, 5);
+    auto hexdata = pkt.GetData().substr(0, 5);
+    ASSERT_EQ(std::memcmp(data, hexdata.c_str(), 5), 0);
 }

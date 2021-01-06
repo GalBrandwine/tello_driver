@@ -26,9 +26,9 @@ Not all TelloPy cabapilities were implemented.
 ### Command sending
 
 - [x] Send conn_req **(Port 9617)**
-- [ ] takeoff
+- [x] takeoff
 - [ ] throw_and_go
-- [ ] land
+- [x] land
 - [ ] palm_land
 - [ ] get_alt_limit **Tested**
 - [ ] set_alt_limit **Tested**
@@ -77,6 +77,19 @@ Not all TelloPy cabapilities were implemented.
 ### Video receiving
 
 - [ ] Receive video
+
+### Packet parsing
+
+- [ ] GetTime
+- [x] AddTime
+- [x] Fixup
+- [x] GetBuffer
+- [x] GetBufferSize
+- [x] GetData // Copy the data
+- [x] AddByte
+- [x] AddInt
+- [x] AddFloat
+- [x] addInt16 // Member
 
 ## Installation
 

@@ -124,33 +124,23 @@ namespace tello_protocol
         AddByte(ch[2]);
         AddByte(ch[3]);
     }
-    void Packet::AddTime(const tm *time)
+    void Packet::AddTime()
     {
-        addInt16(time->tm_hour);
-        addInt16(time->tm_min);
-        addInt16(time->tm_sec);
-        addInt16(0); // (int(time.microsecond/1000) & 0xff)
-        addInt16(0); // ((int(time.microsecond/1000) >> 8) & 0xff)
-    }
-    std::unique_ptr<tm *> Packet::GetTime(unsigned char *buff) const
-    {
-        if (buff == nullptr)
-        {
-            auto data = GetData();
-            buff = (unsigned char *)data.substr(0, data.length()).c_str();
-        }
+        using namespace std::chrono;
+        auto now_hr = time_point_cast<hours>(system_clock::now());
+        auto now_min = time_point_cast<minutes>(system_clock::now());
+        auto now_sec = time_point_cast<seconds>(system_clock::now());
+        auto now_ms = time_point_cast<milliseconds>(system_clock::now());
 
-        uint16_t hour = int16(buff[0], buff[1]);
-        uint16_t min = int16(buff[2], buff[3]);
-        uint16_t sec = int16(buff[4], buff[5]);
+        auto temp_hr = short(now_hr.time_since_epoch().count() % 24);
+        auto temp_min = short(now_min.time_since_epoch().count() % 60);
+        auto temp_sec = short(now_sec.time_since_epoch().count() % 60);
+        auto temp_ms = short(now_ms.time_since_epoch().count() % 1000);
 
-        auto timenow = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
-        tm *gmtm = gmtime(&timenow);
-
-        gmtm->tm_hour = hour;
-        gmtm->tm_min = min;
-        gmtm->tm_sec = sec;
-
-        return std::make_unique<tm *>(gmtm);
+        addInt16(temp_hr);
+        addInt16(temp_min);
+        addInt16(temp_sec);
+        addInt16(temp_ms); // (int(time.microsecond/1000) & 0xff)
+        addInt16(0);       // ((int(time.microsecond/1000) >> 8) & 0xff)
     }
 }; // namespace tello_protocol

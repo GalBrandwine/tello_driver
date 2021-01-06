@@ -7,12 +7,17 @@ namespace tello_protocol
         return m_SticksDict;
     }
 
+    bool MovementCommandsManager::SetFastMode(bool mode)
+    {
+        m_SticksDict[Sticks::FAST_MODE] = mode;
+    }
+
+    /**
+     * These movements imitate stick movements, hence  'amount' is how much stick was given to the desired direction
+     * This function accept only values between 0 to 100.
+    **/
     bool MovementCommandsManager::SetMovementCommand(Movements movement, float amount)
     {
-        /**
-         * These movements imitate stick movements, hence  'amount' is how much stick was given to the desired direction
-         * This function accept only values between 0 to 100.
-        **/
 
         if (amount < 0 || amount > 100)
             return false;
@@ -74,11 +79,12 @@ namespace tello_protocol
         }
     }
 
+    /**  
+     * Backward movements interpreted via right stick, in Y axes (Movements are stick-wise),
+     * Backward tells the drone to go in reverse. Pass in an int from 0-100.
+    **/
     void MovementCommandsManager::set_backward(float amount)
     {
-        /* 
-    Backward movements interpreted via right stick, in Y axes (Movements are stick-wise) 
-    */
 
         /* 
         def backward(self, val):
@@ -93,11 +99,13 @@ namespace tello_protocol
     MovementCommandsManager::MovementCommandsManager(/* args */)
     {
         std::cout << __PRETTY_FUNCTION__ << "::" << __LINE__ << "::Initiated";
-        for (int possible_stick_movement = Sticks::RIGHT_Y; possible_stick_movement != Sticks::LEFT_X; possible_stick_movement++)
+        for (int possible_stick_movement = Sticks::RIGHT_Y; possible_stick_movement != Sticks::FAST_MODE; possible_stick_movement++)
         {
             Sticks movement = static_cast<Sticks>(possible_stick_movement);
             m_SticksDict[movement] = STICK_NEUTRAL_VALUE;
         }
+
+        m_SticksDict[Sticks::FAST_MODE] = false;
     }
 
     MovementCommandsManager::~MovementCommandsManager()
