@@ -53,17 +53,17 @@ TEST(StickMovementsConverter, ConvertStickMovementsToPacketTest)
 
     manager.SetMovementCommand(tello_protocol::Movements::BACKWARD, 10);
 
-    // Test
+    // Run
     auto pkt = tello_protocol::Packet(tello_protocol::STICK_CMD, 0x60);
     converter.Convert(manager.GetStickMovements(), pkt);
-
-    // Representation of the data as it should be in bits.
-    // Decimal: 8800389952512
-    // Hex: 0x801001df400
 
     auto log_header_logger = spdlog::stdout_color_mt("log_header_message");
     log_header_logger->info("Converted Sticks command: {}", spdlog::to_hex(pkt.GetBuffer()));
 
+    // Test
+    // Representation of the data as it should be in bits.
+    // Decimal: 8800389952512
+    // Hex: 0x801001df400
     auto test = 8800389952512;
     // Data without timestamp
     char data[8];

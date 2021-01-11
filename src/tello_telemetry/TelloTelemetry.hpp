@@ -12,7 +12,10 @@
 #include <thread>
 #include "TelloCommander.hpp"
 #include "utils/telemetry_data/TelemetryData.hpp"
+
+#define DISCONNECT_TIMEOUT_MS 1000
 using namespace std::chrono_literals;
+
 namespace tello_protocol
 {
     class TelloTelemetry
@@ -20,7 +23,6 @@ namespace tello_protocol
     public:
         const int GetLogHeaderId() const;
         const int AmountOfBytesReceived() const;
-        // void SetTelloCommander(std::shared_ptr<tello_protocol::TelloCommander>);
         void SetSocket(std::shared_ptr<IReciever>);
 
         TelloTelemetry(std::shared_ptr<spdlog::logger>, spdlog::level::level_enum lvl = spdlog::level::info);
@@ -40,11 +42,14 @@ namespace tello_protocol
         std::shared_ptr<LogData> GetLogData() const;
         void SetLogData(std::shared_ptr<LogData>);
 
+        bool IsDroneConnected() const;
+        bool IsAnyDataReceived() const;
         bool IsConnReqAckReceived() const;
         bool IsLogHeaderReceived() const;
         void SetLogHeaderReceived();
 
     private:
+        void update_last_packet_recieved_timestamp();
         void reset_bytes_received();
         std::shared_ptr<tello_protocol::TelloCommander> m_TelloCommander;
         std::string m_BuildDate, m_DJI_LOG_VERSION;
@@ -54,12 +59,14 @@ namespace tello_protocol
         bool process_data(const std::vector<unsigned char> &);
         std::shared_ptr<IReciever> m_socket;
         bool m_IsLogHeaderReceived = false;
+        bool m_IsConnectedToDrone = false;
         bool m_keep_receiving = true;
         bool m_anyDataReceived = false;
         bool m_connReqAckRecieved = false;
         int m_BytesReceived, m_IsLogHeaderReceivedId;
         std::thread m_Listener;
         std::vector<unsigned char> m_buffer; // = std::vector<unsigned char>(1024); //std::vector<unsigned char>
+        std::chrono::milliseconds m_time_of_last_packet_recieved;
     };
 
 } // namespace tello_protocol

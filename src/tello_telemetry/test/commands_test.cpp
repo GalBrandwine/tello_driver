@@ -17,58 +17,108 @@ TEST(WetTelloCommandTest, TrySendRecieveConnReq)
     std::cout << "Done " << testing::UnitTest::GetInstance()->current_test_info()->name() << std::endl;
 }
 
-TEST(WetTelloSticksCommandTest, TakeoffAndMoveForward)
+/**
+* Test if driver allert abount drone disconnection.
+* Manually turn off the drone after connection
+**/
+TEST(WetTelloSticksCommandTest, TestDisconnectionAllert)
 {
+    // Setup
     TelloDriver tello(spdlog::level::debug);
+
+    // Run
     tello.Connect();
-    EXPECT_TRUE(tello.WaitForConnection(10));
+    if (!tello.WaitForConnection(10))
+    {
+        tello.GetLogger()->error("Couldn't Connect to drone.");
+        ASSERT_TRUE(false);
+    }
+
+    // Test
+    int counter = 100;
+    bool res = true;
+    while (counter-- > 0 && res == true)
+    {
+        res = tello.GetTelloTelemetry().IsDroneConnected();
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    }
+
+    ASSERT_TRUE(res);
+
     std::cout << "Done " << testing::UnitTest::GetInstance()->current_test_info()->name() << std::endl;
 }
-// tello.GetTelloTelemetry().StopListening();
-// TearDownTestCase();
+/**
+ * Test if drone recieves neutral stick commands. 
+ * E.G: 
+ *  No movements. Just keep alive heartbeat.
+ *  If everything work properly. Drone's LED suppose to blink with GREEN
+ */
+TEST(WetTelloSticksCommandTest, SendNeutralStickCommand)
+{
+    // Setup
+    TelloDriver tello(spdlog::level::debug);
 
-// using asio::ip::udp;
+    // Run
+    tello.Connect();
+    if (!tello.WaitForConnection(10))
+    {
+        tello.GetLogger()->error("Couldn't Connect to drone.");
+        ASSERT_TRUE(false);
+    }
 
-// asio::io_service io_service_; // Manages IO for this socket
-// unsigned short port = 9000;
-// /*
-// Packets from the drone suppose to arrive at this (address,port): ('',9000)
-// Packets are being send from client to drone to this (address,port) = ('192.168.10.1', 8889)
-// */
-// unsigned short drone_port = 8889;
-// std::string drone_ip = "192.168.10.1";
-// udp::endpoint remote_endpoint_(asio::ip::address_v4::from_string(drone_ip), drone_port);
+    // Test
+    int counter = 100;
+    while (counter-- > 0)
+    {
+        auto droneMode = tello.GetTelloTelemetry().GetFlightData()->GetFlightMode();
+        tello.GetLogger()->info("DroneMode: " + std::to_string(droneMode));
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    }
 
-// udp::socket tello_socket(io_service_, udp::endpoint(udp::v4(), port)); // The socket
+    std::cout << "Done " << testing::UnitTest::GetInstance()->current_test_info()->name() << std::endl;
+}
 
-// //Run
-// auto pkt = tello_protocol::Packet("conn_req:\x96\x17");
-// std::cout << pkt << std::endl;
-// tello_socket.send_to(asio::buffer(pkt.GetBuffer()), remote_endpoint_);
+/**
+ * WARNING: this test envolve drone movements!
+ * 1. Takeoff
+ * 2. Move backward 1% stick, for 1 sec.
+ * 3. Land
+**/
+TEST(WetTelloSticksCommandTest, SendBackwardStickCommand)
+{
+    // Setup
+    TelloDriver tello(spdlog::level::debug);
 
-// // Test
-// using namespace std::chrono_literals;
-// bool keep_sending = true;
-// auto buffer_ = std::vector<unsigned char>(1024);
-// // It is known that conn_req answer is in size 11 bytes
-// size_t r = 0;
+    // Run
+    tello.Connect();
+    if (!tello.WaitForConnection(10))
+    {
+        tello.GetLogger()->error("Couldn't Connect to drone.");
+        ASSERT_TRUE(false);
+    }
 
-// tello_socket.send_to(asio::buffer(pkt.GetBuffer()), remote_endpoint_);
-// std::this_thread::sleep_for(0.5s);
+    // Test
+    tello.Takeoff();
+    std::this_thread::sleep_for(std::chrono::seconds(5));
+    tello.Backward(1);
 
-// while (keep_sending)
-// {
-//     r = tello_socket.receive(asio::buffer(buffer_));
-//     if (r == 11)
-//         keep_sending = false;
-// }
+    int counter = 10;
+    while (counter-- > 0)
+    {
+        ASSERT_TRUE(tello.GetTelloTelemetry().IsDroneConnected());
+        auto droneMode = tello.GetTelloTelemetry().GetFlightData()->GetFlightMode();
+        tello.GetLogger()->info("DroneMode: " + std::to_string(droneMode));
 
-// // "conn_ack:\x96\x17" (Sniffed using wireshark)
-// std::vector<unsigned char> conn_ack_from_drone = {0x63, 0x6f, 0x6e, 0x6e, 0x5f, 0x61, 0x63, 0x6b, 0x3a, 0x96, 0x17};
+        auto pos = tello.GetPos();
+        tello.GetLogger()->info("********************************pos: " + std::to_string(pos.x) + "," + std::to_string(pos.y) + "," + std::to_string(pos.z));
 
-// int index = 0;
-// for (auto &letter : conn_ack_from_drone)
-// {
-//     ASSERT_EQ(buffer_[index], letter);
-//     index++;
-// }
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    }
+
+    tello.Backward(0);
+    std::this_thread::sleep_for(std::chrono::seconds(5));
+    tello.Land();
+    std::this_thread::sleep_for(std::chrono::seconds(5));
+
+    std::cout << "Done " << testing::UnitTest::GetInstance()->current_test_info()->name() << std::endl;
+}

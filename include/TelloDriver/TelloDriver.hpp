@@ -23,10 +23,16 @@ using asio::ip::udp;
 class TelloDriver
 {
 public:
+    /**
+    * Movements section
+    **/
+    void Backward(int);
+    void Forward(int);
     const float GetAttLimit();
     const short GetAltLimit();
     const short GetWifiStrength();
     const tello_protocol::Vec3 GetPos();
+    std::shared_ptr<spdlog::logger> GetLogger() { return m_BaseLogger; };
     TelloDriver(spdlog::level::level_enum lvl = spdlog::level::info);
     ~TelloDriver();
     tello_protocol::TelloCommander &GetTelloCommander();
@@ -40,4 +46,7 @@ private:
     tello_protocol::TelloCommander m_TelloCommander;
     tello_protocol::TelloTelemetry m_TelloTelemetry;
     std::shared_ptr<spdlog::logger> m_BaseLogger;
+    void setStickCommandsThread();
+    bool m_KeepRunning = true;
+    std::thread m_StickCommandsSendingThread;
 };

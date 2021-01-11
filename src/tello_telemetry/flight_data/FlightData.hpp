@@ -97,12 +97,12 @@ namespace tello_protocol
         double m_front_lsc = -1;
         double m_front_out = -1;
         double m_gravity_state = -1;
-        double m_ground_speed = -1;
+        float m_ground_speed = -1;
         double m_height = -1;
         double m_imu_calibration_state = -1;
         double m_imu_state = -1;
         double m_light_strength = -1;
-        double m_north_speed = -1;
+        float m_north_speed = -1;
         double m_outage_recording = -1;
         double m_power_state = -1;
         double m_pressure_state = -1;

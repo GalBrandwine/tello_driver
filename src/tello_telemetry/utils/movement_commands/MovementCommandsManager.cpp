@@ -10,6 +10,7 @@ namespace tello_protocol
     bool MovementCommandsManager::SetFastMode(bool mode)
     {
         m_SticksDict[Sticks::FAST_MODE] = mode;
+        return true;
     }
 
     /**

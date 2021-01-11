@@ -33,6 +33,7 @@ int main()
         // So far I've seen 2 modes: 1, and 6.
         // MODE 1: NOT OK
         // MODE 6: OK?
+        // MODE 11: MOVING?
         // auto flightMode = tello.GetTelloTelemetry().GetFlightData()->GetFlightMode();
         // std::cout << "flightMode: " << flightMode << '\n';
 

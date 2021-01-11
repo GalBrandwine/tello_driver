@@ -28,8 +28,8 @@ namespace tello_protocol
 
     };
 
-    static int STICK_NEUTRAL_VALUE = 0;
-    static int STICK_NEUTRAL_CONVERTION_VALUE = 1024;
+    static short int STICK_NEUTRAL_VALUE = 0;
+    static short int STICK_NEUTRAL_CONVERTION_VALUE = 1024;
     static const std::string movement_to_string(Movements movement)
     {
         switch (movement)

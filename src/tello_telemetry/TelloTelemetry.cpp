@@ -76,8 +76,21 @@ namespace tello_protocol
         return true;
     }
 
+    void TelloTelemetry::update_last_packet_recieved_timestamp()
+    {
+        const auto p1 = std::chrono::system_clock::now();
+        auto stamp_ms = std::chrono::duration_cast<std::chrono::milliseconds>(p1.time_since_epoch());
+        auto duration = stamp_ms - m_time_of_last_packet_recieved;
+        std::cout << "Milisec since last recieved packet [ms]: " << std::to_string(duration.count()) << '\n';
+        m_time_of_last_packet_recieved = stamp_ms;
+    }
+
     void TelloTelemetry::Listener()
     {
+        std::chrono::_V2::system_clock::time_point p1;
+        std::chrono::milliseconds time_now;
+        std::chrono::milliseconds duration;
+
         while (m_keep_receiving) // && !is_log_header_received
         {
             if (m_socket != nullptr)
@@ -87,16 +100,33 @@ namespace tello_protocol
             }
 
             m_logger->debug("Bytes received: {}", m_BytesReceived);
+
+            p1 = std::chrono::system_clock::now();
+            time_now = std::chrono::duration_cast<std::chrono::milliseconds>(p1.time_since_epoch());
+
             if (m_BytesReceived > 0)
             {
+                m_IsConnectedToDrone = true;
+                m_time_of_last_packet_recieved = time_now;
+                m_anyDataReceived = true;
                 std::vector<unsigned char> data(m_buffer.begin(), m_buffer.begin() + m_BytesReceived);
                 if (!process_data(data))
                 {
                     m_logger->error("Could not process data! Dumping:\n {DATA SUPPOSE TO BE HERE}");
                 }
             }
+
+            duration = time_now - m_time_of_last_packet_recieved;
+            m_logger->debug("Milisec since last recieved packet [ms]: " + std::to_string(duration.count()));
+
+            if (m_anyDataReceived && duration.count() > DISCONNECT_TIMEOUT_MS)
+            {
+                m_IsConnectedToDrone = false;
+                m_logger->warn("Lost connection with drone more than: " + std::to_string(DISCONNECT_TIMEOUT_MS) + "[ms]!");
+            }
+
             reset_bytes_received();
-            std::this_thread::sleep_for(200ms);
+            std::this_thread::sleep_for(100ms);
         }
     }
 
@@ -108,6 +138,14 @@ namespace tello_protocol
     const int TelloTelemetry::AmountOfBytesReceived() const
     {
         return m_BytesReceived;
+    }
+    bool TelloTelemetry::IsDroneConnected() const
+    {
+        return m_IsConnectedToDrone;
+    }
+    bool TelloTelemetry::IsAnyDataReceived() const
+    {
+        return m_anyDataReceived;
     }
 
     // This capability is aborted duo to SOLID principles.
@@ -187,7 +225,8 @@ namespace tello_protocol
         m_logger->set_level(lvl);
         m_logger->info(m_logger->name() + " Initiated.");
 
-        // m_buffer.reserve(1024);
+        const auto p1 = std::chrono::system_clock::now();
+        m_time_of_last_packet_recieved = std::chrono::duration_cast<std::chrono::milliseconds>(p1.time_since_epoch());
         m_buffer = std::vector<unsigned char>(1024);
     }
 

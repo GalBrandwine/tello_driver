@@ -1,6 +1,39 @@
 #include "TelloCommander.hpp"
 namespace tello_protocol
 {
+    /**
+     * Movements section
+    **/
+
+    void TelloCommander::Backward(int amount)
+    {
+        assert(amount >= 0 && amount <= 100);
+        if (!m_MovementCommandsManager.SetMovementCommand(tello_protocol::BACKWARD, amount))
+        {
+            m_logger->warn("Could not set " + std::string(__FUNCTION__) + "(" + std::to_string(amount) + ")");
+        }
+    }
+    void TelloCommander::Forward(int amount)
+    {
+        assert(amount >= 0 && amount <= 100);
+        if (!m_MovementCommandsManager.SetMovementCommand(tello_protocol::FORWARD, amount))
+        {
+            m_logger->warn("Could not set " + std::string(__FUNCTION__) + "(" + std::to_string(amount) + ")");
+        }
+    }
+    bool TelloCommander::SendStickCommands()
+    {
+        auto pkt = tello_protocol::Packet(tello_protocol::STICK_CMD, 0x60);
+        auto &mvmnts = m_MovementCommandsManager.GetStickMovements();
+        if (!m_MovementsToPacketConverter.Convert(mvmnts, pkt))
+        {
+            m_logger->error("Could not convert stick movements! Something went wrong.");
+            return false;
+        }
+        m_socket->Send(pkt.GetBuffer());
+        return true;
+    }
+
     void TelloCommander::SetAltLimitReq(int limit)
     {
         m_logger->debug("Set altitude limit={} (cmd=0x{:x} seq=0x{:x})", limit, tello_protocol::SET_ALT_LIMIT_CMD, 0x01e4);
@@ -15,7 +48,7 @@ namespace tello_protocol
     {
         m_logger->debug("Sending takeoff");
         SetAltLimitReq(30);
-        
+
         auto pkt = tello_protocol::Packet(tello_protocol::TAKEOFF_CMD);
         pkt.Fixup();
         m_socket->Send(pkt.GetBuffer());
@@ -31,33 +64,6 @@ namespace tello_protocol
         m_socket->Send(pkt.GetBuffer());
     }
 
-    /* 
-        def land(self):
-        """Land tells the drone to come in for landing."""
-        log.info('land (cmd=0x%02x seq=0x%04x)' % (LAND_CMD, self.pkt_seq_num))
-        pkt = Packet(LAND_CMD)
-        pkt.add_byte(0x00)
-        pkt.fixup()
-        return self.send_packet(pkt)
-
-
-        def takeoff(self):
-        """Takeoff tells the drones to liftoff and start flying."""
-        log.info('set altitude limit 30m')
-        pkt = Packet(SET_ALT_LIMIT_CMD)
-        log.info(pkt.get_buffer())
-        pkt.add_byte(0x1e)  # 30m
-        log.info(pkt.get_buffer())
-        pkt.add_byte(0x00)
-        log.info(pkt.get_buffer())
-        self.send_packet(pkt)
-        log.info('takeoff (cmd=0x%02x seq=0x%04x)' % (TAKEOFF_CMD, self.pkt_seq_num))
-        pkt = Packet(TAKEOFF_CMD)
-        log.info(pkt.get_buffer())
-        pkt.fixup()
-        log.info(pkt.get_buffer())
-        return self.send_packet(pkt)
-     */
     void TelloCommander::SendAckLog(const int id)
     {
         auto pkt = tello_protocol::Packet(tello_protocol::LOG_HEADER_MSG, 0x50);
@@ -68,8 +74,8 @@ namespace tello_protocol
         pkt.Fixup();
         m_logger->info("Sending conn_ack msg: {}", spdlog::to_hex(pkt.GetBuffer()));
         m_socket->Send(pkt.GetBuffer());
-        // tello_socket.send_to(asio::buffer(pkt.GetBuffer()), remote_endpoint_);
     }
+
     void TelloCommander::SendConnReq()
     {
         auto conn_req = tello_protocol::Packet("conn_req:\x96\x17");
@@ -79,7 +85,7 @@ namespace tello_protocol
     {
         m_socket = socket;
     }
-    TelloCommander::TelloCommander(std::shared_ptr<spdlog::logger> logger,spdlog::level::level_enum lvl)
+    TelloCommander::TelloCommander(std::shared_ptr<spdlog::logger> logger, spdlog::level::level_enum lvl)
         : m_logger(logger)
     {
         m_logger->info(m_logger->name() + " Initiated.");

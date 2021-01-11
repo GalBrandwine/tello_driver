@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(TelloDriver VERSION "0.0.17")
+project(TelloDriver VERSION "0.0.18")
 
 set(CMAKE_CXX_STANDARD 14)
 
@@ -12,7 +12,8 @@ set(TELLO_TELEMETRY_SOURES
   ${CMAKE_SOURCE_DIR}/src/tello_telemetry/TelloTelemetry.cpp
   ${CMAKE_SOURCE_DIR}/src/tello_telemetry/TelloCommander.cpp
   ${CMAKE_SOURCE_DIR}/src/tello_telemetry/utils/TelloSocket.cpp
-  ${CMAKE_SOURCE_DIR}/src/tello_telemetry/utils/async_server/AsyncServer.cpp
+  ${CMAKE_SOURCE_DIR}/src/tello_telemetry/utils/movement_commands/MovementCommandsManager.cpp
+  ${CMAKE_SOURCE_DIR}/src/tello_telemetry/utils/movement_commands/MovementsToPacketConverter.cpp
 )
 
 include_directories(

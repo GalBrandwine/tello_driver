@@ -1,6 +1,20 @@
 
 #include "TelloDriver/TelloDriver.hpp"
 
+/**
+ * Movements section
+**/
+
+void TelloDriver::Backward(int amount)
+{
+    assert(amount >= 0 && amount <= 100);
+    m_TelloCommander.Backward(amount);
+}
+void TelloDriver::Forward(int amount)
+{
+    assert(amount >= 0 && amount <= 100);
+    m_TelloCommander.Forward(amount);
+}
 const float TelloDriver::GetAttLimit()
 {
     return m_TelloTelemetry.GetFlightData()->GetAttLimit();
@@ -52,7 +66,6 @@ bool TelloDriver::WaitForConnection(int timeout)
     fsec fs;
     auto t0 = Time::now();
 
-
     while (!m_TelloTelemetry.IsConnReqAckReceived())
     {
         m_TelloCommander.SendConnReq();
@@ -70,7 +83,27 @@ bool TelloDriver::WaitForConnection(int timeout)
 
     // After sending back ack. the drone will not sent LOG_HEADER_MSG anymore.
     m_TelloCommander.SendAckLog(m_TelloTelemetry.GetLogHeaderId());
+    m_StickCommandsSendingThread = std::thread(&TelloDriver::setStickCommandsThread, this);
     return true;
+}
+
+void TelloDriver::setStickCommandsThread()
+{
+    std::string fnc_name(__PRETTY_FUNCTION__);
+    m_BaseLogger->info(fnc_name + " Has started.");
+
+    while (m_KeepRunning)
+    {
+        if (!m_TelloTelemetry.IsAnyDataReceived())
+        {
+            m_BaseLogger->info("No bytes received yet. So not sending stickcommands.");
+            std::this_thread::sleep_for(std::chrono::milliseconds(100));
+            continue;
+        }
+        m_TelloCommander.SendStickCommands();
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    }
+    m_BaseLogger->info(fnc_name + " Has finished.");
 }
 
 TelloDriver::TelloDriver(spdlog::level::level_enum lvl)
@@ -95,4 +128,8 @@ TelloDriver::TelloDriver(spdlog::level::level_enum lvl)
 TelloDriver::~TelloDriver()
 {
     m_BaseLogger->info(m_BaseLogger->name() + " Destructing!");
+    m_KeepRunning = false;
+    if (m_StickCommandsSendingThread.joinable())
+        m_StickCommandsSendingThread.join();
+    m_BaseLogger->info(m_BaseLogger->name() + " Destructed!");
 }

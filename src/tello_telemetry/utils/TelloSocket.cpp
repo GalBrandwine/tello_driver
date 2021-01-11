@@ -23,10 +23,12 @@ int TelloSocket::Receive(std::vector<unsigned char> &data)
     std::lock_guard<std::mutex> lock(m_sendM);
     if (m_is_bytes_received)
     {
-        std::copy(data_, data_ + m_bytes_recvd, data.begin());
+        int bytes_recvd = m_bytes_recvd;
+        m_bytes_recvd = 0;
+        std::copy(data_, data_ + bytes_recvd, data.begin());
         memset(data_, 0, sizeof(data_));
         do_receive();
-        return m_bytes_recvd;
+        return bytes_recvd;
     }
     return 0;
 }
