@@ -2,17 +2,41 @@
 #include "protocol.hpp"
 #include "log_data/LogNewMvoFeedback.hpp"
 #include "log_data/LogNewImuAttiFeedback.hpp"
+#include <mutex>
 #define ID_NEW_MVO_FEEDBACK 29
 #define ID_IMU_ATTI 2048
 
 namespace tello_protocol
 {
+    /**
+     * @brief LogData class preprocess raw data pefore extracting movements information out of it.
+     * Based on the [TelloPy](https://github.com/hanyazou/TelloPy/blob/develop-0.7.0/tellopy/_internal/protocol.py#L316) preprocess methods.
+     */
     class LogData
     {
     public:
-        LogImuAtti &GetLogImuAtti() { return m_LogImuAtti; };
-        LogNewMvoFeedback &GetLogMvo() { return m_LogMvoFeedback; };
-        void Update(const std::string &);
+        /**
+         * @brief Get the Log Imu Atti object
+         * 
+         * @return LogImuAtti& 
+         */
+        LogImuAtti &GetLogImuAtti();
+
+        /**
+         * @brief Get the Log Mvo object
+         * 
+         * @return LogNewMvoFeedback& 
+         */
+        LogNewMvoFeedback &GetLogMvo();
+
+        /**
+         * @brief Preprocess raw data before updating inner data containers (LogNewMvoFeedback and LogImuAtti)
+         * Based on the [TelloPy](https://github.com/hanyazou/TelloPy/blob/develop-0.7.0/tellopy/_internal/protocol.py#L316) preprocess methods.
+         * 
+         * @param data filled with raw bytes received in IReciever socket.
+         */
+        void Update(const std::vector<unsigned char> &data);
+
         LogData(std::shared_ptr<spdlog::logger>);
         ~LogData();
         friend std::ostream &operator<<(std::ostream &os, const LogData &dt)
@@ -23,6 +47,7 @@ namespace tello_protocol
         }
 
     private:
+        std::mutex m_log_data_mutex;
         std::shared_ptr<spdlog::logger> m_logger;
         int m_count = 0;
         std::vector<unsigned short> m_UnknownIDs;

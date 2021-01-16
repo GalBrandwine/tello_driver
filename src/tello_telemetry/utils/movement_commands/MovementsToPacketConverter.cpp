@@ -30,11 +30,11 @@ namespace tello_protocol
         auto packed_data = axe0 | axe1 | axe2 | axe3 | axe4;
 
         std::string s = std::to_string(packed_data);
-        
-        char pchar[sizeof(unsigned long long)];// = s.c_str();
-        std::memcpy(pchar,&packed_data,sizeof(packed_data));
-        std::cout << "data[int]=" << packed_data << "\n";
-        std::cout << "data[hex]=" << std::hex << packed_data << "\n";
+
+        char pchar[sizeof(unsigned long long)];
+        std::memcpy(pchar, &packed_data, sizeof(packed_data));
+        // std::cout << "data[int]=" << packed_data << "\n";
+        // std::cout << "data[hex]=" << std::hex << packed_data << "\n";
         // std::cout << "data[char*]=" << pchar << "\n";
 
         pktOut.AddByte(pchar[0]);
@@ -85,27 +85,32 @@ namespace tello_protocol
         m_axis[3] += 660.0f * stick_movements_dict.find(Sticks::LEFT_X)->second;
         m_axis[4] = bool(stick_movements_dict.find(Sticks::FAST_MODE)->second);
 
-        std::cout << "Stick commands [int]:"
-                  << " fast=" << m_axis[4]
-                  << " yaw=" << m_axis[3]
-                  << " thr=" << m_axis[2]
-                  << " pit=" << m_axis[1]
-                  << " rol=" << m_axis[0]
-                  << "\n";
+        // std::cout << "Stick commands [int]:"
+        //           << " fast=" << m_axis[4]
+        //           << " yaw=" << m_axis[3]
+        //           << " thr=" << m_axis[2]
+        //           << " pit=" << m_axis[1]
+        //           << " rol=" << m_axis[0]
+        //           << "\n";
 
-        std::cout << "Stick commands [hex]:"
-                  << " fast=" << std::hex << m_axis[4]
-                  << " yaw=" << std::hex << m_axis[3]
-                  << " thr=" << std::hex << m_axis[2]
-                  << " pit=" << std::hex << m_axis[1]
-                  << " rol=" << std::hex << m_axis[0]
-                  << "\n";
+        // std::cout << "Stick commands [hex]:"
+        //           << " fast=" << std::hex << m_axis[4]
+        //           << " yaw=" << std::hex << m_axis[3]
+        //           << " thr=" << std::hex << m_axis[2]
+        //           << " pit=" << std::hex << m_axis[1]
+        //           << " rol=" << std::hex << m_axis[0]
+        //           << "\n";
     }
 
     /**
-     * Convert stick movements into a packet according to tello_protocol. 
+     * @brief Convert stick movements into a packet according to tello_protocol. 
      * Assumes pktOut is empty. 
-    **/
+     * 
+     * @param[in] stick_movements_dict 
+     * @param[out] pktOut 
+     * @return true 
+     * @return false 
+     */
     bool MovementsToPacketConverter::Convert(const std::unordered_map<Sticks, float> &stick_movements_dict, Packet &pktOut)
     {
 

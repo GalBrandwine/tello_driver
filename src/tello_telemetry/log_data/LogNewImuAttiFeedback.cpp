@@ -12,7 +12,7 @@ namespace tello_protocol
     {
     }
 
-    void LogImuAtti::Update(const std::string &data, int count)
+    void LogImuAtti::Update(const std::vector<unsigned char> &data, int count)
     {
         //TODO: Add thread safety.
 

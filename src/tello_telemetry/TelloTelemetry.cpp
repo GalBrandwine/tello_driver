@@ -2,6 +2,33 @@
 
 namespace tello_protocol
 {
+    /**
+   * The subscription management methods.
+   */
+    void TelloTelemetry::Attach(IObserver *observer)
+    {
+        list_observer_.push_back(observer);
+    }
+    void TelloTelemetry::Detach(IObserver *observer)
+    {
+        list_observer_.remove(observer);
+    }
+
+    void TelloTelemetry::Notify()
+    {
+        std::list<IObserver *>::iterator iterator = list_observer_.begin();
+        HowManyObserver();
+        while (iterator != list_observer_.end())
+        {
+            (*iterator)->Update(m_recieved_data);
+            ++iterator;
+        }
+    }
+
+    void TelloTelemetry::HowManyObserver()
+    {
+        m_logger->debug("There are " + std::to_string(list_observer_.size()) + " observers in the list.\n");
+    }
 
     bool TelloTelemetry::process_data(const std::vector<unsigned char> &data)
     {
@@ -12,21 +39,21 @@ namespace tello_protocol
             m_connReqAckRecieved = true;
         }
 
-        auto cmd = uint16(received.GetBuffer()[5], received.GetBuffer()[6]);
-        // m_logger->debug(m_logger->name() + "::" + __FUNCTION__ + " cmd: {}", cmd);
+        unsigned short cmd;
+        std::memcpy(&cmd, &data[5], sizeof(unsigned short));
         if (cmd == tello_protocol::LOG_HEADER_MSG)
         {
-            m_logger->debug("LOG_HEADER_MSG received");
+            // m_logger->debug("LOG_HEADER_MSG received");
             // LOG HEADER MSG is the biggest log message.
             // Drone will continue to send log_header connection requests with incremental ID.
             // Until sending back to drone 'ack_conn'.
-            auto id = uint16(data[9], data[10]);
+            // m_LogHeaderReceivedId = uint16(data[9], data[10]);
 
-            SetBuildDate(received.GetBuffer().substr(28, 26));
+            // SetBuildDate(received.GetBuffer().substr(28, 26));
             // DJI LOG VERSION something like this: DJI_LOG_V3I��Rc
-            auto f = received.GetBuffer().find("DJI");
-            SetDJILogVersion(received.GetBuffer().substr(f, 15));
-            SetLogHeaderReceived();
+            // auto f = received.GetBuffer().find("DJI");
+            // SetDJILogVersion(received.GetBuffer().substr(f, 15));
+            // SetLogHeaderReceived();
         }
         else if (cmd == tello_protocol::LOG_DATA_MSG)
         {
@@ -35,7 +62,15 @@ namespace tello_protocol
             Is cmd  is LOG_DATA_MSG.
             It means that a LOG_DATA connections has been already assured. 
             */
-            GetLogData()->Update(received.GetBuffer().substr(10));
+            try
+            {
+                std::vector<unsigned char> trimmed(data.begin() + 10, data.end());
+                m_LogData->Update(trimmed);
+            }
+            catch (const std::out_of_range &e)
+            {
+                m_logger->error(e.what());
+            }
 
             // It is possible that a connection was open from a previous session.
             SetLogHeaderReceived();
@@ -55,7 +90,7 @@ namespace tello_protocol
             m_logger->debug("ATT_LIMIT_MSG received: {}", float(received.GetData()[1]));
             m_FlightData->SetAttLimit(received.GetData());
         }
-        if (cmd == LOW_BAT_THRESHOLD_MSG)
+        if (cmd == tello_protocol::LOW_BAT_THRESHOLD_MSG)
         {
             m_logger->debug("recv: low battery threshold: {}", received.GetData());
         }
@@ -76,26 +111,15 @@ namespace tello_protocol
         return true;
     }
 
-    void TelloTelemetry::update_last_packet_recieved_timestamp()
-    {
-        const auto p1 = std::chrono::system_clock::now();
-        auto stamp_ms = std::chrono::duration_cast<std::chrono::milliseconds>(p1.time_since_epoch());
-        auto duration = stamp_ms - m_time_of_last_packet_recieved;
-        std::cout << "Milisec since last recieved packet [ms]: " << std::to_string(duration.count()) << '\n';
-        m_time_of_last_packet_recieved = stamp_ms;
-    }
-
     void TelloTelemetry::Listener()
     {
         std::chrono::_V2::system_clock::time_point p1;
-        std::chrono::milliseconds time_now;
-        std::chrono::milliseconds duration;
+        std::chrono::milliseconds time_now, duration;
 
-        while (m_keep_receiving) // && !is_log_header_received
+        while (m_keep_receiving)
         {
             if (m_socket != nullptr)
             {
-
                 m_BytesReceived = m_socket->Receive(m_buffer);
             }
 
@@ -109,8 +133,15 @@ namespace tello_protocol
                 m_IsConnectedToDrone = true;
                 m_time_of_last_packet_recieved = time_now;
                 m_anyDataReceived = true;
-                std::vector<unsigned char> data(m_buffer.begin(), m_buffer.begin() + m_BytesReceived);
-                if (!process_data(data))
+
+                /**
+                 * @brief Pack data from sender, And notify all observers.
+                 * 
+                 */
+                m_recieved_data = std::vector<unsigned char>(m_buffer.begin(), m_buffer.begin() + m_BytesReceived);
+                Notify();
+
+                if (!process_data(m_recieved_data))
                 {
                     m_logger->error("Could not process data! Dumping:\n {DATA SUPPOSE TO BE HERE}");
                 }
@@ -154,10 +185,10 @@ namespace tello_protocol
     //     m_TelloCommander = telloCommander;
     // };
 
-    const int TelloTelemetry::GetLogHeaderId() const
-    {
-        return m_IsLogHeaderReceivedId;
-    };
+    // const int TelloTelemetry::GetLogHeaderId() const
+    // {
+    //     return m_LogHeaderReceivedId;
+    // };
     void TelloTelemetry::SetLogHeaderReceived()
     {
         m_IsLogHeaderReceived = true;
@@ -206,6 +237,16 @@ namespace tello_protocol
         m_logger->info("BUILD date: {};", m_BuildDate);
     }
     const std::string &TelloTelemetry::GetBuildDate() const { return m_BuildDate; }
+
+    void TelloTelemetry::StopListening()
+    {
+        m_keep_receiving = true;
+        if (m_Listener.joinable())
+        {
+            m_Listener.join();
+        }
+        m_logger->info(m_logger->name() + " Listener thread stopped");
+    }
 
     void TelloTelemetry::StartListening()
     {

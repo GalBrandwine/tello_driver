@@ -127,9 +127,9 @@ TEST(TelloTelemetryTest, ReceiveLogHeaderOnce)
             // Until sending back to drone 'ack_conn'.
             auto id = uint16(data[9], data[10]);
 
-            telloTelemerty.SetBuildDate(received.GetBuffer().substr(28, 26));
+            // telloTelemerty.SetBuildDate(received.GetBuffer().substr(28, 26));
             // DJI LOG VERSION something like this: DJI_LOG_V3I��Rc
-            telloTelemerty.SetDJILogVersion(received.GetBuffer().substr(245, 6));
+            // telloTelemerty.SetDJILogVersion(received.GetBuffer().substr(245, 6));
 
             // After sending back ack. the drone will not sent LOG_HEADER_MSG anymore.
             send_ack_log(id);
@@ -230,7 +230,9 @@ TEST(TelloTelemetryTest, ReceiveLogDataMvoMsg)
 
         else if (cmd == tello_protocol::LOG_DATA_MSG)
         {
-            telloTelemerty.GetLogData()->Update(received.GetBuffer().substr(10));
+            
+            std::vector<unsigned char> trimmed(data.begin() + 10, data.end());
+            telloTelemerty.GetLogData()->Update(trimmed);
             log_data_msg_counter++;
         }
 
@@ -306,7 +308,8 @@ TEST(TelloTelemetryTest, ReceiveLogDataImuMsg)
 
         else if (cmd == tello_protocol::LOG_DATA_MSG)
         {
-            telloTelemerty.GetLogData()->Update(received.GetBuffer().substr(10));
+            std::vector<unsigned char> trimmed(data.begin() + 10, data.end());
+            telloTelemerty.GetLogData()->Update(trimmed);
             log_data_msg_counter++;
         }
 

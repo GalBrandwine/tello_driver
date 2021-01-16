@@ -9,7 +9,7 @@ void TelloSocket::do_receive()
             {
                 m_bytes_recvd = bytes_recvd;
                 m_is_bytes_received = true;
-                std::cout << "In do_receive callback::bytes_recvd::" << m_bytes_recvd << "\n";
+                // std::cout << "In do_receive callback::bytes_recvd::" << m_bytes_recvd << "\n";
             }
             else
             {
@@ -40,7 +40,7 @@ void TelloSocket::Send(const std::string &cmd)
         boost::asio::buffer(cmd, cmd.length()),
         m_sender_endpoint,
         [this](std::error_code error, std::size_t bytes_transferred) {
-            std::cout << "In Send callback::bytes_transferred::" << bytes_transferred << "\n";
+            // std::cout << "In Send callback::bytes_transferred::" << bytes_transferred << "\n";
             do_receive();
         });
 }

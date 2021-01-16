@@ -9,6 +9,9 @@
 #include "utils/TelloSocket.hpp"
 #include "TelloTelemetry.hpp"
 #include "TelloCommander.hpp"
+#include "TelloLogHeaderMsgObserver.hpp"
+#include "TelloStickCommandsObserver.hpp"
+
 #include "TelloDriverConfig.hpp"
 
 #include <cstdlib>
@@ -24,10 +27,10 @@ class TelloDriver
 {
 public:
     /**
-    * Movements section
+    * @brief Movements section
     **/
-    void Backward(int);
-    void Forward(int);
+    void Backward(int amount);
+    void Forward(int amount);
     const float GetAttLimit();
     const short GetAltLimit();
     const short GetWifiStrength();
@@ -43,6 +46,8 @@ public:
     bool WaitForConnection(int);
 
 private:
+    std::shared_ptr<IObserver> m_TelloLogHeaderMsgObserver;
+    std::shared_ptr<IObserver> m_TelloStickCommandsObserver;
     tello_protocol::TelloCommander m_TelloCommander;
     tello_protocol::TelloTelemetry m_TelloTelemetry;
     std::shared_ptr<spdlog::logger> m_BaseLogger;

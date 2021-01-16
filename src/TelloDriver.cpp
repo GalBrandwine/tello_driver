@@ -2,9 +2,8 @@
 #include "TelloDriver/TelloDriver.hpp"
 
 /**
- * Movements section
+ * \section Movements section
 **/
-
 void TelloDriver::Backward(int amount)
 {
     assert(amount >= 0 && amount <= 100);
@@ -15,6 +14,7 @@ void TelloDriver::Forward(int amount)
     assert(amount >= 0 && amount <= 100);
     m_TelloCommander.Forward(amount);
 }
+
 const float TelloDriver::GetAttLimit()
 {
     return m_TelloTelemetry.GetFlightData()->GetAttLimit();
@@ -26,13 +26,14 @@ const short TelloDriver::GetAltLimit()
 }
 const short TelloDriver::GetWifiStrength()
 {
-
     return m_TelloTelemetry.GetFlightData()->GetWifiStrength();
 }
+
 const tello_protocol::Vec3 TelloDriver::GetPos()
 {
     return m_TelloTelemetry.GetLogData()->GetLogMvo().GetPos();
 }
+
 tello_protocol::TelloCommander &TelloDriver::GetTelloCommander()
 {
     return m_TelloCommander;
@@ -81,11 +82,21 @@ bool TelloDriver::WaitForConnection(int timeout)
         std::this_thread::sleep_for(50ms);
     }
 
-    // After sending back ack. the drone will not sent LOG_HEADER_MSG anymore.
-    m_TelloCommander.SendAckLog(m_TelloTelemetry.GetLogHeaderId());
-    m_StickCommandsSendingThread = std::thread(&TelloDriver::setStickCommandsThread, this);
+    // m_StickCommandsSendingThread = std::thread(&TelloDriver::setStickCommandsThread, this);
     return true;
 }
+
+/** 
+ * After sending back ack. the drone will not sent LOG_HEADER_MSG anymore.
+ * 
+ * @todo start a threat for recending logHeaderID.
+ * This thread will act as an observer that observe if a HEADER_LOG message has arrived.
+ * This observer has to be known by the tello_telemetry, So arriving messages could notify waiting threads.
+ * 
+ * @see https://refactoring.guru/design-patterns/observer/cpp/example
+ * 
+ * m_TelloCommander.SendAckLog(m_TelloTelemetry.GetLogHeaderId());
+*/
 
 void TelloDriver::setStickCommandsThread()
 {
@@ -100,7 +111,11 @@ void TelloDriver::setStickCommandsThread()
             std::this_thread::sleep_for(std::chrono::milliseconds(100));
             continue;
         }
-        m_TelloCommander.SendStickCommands();
+        if (m_TelloTelemetry.AmountOfBytesReceived() > 0)
+        {
+            m_TelloCommander.SendStickCommands();
+        }
+
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
     m_BaseLogger->info(fnc_name + " Has finished.");
@@ -123,6 +138,13 @@ TelloDriver::TelloDriver(spdlog::level::level_enum lvl)
     auto shared_socket = std::make_shared<TelloSocket>("192.168.10.1", 8889, 9000);
     m_TelloTelemetry.SetSocket(shared_socket);
     m_TelloCommander.SetSocket(shared_socket);
+
+    /**
+     * @brief Observers initiation.
+     * 
+     */
+    m_TelloLogHeaderMsgObserver = std::make_shared<tello_protocol::TelloLogHeaderMsgObserver>(m_TelloTelemetry, m_TelloCommander, spdlog::stdout_color_mt("LogHeaderObserver"), lvl);
+    m_TelloStickCommandsObserver = std::make_shared<tello_protocol::TelloStickCommandsObserver>(m_TelloTelemetry, m_TelloCommander, spdlog::stdout_color_mt("StickCommandsObserver"), lvl);
 }
 
 TelloDriver::~TelloDriver()

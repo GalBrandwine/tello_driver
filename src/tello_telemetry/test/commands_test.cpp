@@ -49,7 +49,7 @@ TEST(WetTelloSticksCommandTest, TestDisconnectionAllert)
 }
 /**
  * Test if drone recieves neutral stick commands. 
- * E.G: 
+ * @example: 
  *  No movements. Just keep alive heartbeat.
  *  If everything work properly. Drone's LED suppose to blink with GREEN
  */
@@ -79,7 +79,7 @@ TEST(WetTelloSticksCommandTest, SendNeutralStickCommand)
 }
 
 /**
- * WARNING: this test envolve drone movements!
+ * @warning: this test envolve drone movements!
  * 1. Takeoff
  * 2. Move backward 1% stick, for 1 sec.
  * 3. Land
@@ -87,7 +87,7 @@ TEST(WetTelloSticksCommandTest, SendNeutralStickCommand)
 TEST(WetTelloSticksCommandTest, SendBackwardStickCommand)
 {
     // Setup
-    TelloDriver tello(spdlog::level::debug);
+    TelloDriver tello(spdlog::level::info);
 
     // Run
     tello.Connect();

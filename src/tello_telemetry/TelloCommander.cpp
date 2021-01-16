@@ -1,10 +1,6 @@
 #include "TelloCommander.hpp"
 namespace tello_protocol
 {
-    /**
-     * Movements section
-    **/
-
     void TelloCommander::Backward(int amount)
     {
         assert(amount >= 0 && amount <= 100);
@@ -21,6 +17,7 @@ namespace tello_protocol
             m_logger->warn("Could not set " + std::string(__FUNCTION__) + "(" + std::to_string(amount) + ")");
         }
     }
+
     bool TelloCommander::SendStickCommands()
     {
         auto pkt = tello_protocol::Packet(tello_protocol::STICK_CMD, 0x60);

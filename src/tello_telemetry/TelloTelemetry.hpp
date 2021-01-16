@@ -12,25 +12,44 @@
 #include <thread>
 #include "TelloCommander.hpp"
 #include "utils/telemetry_data/TelemetryData.hpp"
-
+#include "utils/tello_observer/ISubject.hpp"
+#include "utils/tello_observer/IObserver.hpp"
 #define DISCONNECT_TIMEOUT_MS 1000
 using namespace std::chrono_literals;
 
 namespace tello_protocol
 {
-    class TelloTelemetry
+    class TelloTelemetry : public ISubject
     {
     public:
-        const int GetLogHeaderId() const;
         const int AmountOfBytesReceived() const;
         void SetSocket(std::shared_ptr<IReciever>);
 
         TelloTelemetry(std::shared_ptr<spdlog::logger>, spdlog::level::level_enum lvl = spdlog::level::info);
         ~TelloTelemetry();
 
+        /**
+         * @brief  Stop the listeninig thread
+         * 
+         * Set m_keep_receiving to <code>false<code>, And join on the listener thread.
+         */
         void StopListening();
+
+        /**
+         * @brief Start listening thread.
+         * 
+         */
         void StartListening();
-        void Listener(); // Listener thread
+
+        /**
+         * @brief Listener thread
+         * 
+         * Receive new raw bytes from TelloSocket.
+         * Maintain a *HeartBeat* monitor, If no bytes received more than DISCONNECT_TIMEOUT_MS, then assuming connection is lost.
+         * Notify all observers using the IObserver interface.
+         * 
+         */
+        void Listener();
         void SetBuildDate(const std::string &);
         const std::string &GetBuildDate() const;
         void SetDJILogVersion(const std::string &);
@@ -48,8 +67,14 @@ namespace tello_protocol
         bool IsLogHeaderReceived() const;
         void SetLogHeaderReceived();
 
+        void Attach(IObserver *observer) override;
+        void Detach(IObserver *observer) override;
+        void Notify() override;
+
+        void HowManyObserver();
+
     private:
-        void update_last_packet_recieved_timestamp();
+        std::list<IObserver *> list_observer_;
         void reset_bytes_received();
         std::shared_ptr<tello_protocol::TelloCommander> m_TelloCommander;
         std::string m_BuildDate, m_DJI_LOG_VERSION;
@@ -63,9 +88,9 @@ namespace tello_protocol
         bool m_keep_receiving = true;
         bool m_anyDataReceived = false;
         bool m_connReqAckRecieved = false;
-        int m_BytesReceived, m_IsLogHeaderReceivedId;
+        int m_BytesReceived;
         std::thread m_Listener;
-        std::vector<unsigned char> m_buffer; // = std::vector<unsigned char>(1024); //std::vector<unsigned char>
+        std::vector<unsigned char> m_buffer, m_recieved_data;
         std::chrono::milliseconds m_time_of_last_packet_recieved;
     };
 

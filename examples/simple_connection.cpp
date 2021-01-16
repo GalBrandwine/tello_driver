@@ -7,7 +7,7 @@
  * *******************************************/
 int main()
 {
-    TelloDriver tello(spdlog::level::debug);
+    TelloDriver tello(spdlog::level::info);
     tello.Connect();
     std::cout << "Starting simple connection\n";
     if (!tello.WaitForConnection(10))
@@ -16,6 +16,7 @@ int main()
         exit(1);
     }
 
+    tello_protocol::Vec3 pos;
     while (1)
     {
         // std::cout << "Spinned\n";
@@ -24,13 +25,23 @@ int main()
         // auto wifi_strength = tello.GetWifiStrength();
         // std::cout << "Wifi: " << wifi_strength << "\n";
 
-        // Get CurrentPosition.
-        // These are the RAW values, some software filtering is required.
-        //auto pos = tello.GetPos();
-        // std::cout << "pos.x " << pos.x << " pos.y " << pos.y << " pos.z " << pos.z << '\n';
+        /**
+         * @brief Get CurrentPosition.
+         * These are the RAW values.
+         * 
+         * @note Some software filtering is required.
+         */
+        auto temp_pos = tello.GetPos();
+        if (pos.z != temp_pos.z) //
+        {
+            pos = temp_pos;
+            tello.GetLogger()->info("pos.x " + std::to_string(pos.x) + " pos.y " + std::to_string(pos.y) + " pos.z " + std::to_string(pos.z) + '\n');
+        }
+
+        // pos = tello.GetPos();
+        // tello.GetLogger()->info("pos.x " + std::to_string(pos.x) + " pos.y " + std::to_string(pos.y) + " pos.z " + std::to_string(pos.z) + '\n');
 
         // Get FlightMode
-        // So far I've seen 2 modes: 1, and 6.
         // MODE 1: NOT OK
         // MODE 6: OK?
         // MODE 11: MOVING?
@@ -95,9 +106,9 @@ int main()
         // std::cout << "GetBatteryLower: " << tmp << '\n';
 
         // // GetTemperatureHeight - Not documented
-        auto tmp = tello.GetTelloTelemetry().GetFlightData()->GetTemperatureHeight();
-        std::cout << "GetTemperatureHeight: " << tmp << '\n';
+        // auto tmp = tello.GetTelloTelemetry().GetFlightData()->GetTemperatureHeight();
+        // std::cout << "GetTemperatureHeight: " << tmp << '\n';
 
-        std::this_thread::sleep_for(0.01s);
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
 }

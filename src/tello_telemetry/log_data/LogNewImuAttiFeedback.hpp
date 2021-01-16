@@ -13,7 +13,7 @@ namespace tello_protocol
         const int GetUpdateCounter() const { return m_count; };
         LogImuAtti(std::shared_ptr<spdlog::logger>);
         ~LogImuAtti();
-        void Update(const std::string &, int count = 0);
+        void Update(const std::vector<unsigned char> &data, int count = 0);
         const Vec3 &GetAcc() const;
         const Vec3 &GetGyro() const;
         const Vec3 &GetVg() const;
