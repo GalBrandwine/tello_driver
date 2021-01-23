@@ -137,7 +137,13 @@ namespace tello_protocol
         auto temp_sec = short(now_sec.time_since_epoch().count() % 60);
         auto temp_ms = short(now_ms.time_since_epoch().count() % 1000);
 
-        addInt16(temp_hr);
+        /**
+         * @brief GMP offset
+         * @todo remove to define or a parameter.
+         * 
+         */
+        short GMP_offset = 2; 
+        addInt16(temp_hr + GMP_offset);
         addInt16(temp_min);
         addInt16(temp_sec);
         addInt16(temp_ms); // (int(time.microsecond/1000) & 0xff)

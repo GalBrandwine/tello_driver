@@ -70,8 +70,8 @@ TEST(WetTelloSticksCommandTest, SendNeutralStickCommand)
     int counter = 100;
     while (counter-- > 0)
     {
-        auto droneMode = tello.GetTelloTelemetry().GetFlightData()->GetFlightMode();
-        tello.GetLogger()->info("DroneMode: " + std::to_string(droneMode));
+        // auto droneMode = tello.GetTelloTelemetry().GetFlightData()->GetFlightMode();
+        // tello.GetLogger()->info("DroneMode: " + std::to_string(droneMode));
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
 
@@ -106,8 +106,8 @@ TEST(WetTelloSticksCommandTest, SendBackwardStickCommand)
     while (counter-- > 0)
     {
         ASSERT_TRUE(tello.GetTelloTelemetry().IsDroneConnected());
-        auto droneMode = tello.GetTelloTelemetry().GetFlightData()->GetFlightMode();
-        tello.GetLogger()->info("DroneMode: " + std::to_string(droneMode));
+        // auto droneMode = tello.GetTelloTelemetry().GetFlightData()->GetFlightMode();
+        // tello.GetLogger()->info("DroneMode: " + std::to_string(droneMode));
 
         auto pos = tello.GetPos();
         tello.GetLogger()->info("********************************pos: " + std::to_string(pos.x) + "," + std::to_string(pos.y) + "," + std::to_string(pos.z));

@@ -6,9 +6,11 @@
 #include "spdlog/fmt/bin_to_hex.h"
 #include "spdlog/sinks/stdout_color_sinks.h"
 #include "utils/ISender.hpp"
+#include "utils/ISendAckLog.hpp"
+#include "utils/ISendStickCommands.hpp"
 namespace tello_protocol
 {
-    class TelloCommander
+    class TelloCommander: public ISendAckLog, public ISendStickCommands
     {
     public:
         /**
@@ -33,7 +35,7 @@ namespace tello_protocol
          * @return true if packet converter successfully
          * @return false otherwise
          */
-        bool SendStickCommands();
+        bool SendStickCommands() override;
 
         void SendLandReq();
         void SetAltLimitReq(int);
@@ -54,7 +56,7 @@ namespace tello_protocol
          * @param id - same ID that drone sent to client. We must return *ack* with this ID ASAP,
          * in order to start LOGGING session.
          */
-        void SendAckLog(const int id);
+        void SendAckLog(const int id) override;
 
         /**
          * @brief Set the Socket object

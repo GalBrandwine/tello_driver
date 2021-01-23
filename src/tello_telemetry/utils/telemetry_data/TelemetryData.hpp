@@ -9,4 +9,10 @@ namespace tello_protocol
     {
         float x, y, z, w;
     };
+
+    struct PoseVelData
+    {
+        Vec3 pose,vel;
+    };
+    
 } // namespace tello_protocol

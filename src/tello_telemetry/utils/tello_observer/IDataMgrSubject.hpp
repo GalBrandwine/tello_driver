@@ -10,15 +10,12 @@
  * Also the verbs "observe", "listen" or "track" usually mean the same thing.
  */
 #pragma once
-#include <iostream>
-#include <list>
-#include <string>
+#include "DataMgr.hpp"
 #include "IObserver.hpp"
-
-class ISubject {
- public:
-  virtual ~ISubject(){};
-  virtual void Attach(IObserver *observer) = 0;
-  virtual void Detach(IObserver *observer) = 0;
-  virtual void Notify() = 0;
+class IDataMgrSubject
+{
+public:
+  virtual ~IDataMgrSubject(){};
+  virtual void Attach(const OBSERVERS observer_type, IObserver *observer) = 0;
+  virtual void Notify(const OBSERVERS observer_type) = 0;
 };

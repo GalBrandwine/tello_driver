@@ -9,7 +9,6 @@
 #include "flight_data/FlightData.hpp"
 #include "log_data/LogData.hpp"
 #include "asio.hpp"
-#include <thread>
 #include "TelloCommander.hpp"
 #include "utils/telemetry_data/TelemetryData.hpp"
 #include "utils/tello_observer/ISubject.hpp"
@@ -50,22 +49,19 @@ namespace tello_protocol
          * 
          */
         void Listener();
-        void SetBuildDate(const std::string &);
-        const std::string &GetBuildDate() const;
-        void SetDJILogVersion(const std::string &);
-        const std::string &GetDJILogVersion() const;
 
-        std::shared_ptr<FlightData> GetFlightData() const;
-        void SetFlightData(std::shared_ptr<FlightData>);
 
-        std::shared_ptr<LogData> GetLogData() const;
-        void SetLogData(std::shared_ptr<LogData>);
+        // std::shared_ptr<FlightData> GetFlightData() const;
+        // void SetFlightData(std::shared_ptr<FlightData>);
+
+        // std::shared_ptr<LogData> GetLogData() const;
+        // void SetLogData(std::shared_ptr<LogData>);
 
         bool IsDroneConnected() const;
         bool IsAnyDataReceived() const;
         bool IsConnReqAckReceived() const;
         bool IsLogHeaderReceived() const;
-        void SetLogHeaderReceived();
+        // void SetLogHeaderReceived();
 
         void Attach(IObserver *observer) override;
         void Detach(IObserver *observer) override;
@@ -76,11 +72,10 @@ namespace tello_protocol
     private:
         std::list<IObserver *> list_observer_;
         void reset_bytes_received();
-        std::shared_ptr<tello_protocol::TelloCommander> m_TelloCommander;
-        std::string m_BuildDate, m_DJI_LOG_VERSION;
+        
         std::shared_ptr<spdlog::logger> m_logger;
-        std::shared_ptr<FlightData> m_FlightData;
-        std::shared_ptr<LogData> m_LogData;
+        // std::shared_ptr<FlightData> m_FlightData;
+        // std::shared_ptr<LogData> m_LogData;
         bool process_data(const std::vector<unsigned char> &);
         std::shared_ptr<IReciever> m_socket;
         bool m_IsLogHeaderReceived = false;

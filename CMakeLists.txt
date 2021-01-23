@@ -1,7 +1,14 @@
 cmake_minimum_required(VERSION 3.10)
-project(TelloDriver VERSION "0.0.19")
+project(TelloDriver VERSION "0.0.20")
 
 set(CMAKE_CXX_STANDARD 14)
+
+set(OBSERVERS
+  ${CMAKE_SOURCE_DIR}/src/tello_telemetry/OutGoingCommandsObservers/TelloAckLogHeaderIdSenderObserver.cpp
+  ${CMAKE_SOURCE_DIR}/src/tello_telemetry/OutGoingCommandsObservers/TelloStickCommandsObserver.cpp
+  ${CMAKE_SOURCE_DIR}/src/tello_telemetry/IncommingDataObservers/TelloLogHeaderMsgObserver.cpp
+  ${CMAKE_SOURCE_DIR}/src/tello_telemetry/IncommingDataObservers/TelloLogDataMsgObserver.cpp
+ )
 
 set(TELLO_TELEMETRY_SOURES
   ${CMAKE_SOURCE_DIR}/src/packet_parser/protocol.cpp
@@ -14,9 +21,9 @@ set(TELLO_TELEMETRY_SOURES
   ${CMAKE_SOURCE_DIR}/src/tello_telemetry/utils/TelloSocket.cpp
   ${CMAKE_SOURCE_DIR}/src/tello_telemetry/utils/movement_commands/MovementCommandsManager.cpp
   ${CMAKE_SOURCE_DIR}/src/tello_telemetry/utils/movement_commands/MovementsToPacketConverter.cpp
-  ${CMAKE_SOURCE_DIR}/src/tello_telemetry/TelloLogHeaderMsgObserver.cpp
-  ${CMAKE_SOURCE_DIR}/src/tello_telemetry/TelloStickCommandsObserver.cpp
   
+  ${CMAKE_SOURCE_DIR}/src/tello_telemetry/utils/data_manager/DataManager.cpp
+  ${OBSERVERS}
 )
 
 include_directories(
@@ -31,6 +38,8 @@ add_library(TelloDriver
 target_include_directories(TelloDriver PUBLIC
   ${CMAKE_SOURCE_DIR}/src/packet_parser
   ${CMAKE_SOURCE_DIR}/src/tello_telemetry
+  ${CMAKE_SOURCE_DIR}/src/tello_telemetry/IncommingDataObservers
+  ${CMAKE_SOURCE_DIR}/src/tello_telemetry/OutGoingCommandsObservers
 )
 
 find_package(Git QUIET)

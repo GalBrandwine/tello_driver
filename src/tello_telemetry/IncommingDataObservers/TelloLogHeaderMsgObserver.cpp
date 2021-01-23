@@ -15,21 +15,22 @@ namespace tello_protocol
 
             unsigned short log_id;
             std::memcpy(&log_id, &message_from_subject[9], sizeof(unsigned short));
-            
-            m_commander.SendAckLog(log_id);
-            
-            // m_telemetry.SetLogHeaderReceived();
-            m_telemetry.SetBuildDate(received.GetBuffer().substr(28, 26));
 
-            // DJI LOG VERSION something like this: DJI_LOG_V3I��Rc
-            auto f = received.GetBuffer().find("DJI");
-            m_telemetry.SetDJILogVersion(received.GetBuffer().substr(f, 15));
+            m_log_header_msg_data_mgr.SetLogID(log_id);
+
+            auto build_str = received.GetBuffer().substr(28, 26);
+            std::vector<unsigned char> build_date(build_str.begin(), build_str.end());
+            m_log_header_msg_data_mgr.SetBuildDate(build_date);
+
+            auto log = received.GetBuffer().substr(received.GetBuffer().find("DJI"), 15);
+            std::vector<unsigned char> log_version(log.begin(),log.end());
+            m_log_header_msg_data_mgr.SetDJILogVersion(log_version);
         }
     }
 
-    TelloLogHeaderMsgObserver::TelloLogHeaderMsgObserver(TelloTelemetry &telemetry, TelloCommander &commander, std::shared_ptr<spdlog::logger> logger, spdlog::level::level_enum lvl)
+    TelloLogHeaderMsgObserver::TelloLogHeaderMsgObserver(ISubject &telemetry, ILogHeaderMsgDataManager &log_header_msg_data_mgr, std::shared_ptr<spdlog::logger> logger, spdlog::level::level_enum lvl)
         : m_telemetry(telemetry),
-          m_commander(commander),
+          m_log_header_msg_data_mgr(log_header_msg_data_mgr),
           m_logger(logger)
     {
         m_logger->set_level(lvl);

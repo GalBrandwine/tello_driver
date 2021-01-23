@@ -7,7 +7,7 @@ namespace tello_protocol
         m_commander.SendStickCommands();
     }
 
-    TelloStickCommandsObserver::TelloStickCommandsObserver(TelloTelemetry &telemetry, TelloCommander &commander, std::shared_ptr<spdlog::logger> logger, spdlog::level::level_enum lvl)
+    TelloStickCommandsObserver::TelloStickCommandsObserver(TelloTelemetry &telemetry, ISendStickCommands &commander, std::shared_ptr<spdlog::logger> logger, spdlog::level::level_enum lvl)
         : m_telemetry(telemetry),
           m_commander(commander),
           m_logger(logger)

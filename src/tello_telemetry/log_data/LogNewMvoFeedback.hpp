@@ -28,32 +28,20 @@ namespace tello_protocol
         void Update(const std::vector<unsigned char> &data, int count = 0);
 
         /**
-         * @brief Get the Pos object
+         * @brief Get Pose and velocity, if updated.
          * 
-         * @return const Vec3& 
+         * @param[out] posVelOut 
+         * @return true - if successfully updated the velOut
+         * @return false - otherwise
          */
-        const Vec3 &GetPos() const;
-
-        /**
-         * @brief Get the Vel object
-         * 
-         * @return const Vec3& 
-         */
-        const Vec3 &GetVel() const;
-
-
-        friend std::ostream &operator<<(std::ostream &os, const LogNewMvoFeedback &dt)
-        {
-            os << "VEL: " << dt.m_Vel.x << " " << dt.m_Vel.y << " " << dt.m_Vel.z << " POS: " << dt.m_Pos.x << " " << dt.m_Pos.y << " " << dt.m_Pos.z << '\n';
-            return os;
-        }
+        bool GetPosVelIfUpdated(PoseVelData &posVelOut);
 
     private:
         std::shared_ptr<spdlog::logger> m_logger;
         const std::string m_data;
         int m_count = 0;
-        Vec3 m_Pos;
-        Vec3 m_Vel;
+        bool m_is_pos_vel_updated = false;
+        PoseVelData m_PoseVel;
     };
 
 } // namespace tello_protocol

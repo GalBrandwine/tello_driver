@@ -1,7 +1,10 @@
 #pragma once
 #include "protocol.hpp"
-#include "log_data/LogNewMvoFeedback.hpp"
-#include "log_data/LogNewImuAttiFeedback.hpp"
+#include "LogNewMvoFeedback.hpp"
+#include "LogNewImuAttiFeedback.hpp"
+#include "ILogDataGetter.hpp"
+#include "ILogDataUpdater.hpp"
+
 #include <mutex>
 #define ID_NEW_MVO_FEEDBACK 29
 #define ID_IMU_ATTI 2048
@@ -13,6 +16,9 @@ namespace tello_protocol
      * Based on the [TelloPy](https://github.com/hanyazou/TelloPy/blob/develop-0.7.0/tellopy/_internal/protocol.py#L316) preprocess methods.
      */
     class LogData
+        : public ILogDataUpdater,
+          public ILogDataGetter
+
     {
     public:
         /**
@@ -20,14 +26,14 @@ namespace tello_protocol
          * 
          * @return LogImuAtti& 
          */
-        LogImuAtti &GetLogImuAtti();
+        LogImuAtti &GetLogImuAtti() override;
 
         /**
          * @brief Get the Log Mvo object
          * 
          * @return LogNewMvoFeedback& 
          */
-        LogNewMvoFeedback &GetLogMvo();
+        LogNewMvoFeedback &GetLogMvo() override;
 
         /**
          * @brief Preprocess raw data before updating inner data containers (LogNewMvoFeedback and LogImuAtti)
@@ -39,12 +45,12 @@ namespace tello_protocol
 
         LogData(std::shared_ptr<spdlog::logger>);
         ~LogData();
-        friend std::ostream &operator<<(std::ostream &os, const LogData &dt)
-        {
-            os << "LogMvo: " << dt.m_LogMvoFeedback << '\n';
-            os << "LogImuAtti: " << dt.m_LogImuAtti << '\n';
-            return os;
-        }
+        // friend std::ostream &operator<<(std::ostream &os, const LogData &dt)
+        // {
+        //     os << "LogMvo: " << dt.m_LogMvoFeedback << '\n';
+        //     os << "LogImuAtti: " << dt.m_LogImuAtti << '\n';
+        //     return os;
+        // }
 
     private:
         std::mutex m_log_data_mutex;

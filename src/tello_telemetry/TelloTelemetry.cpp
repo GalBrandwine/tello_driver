@@ -57,54 +57,54 @@ namespace tello_protocol
         }
         else if (cmd == tello_protocol::LOG_DATA_MSG)
         {
-            m_logger->debug("LOG_DATA_MSG received");
-            /* 
-            Is cmd  is LOG_DATA_MSG.
-            It means that a LOG_DATA connections has been already assured. 
-            */
-            try
-            {
-                std::vector<unsigned char> trimmed(data.begin() + 10, data.end());
-                m_LogData->Update(trimmed);
-            }
-            catch (const std::out_of_range &e)
-            {
-                m_logger->error(e.what());
-            }
+            // m_logger->debug("LOG_DATA_MSG received");
+            // /*
+            // Is cmd  is LOG_DATA_MSG.
+            // It means that a LOG_DATA connections has been already assured.
+            // */
+            // try
+            // {
+            //     std::vector<unsigned char> trimmed(data.begin() + 10, data.end());
+            //     // m_LogData->Update(trimmed);
+            // }
+            // catch (const std::out_of_range &e)
+            // {
+            // m_logger->error("LOG_DATA_MSG");
+            // }
 
-            // It is possible that a connection was open from a previous session.
-            SetLogHeaderReceived();
+            // // It is possible that a connection was open from a previous session.
+            // SetLogHeaderReceived();
         }
         else if (cmd == tello_protocol::WIFI_MSG)
         {
-            m_logger->debug("WIFI_MSG received: {}", int(received.GetData()[0]));
-            m_FlightData->SetWifiStrength(received.GetData()[0]);
+            m_logger->info("WIFI_MSG received: {}", int(received.GetData()[0]));
+            // m_FlightData->SetWifiStrength(received.GetData()[0]);
         }
         else if (cmd == tello_protocol::ALT_LIMIT_MSG)
         {
-            m_logger->debug("ALT_LIMIT_MSG received: {}", short(received.GetData()[1]));
-            m_FlightData->SetAltLimit(received.GetData());
+            m_logger->info("ALT_LIMIT_MSG received: {}", short(received.GetData()[1]));
+            // m_FlightData->SetAltLimit(received.GetData());
         }
         if (cmd == tello_protocol::ATT_LIMIT_MSG)
         {
-            m_logger->debug("ATT_LIMIT_MSG received: {}", float(received.GetData()[1]));
-            m_FlightData->SetAttLimit(received.GetData());
+            m_logger->info("ATT_LIMIT_MSG received: {}", float(received.GetData()[1]));
+            // m_FlightData->SetAttLimit(received.GetData());
         }
         if (cmd == tello_protocol::LOW_BAT_THRESHOLD_MSG)
         {
-            m_logger->debug("recv: low battery threshold: {}", received.GetData());
+            m_logger->info("recv: low battery threshold: {}", received.GetData());
         }
 
         if (cmd == tello_protocol::FLIGHT_MSG)
         {
             // This message suppose to contain all technical flight data
-            if (!m_FlightData->SetData(received.GetData()))
-            {
-                std::stringstream wrnSS;
-                wrnSS << __FUNCTION__ << "[" << __LINE__ << "]::"
-                      << "Data packet didnt math its expected length. dropping.";
-                m_logger->warn(wrnSS.str());
-            }
+            // if (!m_FlightData->SetData(received.GetData()))
+            // {
+            //     std::stringstream wrnSS;
+            //     wrnSS << __FUNCTION__ << "[" << __LINE__ << "]::"
+            //           << "Data packet didnt math its expected length. dropping.";
+            //     m_logger->warn(wrnSS.str());
+            // }
         }
 
         std::fill(m_buffer.begin(), m_buffer.end(), 0);
@@ -141,6 +141,10 @@ namespace tello_protocol
                 m_recieved_data = std::vector<unsigned char>(m_buffer.begin(), m_buffer.begin() + m_BytesReceived);
                 Notify();
 
+                /**
+                 * @todo Move all processing into attached observers.
+                 * 
+                 */
                 if (!process_data(m_recieved_data))
                 {
                     m_logger->error("Could not process data! Dumping:\n {DATA SUPPOSE TO BE HERE}");
@@ -154,10 +158,11 @@ namespace tello_protocol
             {
                 m_IsConnectedToDrone = false;
                 m_logger->warn("Lost connection with drone more than: " + std::to_string(DISCONNECT_TIMEOUT_MS) + "[ms]!");
+                std::this_thread::sleep_for(1s);
             }
 
             reset_bytes_received();
-            std::this_thread::sleep_for(100ms);
+            std::this_thread::sleep_for(10ms);
         }
     }
 
@@ -189,10 +194,10 @@ namespace tello_protocol
     // {
     //     return m_LogHeaderReceivedId;
     // };
-    void TelloTelemetry::SetLogHeaderReceived()
-    {
-        m_IsLogHeaderReceived = true;
-    };
+    // void TelloTelemetry::SetLogHeaderReceived()
+    // {
+    //     m_IsLogHeaderReceived = true;
+    // };
 
     bool TelloTelemetry::IsConnReqAckReceived() const
     {
@@ -203,40 +208,40 @@ namespace tello_protocol
         return m_IsLogHeaderReceived;
     }
 
-    void TelloTelemetry::SetLogData(std::shared_ptr<LogData> log_data)
-    {
-        m_LogData = log_data;
-    }
-    std::shared_ptr<LogData> TelloTelemetry::GetLogData() const
-    {
-        return m_LogData;
-    }
+    // void TelloTelemetry::SetLogData(std::shared_ptr<LogData> log_data)
+    // {
+    //     m_LogData = log_data;
+    // }
+    // std::shared_ptr<LogData> TelloTelemetry::GetLogData() const
+    // {
+    //     return m_LogData;
+    // }
 
-    void TelloTelemetry::SetFlightData(std::shared_ptr<FlightData> flight_data)
-    {
-        m_FlightData = flight_data;
-    }
-    std::shared_ptr<FlightData> TelloTelemetry::GetFlightData() const
-    {
-        return m_FlightData;
-    }
+    // void TelloTelemetry::SetFlightData(std::shared_ptr<FlightData> flight_data)
+    // {
+    //     m_FlightData = flight_data;
+    // }
+    // std::shared_ptr<FlightData> TelloTelemetry::GetFlightData() const
+    // {
+    //     return m_FlightData;
+    // }
 
-    void TelloTelemetry::SetDJILogVersion(const std::string &log_version)
-    {
-        m_DJI_LOG_VERSION = log_version;
-        m_logger->info("DJI LOG VERSION: {};", m_DJI_LOG_VERSION);
-    }
-    const std::string &TelloTelemetry::GetDJILogVersion() const
-    {
-        return m_DJI_LOG_VERSION;
-    }
+    // void TelloTelemetry::SetDJILogVersion(const std::string &log_version)
+    // {
+    //     m_DJI_LOG_VERSION = log_version;
+    //     m_logger->info("DJI LOG VERSION: {};", m_DJI_LOG_VERSION);
+    // }
+    // const std::string &TelloTelemetry::GetDJILogVersion() const
+    // {
+    //     return m_DJI_LOG_VERSION;
+    // }
 
-    void TelloTelemetry::SetBuildDate(const std::string &build_date)
-    {
-        m_BuildDate = build_date;
-        m_logger->info("BUILD date: {};", m_BuildDate);
-    }
-    const std::string &TelloTelemetry::GetBuildDate() const { return m_BuildDate; }
+    // void TelloTelemetry::SetBuildDate(const std::string &build_date)
+    // {
+    //     m_BuildDate = build_date;
+    //     m_logger->info("BUILD date: {};", m_BuildDate);
+    // }
+    // const std::string &TelloTelemetry::GetBuildDate() const { return m_BuildDate; }
 
     void TelloTelemetry::StopListening()
     {

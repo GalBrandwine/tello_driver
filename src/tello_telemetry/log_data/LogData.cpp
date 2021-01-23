@@ -6,6 +6,7 @@ namespace tello_protocol
         std::lock_guard<std::mutex> lk(m_log_data_mutex);
         return m_LogImuAtti;
     };
+
     LogNewMvoFeedback &LogData::GetLogMvo()
     {
         std::lock_guard<std::mutex> lk(m_log_data_mutex);
@@ -18,19 +19,28 @@ namespace tello_protocol
 
         m_count++;
         short pos = 0;
+
+        // if (data[pos + 0] != 0x55) // Little endian
+        // {
+        //     return;
+        // }
+        // std::cout << "data.size(): " << data.size() << "\n";
         while (pos < data.size() - 2)
         {
-            if (data[pos + 0] != 0x55) // Little endian
-            {
-                return;
-            }
+            // std::cout << "pos: " << pos << "\n";
+            // short length = int16(data[pos + 1], data[pos + 2]);
 
-            short length = int16(data[pos + 1], data[pos + 2]);
+            short length; // = uint16(data[pos + 4], data[pos + 5]);
+            std::memcpy(&length, &data[pos + 1], sizeof(short));
+
             auto checksum = data[pos + 3];
-            unsigned short id = uint16(data[pos + 4], data[pos + 5]);
-            unsigned char xorval = data[pos + 6];
 
+            unsigned short id; // = uint16(data[pos + 4], data[pos + 5]);
+            std::memcpy(&id, &data[pos + 4], sizeof(unsigned short));
+
+            auto xorval = data[pos + 6];
             auto payload = std::vector<unsigned char>(data.begin() + pos + 10, data.begin() + pos + 10 + length - 12);
+
             for (auto &i : payload)
             {
                 i ^= xorval;
@@ -46,13 +56,16 @@ namespace tello_protocol
             }
             else
             {
-                for (const auto &unknownID : m_UnknownIDs)
+                if (m_UnknownIDs.empty())
                 {
-                    if (id != unknownID)
-                    {
-                        m_logger->error("UNHANDLED LOG DATA: id={}, length={}", id, length - 12);
-                        m_UnknownIDs.push_back(id);
-                    }
+                    m_UnknownIDs.push_back(id);
+                }
+
+                auto result1 = std::find(m_UnknownIDs.begin(), m_UnknownIDs.end(), id);
+                if (result1 == m_UnknownIDs.end())
+                {
+                    m_logger->error("UNHANDLED LOG DATA: id={}, length={}", id, length - 12);
+                    m_UnknownIDs.push_back(id);
                 }
             }
 
@@ -70,6 +83,6 @@ namespace tello_protocol
 
     LogData::~LogData()
     {
-        m_logger->info(m_logger->name() + " Destructing.");
+        // m_logger->info(m_logger->name() + " Destructing.");
     }
 } // namespace tello_protocol

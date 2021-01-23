@@ -16,31 +16,35 @@ namespace tello_protocol
         m_count = count;
         short tempS;
         std::memcpy(&tempS, &data[2], sizeof(short));
-        m_Vel.x = float(tempS) / 100.0f;
+        m_PoseVel.vel.x = float(tempS) / 100.0f;
 
         std::memcpy(&tempS, &data[4], sizeof(short));
-        m_Vel.y = float(tempS) / 100.0f;
+        m_PoseVel.vel.y = float(tempS) / 100.0f;
 
         std::memcpy(&tempS, &data[6], sizeof(short));
-        m_Vel.z = float(tempS) / 100.0f;
+        m_PoseVel.vel.z = float(tempS) / 100.0f;
 
         float tempF;
         std::memcpy(&tempF, &data[8], sizeof(float));
-        m_Pos.x = tempF;
+        m_PoseVel.pose.x = tempF;
 
         std::memcpy(&tempF, &data[12], sizeof(float));
-        m_Pos.y = tempF;
+        m_PoseVel.pose.y = tempF;
 
         std::memcpy(&tempF, &data[16], sizeof(float));
-        m_Pos.z = tempF;
+        m_PoseVel.pose.z = tempF;
+        m_is_pos_vel_updated = true;
     }
 
-    const Vec3 &LogNewMvoFeedback::GetVel() const
+    bool LogNewMvoFeedback::GetPosVelIfUpdated(PoseVelData &posVelOut)
     {
-        return m_Vel;
+        if (m_is_pos_vel_updated)
+        {
+            posVelOut = m_PoseVel;
+            m_is_pos_vel_updated = false;
+            return true;
+        }
+        return false;
     }
-    const Vec3 &LogNewMvoFeedback::GetPos() const
-    {
-        return m_Pos;
-    }
+
 } // namespace tello_protocol

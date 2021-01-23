@@ -31,12 +31,12 @@ int main()
          * 
          * @note Some software filtering is required.
          */
-        auto temp_pos = tello.GetPos();
-        if (pos.z != temp_pos.z) //
-        {
-            pos = temp_pos;
-            tello.GetLogger()->info("pos.x " + std::to_string(pos.x) + " pos.y " + std::to_string(pos.y) + " pos.z " + std::to_string(pos.z) + '\n');
-        }
+        // auto temp_pos = tello.GetPos();
+        // if (pos.z != temp_pos.z) //
+        // {
+        //     pos = temp_pos;
+        //     tello.GetLogger()->info("pos.x " + std::to_string(pos.x) + " pos.y " + std::to_string(pos.y) + " pos.z " + std::to_string(pos.z) + '\n');
+        // }
 
         // pos = tello.GetPos();
         // tello.GetLogger()->info("pos.x " + std::to_string(pos.x) + " pos.y " + std::to_string(pos.y) + " pos.z " + std::to_string(pos.z) + '\n');
@@ -109,6 +109,6 @@ int main()
         // auto tmp = tello.GetTelloTelemetry().GetFlightData()->GetTemperatureHeight();
         // std::cout << "GetTemperatureHeight: " << tmp << '\n';
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
 }
