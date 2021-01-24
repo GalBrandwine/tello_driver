@@ -5,18 +5,68 @@
  * In this example I access some of the tello attributes that are available from the tello unofficial SDK. 
  * 
  * *******************************************/
+
+/**
+ * @brief This is an example for creating user observer and attaching it to TelloDriver.
+ * This class can be attached to:
+ * * a speficig IPositionVelocityObserver, for getting new Pose and velocity
+ * * and to a generic IObserver, for getting standartt std::vector<unsignd char> and interprating it the user way.
+ */
+class PosObserver : public IPositionVelocityObserver
+{
+public:
+    /**
+     * @brief Must be overriden.
+     * 
+     * @param[in] message_from_subject - data filled with information relenavt to this observer.
+     */
+    void Update(const tello_protocol::PoseVelData &pos_vel) override;
+    void Update(const std::vector<unsigned char> &message_from_subject) override;
+    PosObserver(/* args */);
+    ~PosObserver();
+
+private:
+    /* data */
+};
+
+PosObserver::PosObserver(/* args */)
+{
+}
+
+PosObserver::~PosObserver()
+{
+}
+void PosObserver::Update(const tello_protocol::PoseVelData &pos_vel)
+{
+    auto new_pos_vel = pos_vel;
+    std::cout << "new_pos_vel " << new_pos_vel.pose.x << " " << new_pos_vel.pose.y << " " << new_pos_vel.pose.z << "\n";
+}
+void PosObserver::Update(const std::vector<unsigned char> &message_from_subject)
+{
+    std::string s(message_from_subject.begin(), message_from_subject.end());
+    std::cout << "received tello current log version: " << s << "\n";
+}
+
 int main()
 {
+
     TelloDriver tello(spdlog::level::info);
     tello.Connect();
+
+    std::cout << "Attaching user observer\n";
+    PosObserver pos_vel_obs;
+
+    tello.Attach(OBSERVERS::POSITION_VELOCITY_LOG, &pos_vel_obs);
+    tello.Attach(OBSERVERS::DJI_LOG_VERSION, &pos_vel_obs);
+
     std::cout << "Starting simple connection\n";
     if (!tello.WaitForConnection(10))
     {
-        std::cout << "Connection error. exiting!\n";
+        tello.GetLogger()->error("Connection error. exiting!");
         exit(1);
     }
 
-    tello_protocol::Vec3 pos;
+    // tello_protocol::Vec3 pos;
     while (1)
     {
         // std::cout << "Spinned\n";

@@ -57,10 +57,10 @@ namespace tello_protocol
         // std::shared_ptr<LogData> GetLogData() const;
         // void SetLogData(std::shared_ptr<LogData>);
 
-        bool IsDroneConnected() const;
-        bool IsAnyDataReceived() const;
-        bool IsConnReqAckReceived() const;
-        bool IsLogHeaderReceived() const;
+        // bool IsDroneConnected() const;
+        // bool IsAnyDataReceived() const;
+        // bool IsConnReqAckReceived() const;
+        // bool IsLogHeaderReceived() const;
         // void SetLogHeaderReceived();
 
         void Attach(IObserver *observer) override;

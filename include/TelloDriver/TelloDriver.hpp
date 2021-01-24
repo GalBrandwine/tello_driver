@@ -1,4 +1,5 @@
 #pragma once
+
 #include <memory>
 #include <chrono>
 
@@ -10,6 +11,8 @@
 #include "TelloTelemetry.hpp"
 #include "TelloCommander.hpp"
 #include "utils/data_manager/DataManager.hpp"
+
+#include "TelloConnAckMsgObserver.hpp"
 #include "TelloLogDataMsgObserver.hpp"
 #include "TelloLogHeaderMsgObserver.hpp"
 #include "TelloStickCommandsObserver.hpp"
@@ -20,6 +23,16 @@
 #include <iostream>
 #include "asio.hpp"
 #include <thread>
+
+/**
+ * @file TelloDriver.hpp
+ * @author your name (gal080592@gmail.com)
+ * @brief The unofficial SDK Tello driver.
+ * @date 2021-01-24
+ * 
+ * @copyright Copyright (c) 2021
+ * 
+ */
 
 using namespace std::chrono_literals;
 using asio::ip::udp;
@@ -33,6 +46,8 @@ public:
     **/
     void Backward(int amount);
     void Forward(int amount);
+    void Takeoff();
+    void Land();
     const float GetAttLimit();
     const short GetAltLimit();
     const short GetWifiStrength();
@@ -42,8 +57,8 @@ public:
     ~TelloDriver();
     tello_protocol::TelloCommander &GetTelloCommander();
     tello_protocol::TelloTelemetry &GetTelloTelemetry();
-    void Takeoff();
-    void Land();
+
+    void Attach(OBSERVERS oberver_type, IObserver *observer);
     void Connect();
     bool WaitForConnection(int);
 
@@ -52,7 +67,7 @@ private:
 
     /*************************************
      * 
-     * @section Incomming commands observers
+     * @section Incomming data observers
      * 
     *************************************/
 
@@ -74,12 +89,20 @@ private:
      */
     std::shared_ptr<IObserver> m_TelloLogDataMsgObserver;
 
+    /**
+     * @brief TelloConnAckMsgObserver attached to TelloTelemetry via ISubject interface.
+     * Upon callback, this obeserver will check if raw_data contain \'conn_ack\'. 
+     * If so this observer will call DataManager::SetConnReqAck()
+     * 
+     */
+    std::shared_ptr<IObserver> m_TelloConnAckMsgObserver;
+
     /*************************************
      * 
      * @section Outgoing commands observers
      * 
     *************************************/
-    
+
     /**
      * @brief TelloAckLogHeaderIdSenderObserver attached to TelloDataManager via IDataMgrSubject interface.
      * TelloDataManager trigger a callback upon receiving new AckLogHeaderMsg, send ack commands according to attached OBSERVER::ACK_MSG.

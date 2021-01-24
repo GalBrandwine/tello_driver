@@ -10,12 +10,6 @@ namespace tello_protocol
 
         if (cmd == tello_protocol::LOG_DATA_MSG)
         {
-            // m_logger->info("LOG_DATA_MSG received");
-            /* 
-            Is cmd  is LOG_DATA_MSG.
-            It means that a LOG_DATA connections has been already assured. 
-            */
-            // auto LogData = std::make_shared<tello_protocol::LogData>(m_logger);
             try
             {
                 std::vector<unsigned char> trimmed(message_from_subject.begin() + 10, message_from_subject.end());

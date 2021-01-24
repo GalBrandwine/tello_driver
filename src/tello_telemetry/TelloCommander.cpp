@@ -78,6 +78,7 @@ namespace tello_protocol
         auto conn_req = tello_protocol::Packet("conn_req:\x96\x17");
         m_socket->Send(conn_req.GetBuffer());
     }
+    
     void TelloCommander::SetSocket(std::shared_ptr<ISender> socket)
     {
         m_socket = socket;

@@ -34,10 +34,10 @@ namespace tello_protocol
     {
         auto received = tello_protocol::Packet(data);
 
-        if (received.GetBuffer().substr(0, 8) == "conn_ack")
-        {
-            m_connReqAckRecieved = true;
-        }
+        // if (received.GetBuffer().substr(0, 8) == "conn_ack")
+        // {
+        //     m_connReqAckRecieved = true;
+        // }
 
         unsigned short cmd;
         std::memcpy(&cmd, &data[5], sizeof(unsigned short));
@@ -97,7 +97,15 @@ namespace tello_protocol
 
         if (cmd == tello_protocol::FLIGHT_MSG)
         {
-            // This message suppose to contain all technical flight data
+            /**
+             * @todo  implemented IncommingFlightDataMsgObserver.
+             * 
+             */
+            
+            // std::stringstream wrnSS;
+            // wrnSS << __FUNCTION__ << "[" << __LINE__ << "]::"
+            //       << "Data packet didnt math its expected length. dropping.";
+            // m_logger->warn(wrnSS.str());
             // if (!m_FlightData->SetData(received.GetData()))
             // {
             //     std::stringstream wrnSS;
@@ -162,7 +170,7 @@ namespace tello_protocol
             }
 
             reset_bytes_received();
-            std::this_thread::sleep_for(10ms);
+            std::this_thread::sleep_for(5ms);
         }
     }
 
@@ -175,14 +183,14 @@ namespace tello_protocol
     {
         return m_BytesReceived;
     }
-    bool TelloTelemetry::IsDroneConnected() const
-    {
-        return m_IsConnectedToDrone;
-    }
-    bool TelloTelemetry::IsAnyDataReceived() const
-    {
-        return m_anyDataReceived;
-    }
+    // bool TelloTelemetry::IsDroneConnected() const
+    // {
+    //     return m_IsConnectedToDrone;
+    // }
+    // bool TelloTelemetry::IsAnyDataReceived() const
+    // {
+    //     return m_anyDataReceived;
+    // }
 
     // This capability is aborted duo to SOLID principles.
     // void TelloTelemetry::SetTelloCommander(std::shared_ptr<tello_protocol::TelloCommander> telloCommander)
@@ -199,14 +207,14 @@ namespace tello_protocol
     //     m_IsLogHeaderReceived = true;
     // };
 
-    bool TelloTelemetry::IsConnReqAckReceived() const
-    {
-        return m_connReqAckRecieved;
-    }
-    bool TelloTelemetry::IsLogHeaderReceived() const
-    {
-        return m_IsLogHeaderReceived;
-    }
+    // bool TelloTelemetry::IsConnReqAckReceived() const
+    // {
+    //     return m_connReqAckRecieved;
+    // }
+    // bool TelloTelemetry::IsLogHeaderReceived() const
+    // {
+    //     return m_IsLogHeaderReceived;
+    // }
 
     // void TelloTelemetry::SetLogData(std::shared_ptr<LogData> log_data)
     // {

@@ -8,6 +8,7 @@ set(OBSERVERS
   ${CMAKE_SOURCE_DIR}/src/tello_telemetry/OutGoingCommandsObservers/TelloStickCommandsObserver.cpp
   ${CMAKE_SOURCE_DIR}/src/tello_telemetry/IncommingDataObservers/TelloLogHeaderMsgObserver.cpp
   ${CMAKE_SOURCE_DIR}/src/tello_telemetry/IncommingDataObservers/TelloLogDataMsgObserver.cpp
+  ${CMAKE_SOURCE_DIR}/src/tello_telemetry/IncommingDataObservers/TelloConnAckMsgObserver.cpp
  )
 
 set(TELLO_TELEMETRY_SOURES
