@@ -21,7 +21,7 @@ namespace tello_protocol
     class TelloTelemetry : public ISubject
     {
     public:
-        const int AmountOfBytesReceived() const;
+        
         void SetSocket(std::shared_ptr<IReciever>);
 
         TelloTelemetry(std::shared_ptr<spdlog::logger>, spdlog::level::level_enum lvl = spdlog::level::info);
@@ -78,11 +78,11 @@ namespace tello_protocol
         // std::shared_ptr<LogData> m_LogData;
         bool process_data(const std::vector<unsigned char> &);
         std::shared_ptr<IReciever> m_socket;
-        bool m_IsLogHeaderReceived = false;
+        // bool m_IsLogHeaderReceived = false;
         bool m_IsConnectedToDrone = false;
         bool m_keep_receiving = true;
         bool m_anyDataReceived = false;
-        bool m_connReqAckRecieved = false;
+        // bool m_connReqAckRecieved = false;
         int m_BytesReceived;
         std::thread m_Listener;
         std::vector<unsigned char> m_buffer, m_recieved_data;

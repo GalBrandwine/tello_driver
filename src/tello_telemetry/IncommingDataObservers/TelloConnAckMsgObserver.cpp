@@ -4,7 +4,6 @@ namespace tello_protocol
 {
     void TelloConnAckMsgObserver::Update(const std::vector<unsigned char> &message_from_subject)
     {
-        // auto received = tello_protocol::Packet(message_from_subject);
 
         std::string is_acked(message_from_subject.begin(), message_from_subject.begin() + 8);
 
@@ -13,7 +12,7 @@ namespace tello_protocol
             m_logger->info("Connection request acknowledged!");
             m_conn_ack_msg_data_mgr.SetConnReqAck();
         }
-        
+
     }
 
     TelloConnAckMsgObserver::TelloConnAckMsgObserver(ISubject &telemetry, IConnAckMsgDataManager &conn_ack_msg_data_mgr, std::shared_ptr<spdlog::logger> logger, spdlog::level::level_enum lvl)

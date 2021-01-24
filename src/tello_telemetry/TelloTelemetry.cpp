@@ -179,10 +179,10 @@ namespace tello_protocol
         m_BytesReceived = 0;
     }
 
-    const int TelloTelemetry::AmountOfBytesReceived() const
-    {
-        return m_BytesReceived;
-    }
+    // const int TelloTelemetry::AmountOfBytesReceived() const
+    // {
+    //     return m_BytesReceived;
+    // }
     // bool TelloTelemetry::IsDroneConnected() const
     // {
     //     return m_IsConnectedToDrone;
