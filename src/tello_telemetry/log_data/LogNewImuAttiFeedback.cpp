@@ -14,48 +14,39 @@ namespace tello_protocol
 
     void LogImuAtti::Update(const std::vector<unsigned char> &data, int count)
     {
-        //TODO: Add thread safety.
-
-        // m_logger->info("length={} {}",data.size(), spdlog::to_hex(data));
         m_count = count;
 
         // (self.acc_x, self.acc_y, self.acc_z) = struct.unpack_from('fff', data, 20)
-        std::memcpy(&m_acc.x, &data[20], sizeof(float));
-        std::memcpy(&m_acc.y, &data[24], sizeof(float));
-        std::memcpy(&m_acc.z, &data[28], sizeof(float));
+        std::memcpy(&m_imuAtti.acc.x, &data[20], sizeof(float));
+        std::memcpy(&m_imuAtti.acc.y, &data[24], sizeof(float));
+        std::memcpy(&m_imuAtti.acc.z, &data[28], sizeof(float));
 
         // (self.gyro_x, self.gyro_y, self.gyro_z) = struct.unpack_from('fff', data, 32)
-        std::memcpy(&m_gyro.x, &data[32], sizeof(float));
-        std::memcpy(&m_gyro.y, &data[36], sizeof(float));
-        std::memcpy(&m_gyro.z, &data[40], sizeof(float));
+        std::memcpy(&m_imuAtti.gyro.x, &data[32], sizeof(float));
+        std::memcpy(&m_imuAtti.gyro.y, &data[36], sizeof(float));
+        std::memcpy(&m_imuAtti.gyro.z, &data[40], sizeof(float));
 
         // (self.q0, self.q1, self.q2, self.q3) = struct.unpack_from('ffff', data, 48)
-        std::memcpy(&m_quat.x, &data[48], sizeof(float));
-        std::memcpy(&m_quat.y, &data[52], sizeof(float));
-        std::memcpy(&m_quat.z, &data[56], sizeof(float));
-        std::memcpy(&m_quat.w, &data[60], sizeof(float));
+        std::memcpy(&m_imuAtti.quat.x, &data[48], sizeof(float));
+        std::memcpy(&m_imuAtti.quat.y, &data[52], sizeof(float));
+        std::memcpy(&m_imuAtti.quat.z, &data[56], sizeof(float));
+        std::memcpy(&m_imuAtti.quat.w, &data[60], sizeof(float));
 
         // (self.vg_x, self.vg_y, self.vg_z) = struct.unpack_from('fff', data, 76)
-        std::memcpy(&m_vg.x, &data[76], sizeof(float));
-        std::memcpy(&m_vg.y, &data[80], sizeof(float));
-        std::memcpy(&m_vg.z, &data[84], sizeof(float));
-    }
-    
-    const Vec3 &LogImuAtti::GetAcc() const
-    {
-        return m_acc;
-    }
-    const Vec3 &LogImuAtti::GetGyro() const
-    {
-        return m_gyro;
+        std::memcpy(&m_imuAtti.vg.x, &data[76], sizeof(float));
+        std::memcpy(&m_imuAtti.vg.y, &data[80], sizeof(float));
+        std::memcpy(&m_imuAtti.vg.z, &data[84], sizeof(float));
+        m_is_imu_atti_updated = true;
     }
 
-    const Vec3 &LogImuAtti::GetVg() const
+    bool LogImuAtti::GetImuAttiIfUpdated(ImuAttitudeData &imuAttiOut)
     {
-        return m_vg;
-    }
-    const Vec4 &LogImuAtti::GetQuat() const
-    {
-        return m_quat;
+        if (m_is_imu_atti_updated)
+        {
+            imuAttiOut = m_imuAtti;
+            m_is_imu_atti_updated = false;
+            return true;
+        }
+        return false;
     }
 } // namespace tello_protocol

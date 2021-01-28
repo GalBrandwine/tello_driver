@@ -20,16 +20,13 @@ namespace tello_protocol
         m_count++;
         short pos = 0;
 
-        // if (data[pos + 0] != 0x55) // Little endian
-        // {
-        //     return;
-        // }
-        // std::cout << "data.size(): " << data.size() << "\n";
         while (pos < data.size() - 2)
         {
-            // std::cout << "pos: " << pos << "\n";
-            // short length = int16(data[pos + 1], data[pos + 2]);
-
+            if (data[pos + 0] != 0x55) // Little endian
+            {
+                m_logger->error("Data at position {}, is corrupted!", pos);
+                return;
+            }
             short length; // = uint16(data[pos + 4], data[pos + 5]);
             std::memcpy(&length, &data[pos + 1], sizeof(short));
 
@@ -39,7 +36,17 @@ namespace tello_protocol
             std::memcpy(&id, &data[pos + 4], sizeof(unsigned short));
 
             auto xorval = data[pos + 6];
-            auto payload = std::vector<unsigned char>(data.begin() + pos + 10, data.begin() + pos + 10 + length - 12);
+            std::vector<unsigned char> payload;
+            try
+            {
+                payload = std::vector<unsigned char>(data.begin() + pos + 10, data.begin() + pos + 10 + length - 12);
+            }
+            catch (const std::exception &e)
+            {
+                std::string err(__PRETTY_FUNCTION__);
+                m_logger->error(err + "::" + e.what());
+                return;
+            }
 
             for (auto &i : payload)
             {

@@ -15,7 +15,7 @@ namespace tello_protocol
     class LogNewMvoFeedback
     {
     public:
-        const int GetUpdateCounter() const { return m_count; };
+        // const int GetUpdateCounter() const { return m_count; };
         LogNewMvoFeedback(std::shared_ptr<spdlog::logger>);
         ~LogNewMvoFeedback();
 

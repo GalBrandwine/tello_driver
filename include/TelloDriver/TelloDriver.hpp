@@ -12,8 +12,10 @@
 #include "TelloCommander.hpp"
 #include "utils/data_manager/DataManager.hpp"
 
+#include "TelloWifiMsgObserver.hpp"
 #include "TelloConnAckMsgObserver.hpp"
 #include "TelloLogDataMsgObserver.hpp"
+#include "TelloFlightDataMsgObserver.hpp"
 #include "TelloLogHeaderMsgObserver.hpp"
 #include "TelloStickCommandsObserver.hpp"
 #include "TelloAckLogHeaderIdSenderObserver.hpp"
@@ -72,6 +74,22 @@ private:
     *************************************/
 
     /**
+     * @brief TelloFlightDataMsgObserver attached to TelloTelemetry via ISubject interface.
+     * Observe for Flight_Data.
+     * If received, calls SetFlightData member function via IFlightDataMsgDataManager interface, supplied by DataManager.
+     * 
+     */
+    std::shared_ptr<IObserver> m_TelloFlightDataMsgObserver;
+
+    /**
+     * @brief TelloWifiMsgObserver attached to TelloTelemetry via ISubject interface.
+     * Observe for WIFI_MSG's.
+     * If received, calls SetWifiMsg member function via IWifiMsgDataManager interface, supplied by DataManager.
+     * 
+     */
+    std::shared_ptr<IObserver> m_TelloWifiMsgObserver;
+
+    /**
      * @brief TelloLogHeaderMsgObserver attached to telloTelemetry via ISubject interface.
      * It being callback upon new data arival to TelloTelemtry. 
      * Then parse this new data, and insert it to TelloDataManager through ILogHeaderMsgDataManager interface.
@@ -120,6 +138,4 @@ private:
     tello_protocol::TelloCommander m_TelloCommander;
     tello_protocol::TelloTelemetry m_TelloTelemetry;
     std::shared_ptr<spdlog::logger> m_BaseLogger;
-    bool m_KeepRunning = true;
-    std::thread m_StickCommandsSendingThread;
 };

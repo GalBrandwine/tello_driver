@@ -1,8 +1,45 @@
 #include "DataManager.hpp"
 namespace tello_protocol
 {
+    ConnectionInformation &DataManager::GetConnectionInformation()
+    {
+        return m_connection_information;
+    }
+
+    void DataManager::SetFlightData(const std::shared_ptr<IFlightDataGetter> flight_data_processor)
+    {
+        auto flight_data = flight_data_processor->GetFlightData();
+
+        /* 
+        if (log_data_processor->GetLogMvo().GetPosVelIfUpdated(m_posVel))
+        {
+            m_logger->debug("pose {} {} {}", m_posVel.pose.x, m_posVel.pose.y, m_posVel.pose.z);
+            Notify(POSITION_VELOCITY_LOG);
+        }
+        if (log_data_processor->GetLogImuAtti().GetImuAttiIfUpdated(m_imuAtti))
+        {
+            m_logger->debug("acc {} {} {}", m_imuAtti.acc.x, m_imuAtti.acc.y, m_imuAtti.acc.z);
+            m_logger->debug("gyro {} {} {}", m_imuAtti.gyro.x, m_imuAtti.gyro.y, m_imuAtti.gyro.z);
+            m_logger->debug("vg {} {} {}", m_imuAtti.vg.x, m_imuAtti.vg.y, m_imuAtti.vg.z);
+            m_logger->debug("quat {} {} {} {}", m_imuAtti.quat.x, m_imuAtti.quat.y, m_imuAtti.quat.z, m_imuAtti.quat.w);
+            Notify(IMU_ATTITUDE_LOG);
+        }
+         */
+    }
+
+    void DataManager::SetWifiMsg(const unsigned char &wifi_strength)
+    {
+        m_logger->debug("SetWifiMsg recieved: {}", wifi_strength);
+        /**
+         * @todo Store wifi information in FlightData struct.
+         * Something like that: m_FlightData->SetWifiStrength(received.GetData()[0]);
+         * 
+         */
+    }
+
     void DataManager::SetConnReqAck()
     {
+        m_logger->debug("Connection request acknowledged!");
         m_connection_information.IsConnected = true;
     }
 
@@ -19,11 +56,18 @@ namespace tello_protocol
             SetConnReqAck();
         }
 
-
         if (log_data_processor->GetLogMvo().GetPosVelIfUpdated(m_posVel))
         {
-            m_logger->info("pose {} {} {}", m_posVel.pose.x, m_posVel.pose.y, m_posVel.pose.z);
+            m_logger->debug("pose {} {} {}", m_posVel.pose.x, m_posVel.pose.y, m_posVel.pose.z);
             Notify(POSITION_VELOCITY_LOG);
+        }
+        if (log_data_processor->GetLogImuAtti().GetImuAttiIfUpdated(m_imuAtti))
+        {
+            m_logger->debug("acc {} {} {}", m_imuAtti.acc.x, m_imuAtti.acc.y, m_imuAtti.acc.z);
+            m_logger->debug("gyro {} {} {}", m_imuAtti.gyro.x, m_imuAtti.gyro.y, m_imuAtti.gyro.z);
+            m_logger->debug("vg {} {} {}", m_imuAtti.vg.x, m_imuAtti.vg.y, m_imuAtti.vg.z);
+            m_logger->debug("quat {} {} {} {}", m_imuAtti.quat.x, m_imuAtti.quat.y, m_imuAtti.quat.z, m_imuAtti.quat.w);
+            Notify(IMU_ATTITUDE_LOG);
         }
     }
 
@@ -78,9 +122,18 @@ namespace tello_protocol
 
     void DataManager::notify_dji_log_version(IObserver *observer)
     {
-        std::vector<unsigned char> data(m_log_header_information.DJILogVersion);
-        data.insert(data.end(), m_log_header_information.BuildDate.begin(), m_log_header_information.BuildDate.end());
-        observer->Update(data);
+        std::vector<unsigned char> data;
+        try
+        {
+            data = m_log_header_information.DJILogVersion;
+            data.insert(data.end(), m_log_header_information.BuildDate.begin(), m_log_header_information.BuildDate.end());
+            observer->Update(data);
+        }
+        catch (const std::exception &e)
+        {
+            std::string err(__PRETTY_FUNCTION__);
+            m_logger->error(err + "::" + e.what());
+        }
     }
 
     void DataManager::Notify(const OBSERVERS observer_type)

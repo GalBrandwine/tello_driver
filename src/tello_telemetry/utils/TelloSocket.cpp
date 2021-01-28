@@ -12,9 +12,16 @@ void TelloSocket::in_data_worker()
 
 void TelloSocket::do_receive()
 {
-
-    m_bytes_recvd = m_tello_socket->receive_from(
-        boost::asio::buffer(data_, max_length), m_sender_endpoint);
+    try
+    {
+        m_tello_socket->wait(m_tello_socket->wait_read);
+        m_bytes_recvd = m_tello_socket->receive_from(
+            boost::asio::buffer(data_, max_length), m_sender_endpoint);
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << __PRETTY_FUNCTION__ << "::" << __LINE__ << " " << e.what() << '\n';
+    }
 }
 
 int TelloSocket::Receive(std::vector<unsigned char> &data)
@@ -34,34 +41,30 @@ int TelloSocket::Receive(std::vector<unsigned char> &data)
 
 void TelloSocket::Send(const std::string &cmd)
 {
-    auto msg = cmd;
-
-    // std::lock_guard<std::mutex> lock(m_sendM);
-    m_tello_socket->send_to(boost::asio::buffer(msg, msg.length()), m_sender_endpoint); /* ,
-        [this](std::error_code error, std::size_t bytes_transferred) {
-        }); */
+    try
+    {
+        m_tello_socket->wait(m_tello_socket->wait_write);
+        m_tello_socket->send_to(boost::asio::buffer(cmd, cmd.length()), m_sender_endpoint);
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << __PRETTY_FUNCTION__ << "::" << __LINE__ << " " << e.what() << '\n';
+    }
 }
 
 TelloSocket::~TelloSocket()
 {
-
-    m_tello_socket->shutdown(m_tello_socket->shutdown_both);
-
-    work_io_context_.stop();
-    // if (work_thread_.joinable())
-    // {
-    //     work_thread_.join();
-    // }
-
-    delete (m_tello_socket);
+    m_keep_running = false;
+    boost::system::error_code ignored;
+    
+    m_tello_socket->shutdown(m_tello_socket->shutdown_both, ignored);
 
     if (m_in_socket_thread.joinable())
     {
         m_any_revieved = true;
-        m_keep_running = false;
         m_in_socket_thread.join();
     }
-    std::cout << "TelloSocket Destrtucting.\n";
+    std::cout << "TelloSocket Destrtucted.\n";
 }
 
 TelloSocket::TelloSocket(const std::string &droneIp, const short droneCommandPort, const short droneDataPort)

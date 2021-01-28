@@ -13,15 +13,21 @@
 class TelloSocket : public ISender, public IReciever
 {
 public:
-
     /**
-     * @brief Receive new bytes from socket.
+     * @brief Receive new bytes from socket (None blocking).
      * 
      * @param[out] data - buffer filled with new data.
-     * @return int amount of received bytes. 
+     * @return int amount of received bytes.
      */
     int Receive(std::vector<unsigned char> &data) override;
 
+    /**
+     * @brief Send command to socket.
+     * 1. Wait for socket to be in *read* mode.
+     * 2. Block until operation complete.
+     * 
+     * @param cmd const std::string & filled with data.
+     */
     void Send(const std::string &cmd) override;
 
     TelloSocket(const std::string &droneIp, const short droneCommandPort, const short droneDataPort);
@@ -29,14 +35,9 @@ public:
 
 private:
     /**
-     * @brief Async call for sending data
-     * 
-     * @param length size of data to send.
-     */
-    void do_send(std::size_t length);
-
-    /**
-     * @brief Blocking until socket return with new data.
+     * @brief Synced socket receive.
+     * 1.Wait for socket to be ready to *read*.
+     * 2.**Block** until socket return with new data.
      * 
      */
     void do_receive();

@@ -18,7 +18,6 @@ namespace tello_protocol
     class LogData
         : public ILogDataUpdater,
           public ILogDataGetter
-
     {
     public:
         /**

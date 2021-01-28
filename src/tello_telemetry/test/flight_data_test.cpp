@@ -362,11 +362,11 @@ TEST(TelloTelemetryTest, ReceiveFlightData)
         if (cmd == tello_protocol::FLIGHT_MSG)
         {
 
-            if (flight_data.SetData(received.GetData()))
-            {
-                ASSERT_GE(flight_data.GetFlightMode(), 0);
-                keep_receiving = false;
-            }
+            // if (flight_data.SetData(received.GetData()))
+            // {
+            //     ASSERT_GE(flight_data.GetFlightMode(), 0);
+            //     keep_receiving = false;
+            // }
         }
         std::fill(buffer_.begin(), buffer_.end(), 0);
         std::this_thread::sleep_for(0.5s);

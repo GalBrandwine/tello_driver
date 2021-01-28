@@ -74,10 +74,10 @@ bool TelloDriver::WaitForConnection(int timeout)
     fsec fs;
     auto t0 = Time::now();
 
+    m_TelloCommander.SendConnReq();
     while (!m_DataManager.IsConnReqAckReceived())
     {
         m_TelloCommander.SendConnReq();
-
         auto t1 = Time::now();
         fs = t1 - t0;
         auto passed = fs.count();
@@ -96,16 +96,11 @@ TelloDriver::TelloDriver(spdlog::level::level_enum lvl)
     : m_BaseLogger(spdlog::stdout_color_mt("TelloDriver")),
       m_TelloTelemetry(spdlog::stdout_color_mt("tello_telemetry"), lvl),
       m_TelloCommander(spdlog::stdout_color_mt("tello_commander"), lvl),
-      m_DataManager(spdlog::stdout_color_mt("data_manager"), lvl)
+      m_DataManager(spdlog::stdout_color_mt("data_manager"), spdlog::level::debug)
 {
     m_BaseLogger->info("TelloDriver created! version: {}", TelloDriverVersion);
     m_BaseLogger->set_level(lvl);
 
-    // auto flight_data = std::make_shared<tello_protocol::FlightData>(spdlog::stdout_color_mt("flight_data"));
-    // m_TelloTelemetry.SetFlightData(std::move(flight_data));
-
-    // auto log_data = std::make_shared<tello_protocol::LogData>(spdlog::stdout_color_mt("log_data"));
-    // m_TelloTelemetry.SetLogData(std::move(log_data));
 
     auto shared_socket = std::make_shared<TelloSocket>("192.168.10.1", 8889, 9000);
     m_TelloTelemetry.SetSocket(shared_socket);
@@ -116,19 +111,16 @@ TelloDriver::TelloDriver(spdlog::level::level_enum lvl)
      * 
      */
 
-    m_TelloConnAckMsgObserver = std::make_shared<tello_protocol::TelloConnAckMsgObserver>(m_TelloTelemetry, m_DataManager, spdlog::stdout_color_mt("TelloConnAckMsgObserver"), lvl);
+    // m_TelloConnAckMsgObserver = std::make_shared<tello_protocol::TelloConnAckMsgObserver>(m_TelloTelemetry, m_DataManager, spdlog::stdout_color_mt("TelloConnAckMsgObserver"), lvl);
     m_TelloAckLogHeaderIdSenderObserver = std::make_shared<tello_protocol::TelloAckLogHeaderIdSenderObserver>(m_TelloCommander, m_DataManager, spdlog::stdout_color_mt("TelloAckLogHeaderIdSenderObserver"), lvl);
+    m_TelloWifiMsgObserver = std::make_shared<tello_protocol::TelloWifiMsgObserver>(m_TelloTelemetry, m_DataManager, spdlog::stdout_color_mt("TelloWifiMsgObserver"), lvl);
     m_TelloLogDataMsgObserver = std::make_shared<tello_protocol::TelloLogDataMsgObserver>(m_TelloTelemetry, m_DataManager, spdlog::stdout_color_mt("TelloLogDataMsgObserver"), lvl);
+    m_TelloFlightDataMsgObserver = std::make_shared<tello_protocol::TelloFlightDataMsgObserver>(m_TelloTelemetry, m_DataManager, spdlog::stdout_color_mt("TelloFlightDataMsgObserver"), lvl);
     m_TelloLogHeaderMsgObserver = std::make_shared<tello_protocol::TelloLogHeaderMsgObserver>(m_TelloTelemetry, m_DataManager, spdlog::stdout_color_mt("TelloLogHeaderMsgObserver"), lvl);
-    m_TelloStickCommandsObserver = std::make_shared<tello_protocol::TelloStickCommandsObserver>(m_TelloTelemetry, m_TelloCommander, spdlog::stdout_color_mt("StickCommandsObserver"), lvl);
-    
+    m_TelloStickCommandsObserver = std::make_shared<tello_protocol::TelloStickCommandsObserver>(m_TelloTelemetry, m_TelloCommander, m_DataManager, spdlog::stdout_color_mt("StickCommandsObserver"), lvl);
 }
 
 TelloDriver::~TelloDriver()
 {
-    m_BaseLogger->info(m_BaseLogger->name() + " Destructing!");
-    m_KeepRunning = false;
-    if (m_StickCommandsSendingThread.joinable())
-        m_StickCommandsSendingThread.join();
     m_BaseLogger->info(m_BaseLogger->name() + " Destructed!");
 }

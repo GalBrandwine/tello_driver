@@ -77,7 +77,7 @@ namespace tello_protocol
         }
         else if (cmd == tello_protocol::WIFI_MSG)
         {
-            m_logger->info("WIFI_MSG received: {}", int(received.GetData()[0]));
+            // m_logger->info("WIFI_MSG received: {}", int(received.GetData()[0]));
             // m_FlightData->SetWifiStrength(received.GetData()[0]);
         }
         else if (cmd == tello_protocol::ALT_LIMIT_MSG)

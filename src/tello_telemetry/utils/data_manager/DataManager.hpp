@@ -11,22 +11,11 @@
 #include "ILogHeaderMsgDataManager.hpp"
 #include "ILogDataMsgDataManager.hpp"
 #include "IConnAckMsgDataManager.hpp"
-
+#include "IWifiMsgDataManager.hpp"
+#include "ILogDataConnectionInformationSupply.hpp"
+#include "IFlightDataMsgDataManager.hpp"
 namespace tello_protocol
 {
-    struct ConnectionInformation
-    {
-        bool IsConnected = false;
-    };
-
-    /**
-     * @brief Store LogHeaderMsg information
-     * 
-     */
-    struct LogHeaderInformation
-    {
-        std::vector<unsigned char> BuildDate, DJILogVersion, LogId;
-    };
 
     /**
      * @brief Store and maintain data from Observers.
@@ -39,9 +28,27 @@ namespace tello_protocol
         : public IDataMgrSubject,
           public ILogHeaderMsgDataManager,
           public ILogDataMsgDataManager,
-          public IConnAckMsgDataManager
+          public IConnAckMsgDataManager,
+          public IWifiMsgDataManager,
+          public ILogDataConnectionInformationSupply,
+          public IFlightDataMsgDataManager
     {
     public:
+        /**
+         * @brief Set the Flight Data object
+         * 
+         * @param flight_data_processor 
+         */
+        void SetFlightData(const std::shared_ptr<IFlightDataGetter> flight_data_processor) override;
+
+        /**
+         * @brief Set the WifiMsg data.
+         * Overriding IWifiMsgDataManager, so that TelloWifiMsgObserver (which attached to TelloTellemetry) could supply new WifiMsgs.
+         * 
+         * @param wifi_strength
+         */
+        void SetWifiMsg(const unsigned char &wifi_strength) override;
+
         /**
          * @brief Overriding IConnAckMsgDataManager.
          * This function will be called by the ConnReqAck observer, which is attached to TelloTelemetry.
@@ -79,6 +86,14 @@ namespace tello_protocol
          * @return false 
          */
         bool IsConnReqAckReceived() { return m_connection_information.IsConnected; };
+
+        /**
+         * @brief Get the Connection Information object
+         * 
+         * @return const tello_protocol::ConnectionInformation& 
+         */
+        ConnectionInformation &GetConnectionInformation() override;
+
         DataManager(std::shared_ptr<spdlog::logger> logger, spdlog::level::level_enum lvl = spdlog::level::info);
         ~DataManager();
 
@@ -103,6 +118,7 @@ namespace tello_protocol
         ConnectionInformation m_connection_information;
 
         LogHeaderInformation m_log_header_information;
+        ImuAttitudeData m_imuAtti;
         PoseVelData m_posVel;
         std::unordered_map<OBSERVERS, std::list<IObserver *>> m_attached_dict;
         std::shared_ptr<spdlog::logger> m_logger;
