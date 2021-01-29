@@ -10,21 +10,11 @@
  * Also the verbs "observe", "listen" or "track" usually mean the same thing.
  */
 #pragma once
-#include <iostream>
-#include <list>
-#include <string>
-#include <vector>
 #include "utils/telemetry_data/TelemetryData.hpp"
-class IPositionVelocityObserver : public IObserver
+class IPositionVelocityObserver : virtual public IObserver
 {
 public:
   virtual ~IPositionVelocityObserver(){};
   virtual void Update(const tello_protocol::PoseVelData &pos_vel) = 0;
-  
-  /**
-   * @brief Empty implementation 
-   * 
-   * @param message_from_subject 
-   */
-  void Update(const std::vector<unsigned char> &message_from_subject) override{};
+
 };

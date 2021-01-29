@@ -1,7 +1,7 @@
 # tello_driver (cpp)
 
 A **cpp** tello_driver for the DJI tello drone, that truly supports the **unofficial** SDK.
-Meant to be included as a library, to other projects. See *examples*.
+Meant to be included as a library, to other projects. See *[examples](examples)*.
 
 ## Implemented Capabilities from TelloPy
 
@@ -15,10 +15,10 @@ Not all TelloPy cabapilities were implemented.
 - [x] Parsing WIFI_MSG
 - [x] Parsing ALT_LIMIT_MSG
 - [x] Parsing ATT_LIMIT_MSG
-- [x] Parsing LOW_BAT_THRESHOLD_MSG. **Note printing Only**.
+- [x] Parsing LOW_BAT_THRESHOLD_MSG.
 - [ ] Parsing LIGHT_MSG. **Note: Not enough doccumentation. didnt understand what is this message**.
 - [x] Parsing FLIGHT_MSG
-- [ ] Parsing TIME_CMD. **Note could not reproduce**.
+- [x] Parsing TIME_CMD. **Note could not reproduce**.
 - [ ] Capturing all ACK messages:
 - [ ] Parsing TELLO_CMD_FILE_SIZE
 - [ ] Parsing TELLO_CMD_FILE_DATA
@@ -46,14 +46,14 @@ Not all TelloPy cabapilities were implemented.
 - [ ] set_video_encoder_rate
 - [ ] __send_video_encoder_rate
 - [ ] take_picture
-- [ ] up
-- [ ] down
-- [ ] forward
-- [ ] backward
-- [ ] right
-- [ ] left
-- [ ] clockwise
-- [ ] counter_clockwise
+- [x] up
+- [x] down
+- [x] forward
+- [x] backward
+- [x] right
+- [x] left
+- [x] clockwise
+- [x] counter_clockwise
 - [ ] flip_forward
 - [ ] flip_back
 - [ ] flip_right
@@ -69,7 +69,7 @@ Not all TelloPy cabapilities were implemented.
 - [ ] set_roll
 - [ ] toggle_fast_mode
 - [ ] manual_takeoff
-- [ ] __send_stick_command
+- [x] __send_stick_command
 - [x] __send_ack_log
 - [x] send_packet
 - [x] send_packet_data
@@ -105,4 +105,9 @@ cmake ..  && make -j # Or, for debugging: cmake .. -DCMAKE_BUILD_TYPE=Debug && m
 ```shell
 cd build/examples
 ./simple_connection
+```
 
+### Projects that help me bring up this monstrosity :)
+
+- [tello_ros project](https://github.com/clydemcqueen/tello_ros).
+- [TelloPy](https://github.com/hanyazou/TelloPy)

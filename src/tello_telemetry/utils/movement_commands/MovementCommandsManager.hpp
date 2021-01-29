@@ -68,14 +68,80 @@ namespace tello_protocol
     {
     public:
         const std::unordered_map<Sticks, float> &GetStickMovements() const;
-        bool SetMovementCommand(Movements, float);
+        /**
+         * @brief Set the Movement Command.
+         * These movements imitate stick movements, hence  'amount' is how much stick was given to the desired direction
+         * This function accept only values between 0 to 100.
+         * 
+         * @param amount - Amount of stick movement [0,100]
+         * @return true - If command set succesfully.
+         * @return false - If (amount  > 100 or amount < 100)
+         */
+        bool SetMovementCommand(Movements, float amount);
         bool SetFastMode(bool);
 
         MovementCommandsManager(/* args */);
         ~MovementCommandsManager();
 
     private:
-        void set_backward(float);
+        /**
+         * @brief Forward movements interpreted via right stick, in Y axes (Movements are stick-wise).
+         * 
+         * @param amount - Amount of stick movement [0,100]
+         */
+        void set_forward(float amount);
+
+        /**
+         * @brief Backward movements interpreted via right stick, in Y axes (Movements are stick-wise).
+         * @param amount - Amount of stick movement [0,100]
+         */
+        void set_backward(float amount);
+
+        /**
+         * @brief Rotate clockwise movements interpreted via left stick, in X axes (Movements are stick-wise).
+         * @param amount - Amount of stick movement [0,100]
+         */
+        void set_clockwise(float amount);
+
+        /**
+         * @brief Tells the drone to rotate in a counter-clockwise direction
+         * Movements interpreted via left stick, in X axes (Movements are stick-wise).
+         * 
+         * @param amount - Amount of stick movement [0,100]
+         */
+        void set_counter_clockwise(float amount);
+
+        /**
+         * @brief Left tells the drone to go left
+         * Movements interpreted via right stick, in X axes (Movements are stick-wise).
+         * 
+         * @param amount - Amount of stick movement [0,100]
+        */
+        void set_left(float amount);
+
+        /**
+         * @brief Right tells the drone to go right
+         * Movements interpreted via right stick, in X axes (Movements are stick-wise).
+         * 
+         * @param amount - Amount of stick movement [0,100]
+         */
+        void set_right(float amount);
+
+        /**
+         * @brief Up tells the drone to ascend
+         * Movements interpreted via left stick, in Y axes (Movements are stick-wise).
+         * 
+         * @param amount - Amount of stick movement [0,100]
+         */
+        void set_up(float amount);
+
+        /**
+         * @brief Up tells the drone to descend
+         * Movements interpreted via left stick, in Y axes (Movements are stick-wise).
+         * 
+         * @param amount - Amount of stick movement [0,100]
+         */
+        void set_down(float amount);
         std::unordered_map<Sticks, float> m_SticksDict;
     };
 } // namespace tello_protocol

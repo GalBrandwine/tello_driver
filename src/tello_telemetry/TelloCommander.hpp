@@ -10,7 +10,7 @@
 #include "utils/ISendStickCommands.hpp"
 namespace tello_protocol
 {
-    class TelloCommander: public ISendAckLog, public ISendStickCommands
+    class TelloCommander : public ISendAckLog, public ISendStickCommands
     {
     public:
         /**
@@ -18,9 +18,15 @@ namespace tello_protocol
          * \brief This section expose movements commands, as implemented in [TelloPy](https://github.com/hanyazou/TelloPy/blob/develop-0.7.0/tellopy/_internal/tello.py#L328)
          * 
         **/
+        void Down(int);
+        void Up(int);
+        void Clockwise(int);
+        void CounterClockwise(int);
+        void Left(int);
+        void Right(int);
         void Backward(int);
         void Forward(int);
-
+        bool SetFastMode(bool);
         /**
          * @brief Send stick commands.
          * This works like a *keep-alive*, to the drone.

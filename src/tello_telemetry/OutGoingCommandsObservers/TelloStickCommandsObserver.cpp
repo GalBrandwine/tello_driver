@@ -6,7 +6,6 @@ namespace tello_protocol
     {
         if (m_connect_info_data_mgr.GetConnectionInformation().IsConnected)
         {
-            // m_logger->info("Drone is connected, sending stickcommands");
             m_commander.SendStickCommands();
         }
     }

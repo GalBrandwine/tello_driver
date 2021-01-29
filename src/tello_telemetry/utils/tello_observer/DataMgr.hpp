@@ -5,7 +5,8 @@ enum OBSERVERS
     ACK_LOG_HEADER,
     DJI_LOG_VERSION,       //< Notify all attached that Log build data and version, has been received.
     POSITION_VELOCITY_LOG, //< Notify all attached that position and velocity, has been received.
-    IMU_ATTITUDE_LOG
+    IMU_ATTITUDE_LOG,
+    FLIGHT_DATA_MSG
 };
 
 static const std::string observer_name(OBSERVERS observer_type)
@@ -20,6 +21,9 @@ static const std::string observer_name(OBSERVERS observer_type)
         return "POSITION_VELOCITY_LOG";
     case OBSERVERS::IMU_ATTITUDE_LOG:
         return "IMU_ATTITUDE_LOG";
+    case OBSERVERS::FLIGHT_DATA_MSG:
+        return "FLIGHT_DATA_MSG";        
+        
     default:
         return "NOT IMPLEMENTED";
     }

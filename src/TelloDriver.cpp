@@ -4,6 +4,36 @@
 /**
  * \section Movements section
 **/
+void TelloDriver::CounterClockwise(int amount)
+{
+    assert(amount >= 0 && amount <= 100);
+    m_TelloCommander.CounterClockwise(amount);
+}
+void TelloDriver::Clockwise(int amount)
+{
+    assert(amount >= 0 && amount <= 100);
+    m_TelloCommander.Clockwise(amount);
+}
+void TelloDriver::Right(int amount)
+{
+    assert(amount >= 0 && amount <= 100);
+    m_TelloCommander.Right(amount);
+}
+void TelloDriver::Left(int amount)
+{
+    assert(amount >= 0 && amount <= 100);
+    m_TelloCommander.Left(amount);
+}
+void TelloDriver::Down(int amount)
+{
+    assert(amount >= 0 && amount <= 100);
+    m_TelloCommander.Down(amount);
+}
+void TelloDriver::Up(int amount)
+{
+    assert(amount >= 0 && amount <= 100);
+    m_TelloCommander.Up(amount);
+}
 void TelloDriver::Backward(int amount)
 {
     assert(amount >= 0 && amount <= 100);
@@ -15,34 +45,39 @@ void TelloDriver::Forward(int amount)
     m_TelloCommander.Forward(amount);
 }
 
-const float TelloDriver::GetAttLimit()
+void TelloDriver::SetAltLimitReq(int alt_limit)
 {
-    // return m_TelloTelemetry.GetFlightData()->GetAttLimit();
+    m_TelloCommander.SetAltLimitReq(alt_limit);
 }
 
-const short TelloDriver::GetAltLimit()
-{
-    // return m_TelloTelemetry.GetFlightData()->GetAltLimit();
-}
-const short TelloDriver::GetWifiStrength()
-{
-    // return m_TelloTelemetry.GetFlightData()->GetWifiStrength();
-}
+// const float TelloDriver::GetAttLimit()
+// {
+//     // return m_TelloTelemetry.GetFlightData()->GetAttLimit();
+// }
 
-const tello_protocol::Vec3 TelloDriver::GetPos()
-{
-    // return m_TelloTelemetry.GetLogData()->GetLogMvo().GetPos();
-}
+// const short TelloDriver::GetAltLimit()
+// {
+//     // return m_TelloTelemetry.GetFlightData()->GetAltLimit();
+// }
+// const short TelloDriver::GetWifiStrength()
+// {
+//     // return m_TelloTelemetry.GetFlightData()->GetWifiStrength();
+// }
 
-tello_protocol::TelloCommander &TelloDriver::GetTelloCommander()
-{
-    return m_TelloCommander;
-}
+// const tello_protocol::Vec3 TelloDriver::GetPos()
+// {
+//     // return m_TelloTelemetry.GetLogData()->GetLogMvo().GetPos();
+// }
 
-tello_protocol::TelloTelemetry &TelloDriver::GetTelloTelemetry()
-{
-    return m_TelloTelemetry;
-}
+// tello_protocol::TelloCommander &TelloDriver::GetTelloCommander()
+// {
+//     return m_TelloCommander;
+// }
+
+// tello_protocol::TelloTelemetry &TelloDriver::GetTelloTelemetry()
+// {
+//     return m_TelloTelemetry;
+// }
 
 void TelloDriver::Land()
 {
@@ -100,7 +135,6 @@ TelloDriver::TelloDriver(spdlog::level::level_enum lvl)
 {
     m_BaseLogger->info("TelloDriver created! version: {}", TelloDriverVersion);
     m_BaseLogger->set_level(lvl);
-
 
     auto shared_socket = std::make_shared<TelloSocket>("192.168.10.1", 8889, 9000);
     m_TelloTelemetry.SetSocket(shared_socket);

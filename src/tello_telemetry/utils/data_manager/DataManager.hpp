@@ -7,6 +7,7 @@
 #include "spdlog/fmt/bin_to_hex.h"
 #include "spdlog/sinks/stdout_color_sinks.h"
 #include <sstream>
+#include <type_traits>
 
 #include "ILogHeaderMsgDataManager.hpp"
 #include "ILogDataMsgDataManager.hpp"
@@ -19,7 +20,7 @@ namespace tello_protocol
 
     /**
      * @brief Store and maintain data from Observers.
-     * Apon each new data from a observer:
+     * Apon each new data from an observer do:
      * * Update these new data (if new)
      * * Notify all attached subscribers to this new data.
      * 
@@ -77,6 +78,9 @@ namespace tello_protocol
 
         void Attach(const OBSERVERS observer_type, IObserver *observer) override;
         void Attach(const OBSERVERS observer_type, IPositionVelocityObserver *observer) override;
+        void Attach(const OBSERVERS observer_type, IFlightDataObserver *observer) override;
+        void Attach(const OBSERVERS observer_type, IImuAttitudeObserver *observer) override;
+        
         // void Attach(const OBSERVERS observer_type, IConnectionEstablishedObserver *observer) override;
 
         /**
@@ -109,6 +113,21 @@ namespace tello_protocol
          * @param[out] observer - an attched IPositionVelocityObserver.
          */
         void notify_position_velocity(IObserver *observer);
+
+        /**
+         * @brief Expects observer to has interface of IFlightDataObserver
+         * 
+         * @throw Exception if Wrong observers attached.
+         * @param[out] observer - an attched IFlightDataObserver.
+         */
+        void notify_flight_data_received(IObserver *observer);
+
+        /**
+         * @brief Expects observer to has interface of IFlightDataObserver
+         * 
+         * @param[out] observer - an attched IFlightDataObserver.
+         */
+        void notify_imu_attitude_received(IObserver *observer);
         void howManyObservers(const OBSERVERS observer_type);
 
         /**
@@ -120,6 +139,7 @@ namespace tello_protocol
         LogHeaderInformation m_log_header_information;
         ImuAttitudeData m_imuAtti;
         PoseVelData m_posVel;
+        FlightDataStruct m_flightData;
         std::unordered_map<OBSERVERS, std::list<IObserver *>> m_attached_dict;
         std::shared_ptr<spdlog::logger> m_logger;
     };

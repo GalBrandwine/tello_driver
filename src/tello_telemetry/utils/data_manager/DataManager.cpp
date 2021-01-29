@@ -8,33 +8,18 @@ namespace tello_protocol
 
     void DataManager::SetFlightData(const std::shared_ptr<IFlightDataGetter> flight_data_processor)
     {
-        auto flight_data = flight_data_processor->GetFlightData();
 
-        /* 
-        if (log_data_processor->GetLogMvo().GetPosVelIfUpdated(m_posVel))
-        {
-            m_logger->debug("pose {} {} {}", m_posVel.pose.x, m_posVel.pose.y, m_posVel.pose.z);
-            Notify(POSITION_VELOCITY_LOG);
-        }
-        if (log_data_processor->GetLogImuAtti().GetImuAttiIfUpdated(m_imuAtti))
-        {
-            m_logger->debug("acc {} {} {}", m_imuAtti.acc.x, m_imuAtti.acc.y, m_imuAtti.acc.z);
-            m_logger->debug("gyro {} {} {}", m_imuAtti.gyro.x, m_imuAtti.gyro.y, m_imuAtti.gyro.z);
-            m_logger->debug("vg {} {} {}", m_imuAtti.vg.x, m_imuAtti.vg.y, m_imuAtti.vg.z);
-            m_logger->debug("quat {} {} {} {}", m_imuAtti.quat.x, m_imuAtti.quat.y, m_imuAtti.quat.z, m_imuAtti.quat.w);
-            Notify(IMU_ATTITUDE_LOG);
-        }
-         */
+        auto old_wifi_strength = m_flightData.wifi_strength; /**< Save wifi strength, for it is not maintained with flight_data_processor. */
+        m_flightData = flight_data_processor->GetFlightData();
+
+        m_flightData.wifi_strength = old_wifi_strength;
+        Notify(OBSERVERS::FLIGHT_DATA_MSG);
     }
 
     void DataManager::SetWifiMsg(const unsigned char &wifi_strength)
     {
         m_logger->debug("SetWifiMsg recieved: {}", wifi_strength);
-        /**
-         * @todo Store wifi information in FlightData struct.
-         * Something like that: m_FlightData->SetWifiStrength(received.GetData()[0]);
-         * 
-         */
+        m_flightData.wifi_strength = wifi_strength;
     }
 
     void DataManager::SetConnReqAck()
@@ -59,7 +44,7 @@ namespace tello_protocol
         if (log_data_processor->GetLogMvo().GetPosVelIfUpdated(m_posVel))
         {
             m_logger->debug("pose {} {} {}", m_posVel.pose.x, m_posVel.pose.y, m_posVel.pose.z);
-            Notify(POSITION_VELOCITY_LOG);
+            Notify(OBSERVERS::POSITION_VELOCITY_LOG);
         }
         if (log_data_processor->GetLogImuAtti().GetImuAttiIfUpdated(m_imuAtti))
         {
@@ -67,15 +52,15 @@ namespace tello_protocol
             m_logger->debug("gyro {} {} {}", m_imuAtti.gyro.x, m_imuAtti.gyro.y, m_imuAtti.gyro.z);
             m_logger->debug("vg {} {} {}", m_imuAtti.vg.x, m_imuAtti.vg.y, m_imuAtti.vg.z);
             m_logger->debug("quat {} {} {} {}", m_imuAtti.quat.x, m_imuAtti.quat.y, m_imuAtti.quat.z, m_imuAtti.quat.w);
-            Notify(IMU_ATTITUDE_LOG);
+            Notify(OBSERVERS::IMU_ATTITUDE_LOG);
         }
     }
 
     void DataManager::SetLogID(const unsigned short id)
     {
-        m_logger->info(__PRETTY_FUNCTION__);
+        m_logger->debug(__PRETTY_FUNCTION__);
         std::memcpy(&m_log_header_information.LogId, &id, sizeof(unsigned short));
-        m_logger->info("LogId: {};", id);
+        m_logger->debug("LogId: {};", id);
         Notify(ACK_LOG_HEADER);
     }
 
@@ -103,15 +88,65 @@ namespace tello_protocol
         Notify(DJI_LOG_VERSION);
     }
 
-    void DataManager::notify_position_velocity(IObserver *observer)
+    void DataManager::notify_imu_attitude_received(IObserver *observer)
     {
+        auto casted = dynamic_cast<IImuAttitudeObserver *>(observer);
+        if (casted == nullptr)
+        {
+            m_logger->error("Attached Observer does not implement ImuAttitudeObserver. \n \
+            Observer Update() declartation should look like: \n \
+            void ImuAttitudeObserver::Update(const tello_protocol::ImuAttitudeData &imut_attitude_data)");
+            return;
+        }
+
         try
         {
-            dynamic_cast<IPositionVelocityObserver *>(observer)->Update(m_posVel);
+            casted->Update(m_imuAtti);
         }
         catch (const std::exception &e)
         {
-            m_logger->critical("Cought dynamic_cast exception: {}", e.what());
+            m_logger->error("Cought dynamic_cast exception: {}", e.what());
+        }
+    }
+    void DataManager::notify_flight_data_received(IObserver *observer)
+    {
+        auto casted = dynamic_cast<IFlightDataObserver *>(observer);
+        if (casted == nullptr)
+        {
+            m_logger->error("Attached Observer does not implement IFlightDataObserver. \n \
+            Observer Update() declartation should look like: \n \
+            void IFlightDataObserver::Update(const tello_protocol::FlightDataStruct &flight_data)");
+            return;
+        }
+
+        try
+        {
+            casted->Update(m_flightData);
+        }
+        catch (const std::exception &e)
+        {
+            m_logger->error("Cought dynamic_cast exception: {}", e.what());
+        }
+    }
+
+    void DataManager::notify_position_velocity(IObserver *observer)
+    {
+        auto casted = dynamic_cast<IPositionVelocityObserver *>(observer);
+        if (casted == nullptr)
+        {
+            m_logger->error("Attached Observer does not implement IPositionVelocityObserver. \n \
+            Observer Update() declartation should look like: \n \
+            void IPositionVelocityObserver::Update(const tello_protocol::PoseVelData &pos_vel)");
+            return;
+        }
+
+        try
+        {
+            casted->Update(m_posVel);
+        }
+        catch (const std::exception &e)
+        {
+            m_logger->error("Cought dynamic_cast exception: {}", e.what());
         }
     }
 
@@ -152,7 +187,15 @@ namespace tello_protocol
                 break;
             case OBSERVERS::POSITION_VELOCITY_LOG:
                 notify_position_velocity(observer);
+            case OBSERVERS::FLIGHT_DATA_MSG:
+                notify_flight_data_received(observer);
+            case OBSERVERS::IMU_ATTITUDE_LOG:
+                notify_imu_attitude_received(observer);
                 break;
+            /**
+             * @todo Add support for attached ImuAtti observers.
+             * 
+             */
             default:
                 break;
             }
@@ -164,6 +207,14 @@ namespace tello_protocol
         m_attached_dict[observer_type].push_back(observer);
     }
     void DataManager::Attach(const OBSERVERS observer_type, IPositionVelocityObserver *observer)
+    {
+        m_attached_dict[observer_type].push_back(observer);
+    }
+    void DataManager::Attach(const OBSERVERS observer_type, IFlightDataObserver *observer)
+    {
+        m_attached_dict[observer_type].push_back(observer);
+    }
+    void DataManager::Attach(const OBSERVERS observer_type, IImuAttitudeObserver *observer)
     {
         m_attached_dict[observer_type].push_back(observer);
     }

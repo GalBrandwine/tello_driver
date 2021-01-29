@@ -9,16 +9,6 @@ namespace tello_protocol
         std::memcpy(&cmd, &message_from_subject[5], sizeof(unsigned short));
         if (cmd == tello_protocol::FLIGHT_MSG)
         {
-            /**
-             * @todo  implemented IncommingFlightDataMsgObserver.
-             * 
-             */
-
-            // std::stringstream wrnSS;
-            // wrnSS << __FUNCTION__ << "[" << __LINE__ << "]::"
-            //       << "Data packet didnt math its expected length. dropping.";
-            // m_logger->warn(wrnSS.str());
-
             try
             {
                 std::vector<unsigned char> data(message_from_subject.begin() + 9, message_from_subject.end());

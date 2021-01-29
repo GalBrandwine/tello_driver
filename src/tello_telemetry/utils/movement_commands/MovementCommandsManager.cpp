@@ -13,10 +13,7 @@ namespace tello_protocol
         return true;
     }
 
-    /**
-     * These movements imitate stick movements, hence  'amount' is how much stick was given to the desired direction
-     * This function accept only values between 0 to 100.
-    **/
+
     bool MovementCommandsManager::SetMovementCommand(Movements movement, float amount)
     {
 
@@ -24,80 +21,80 @@ namespace tello_protocol
             return false;
 
         std::cout << __PRETTY_FUNCTION__ << movement_to_string(movement).c_str() << "\n";
-        /* 
-       def up(self, val):
-        """Up tells the drone to ascend. Pass in an int from 0-100."""
-        log.info('up(val=%d)' % val)
-        self.left_y = val / 100.0
-
-    def down(self, val):
-        """Down tells the drone to descend. Pass in an int from 0-100."""
-        log.info('down(val=%d)' % val)
-        self.left_y = val / 100.0 * -1
-
-    def forward(self, val):
-        """Forward tells the drone to go forward. Pass in an int from 0-100."""
-        log.info('forward(val=%d)' % val)
-        self.right_y = val / 100.0
-
-    def right(self, val):
-        """Right tells the drone to go right. Pass in an int from 0-100."""
-        log.info('right(val=%d)' % val)
-        self.right_x = val / 100.0
-
-    def left(self, val):
-        """Left tells the drone to go left. Pass in an int from 0-100."""
-        log.info('left(val=%d)' % val)
-        self.right_x = val / 100.0 * -1
-
-    def clockwise(self, val):
-        """
-        Clockwise tells the drone to rotate in a clockwise direction.
-        Pass in an int from 0-100.
-        """
-        log.info('clockwise(val=%d)' % val)
-        self.left_x = val / 100.0
-
-    def counter_clockwise(self, val):
-        """
-        CounterClockwise tells the drone to rotate in a counter-clockwise direction.
-        Pass in an int from 0-100.
-        """
-        log.info('counter_clockwise(val=%d)' % val)
-        self.left_x = val / 100.0 * -1
-         */
         switch (movement)
         {
+        case Movements::DOWN:
+            set_down(amount);
+            return true;
+        case Movements::UP:
+            set_up(amount);
+            return true;
+        case Movements::RIGHT:
+            set_right(amount);
+            return true;
+        case Movements::LEFT:
+            set_left(amount);
+            return true;
         case Movements::BACKWARD:
-            // Backward tells the drone to go in reverse. Pass in an int from 0-100.
             set_backward(amount);
             return true;
-            break;
-
+        case Movements::FORWARD:
+            set_forward(amount);
+            return true;
+        case Movements::CLOCKWISE:
+            set_clockwise(amount);
+            return true;
+        case Movements::COUNTER_CLOCKWISE:
+            set_counter_clockwise(amount);
+            return true;
         default:
             return false;
-            break;
         }
     }
 
-    /**  
-     * Backward movements interpreted via right stick, in Y axes (Movements are stick-wise),
-     * Backward tells the drone to go in reverse. Pass in an int from 0-100.
-    **/
+    void MovementCommandsManager::set_down(float amount)
+    {
+        std::cout << __PRETTY_FUNCTION__ << " (" << amount << ")\n";
+        m_SticksDict[Sticks::LEFT_Y] = amount / 100 * -1;
+    }
+    void MovementCommandsManager::set_up(float amount)
+    {
+        std::cout << __PRETTY_FUNCTION__ << " (" << amount << ")\n";
+        m_SticksDict[Sticks::LEFT_Y] = amount / 100;
+    }
+    void MovementCommandsManager::set_right(float amount)
+    {
+        std::cout << __PRETTY_FUNCTION__ << " (" << amount << ")\n";
+        m_SticksDict[Sticks::RIGHT_X] = amount / 100;
+    }
+    void MovementCommandsManager::set_left(float amount)
+    {
+        std::cout << __PRETTY_FUNCTION__ << " (" << amount << ")\n";
+        m_SticksDict[Sticks::RIGHT_X] = amount / 100 * -1;
+    }
+    void MovementCommandsManager::set_counter_clockwise(float amount)
+    {
+        std::cout << __PRETTY_FUNCTION__ << " (" << amount << ")\n";
+        m_SticksDict[Sticks::LEFT_X] = amount / 100 * -1;
+    }
+    void MovementCommandsManager::set_clockwise(float amount)
+    {
+        std::cout << __PRETTY_FUNCTION__ << " (" << amount << ")\n";
+        m_SticksDict[Sticks::LEFT_X] = amount / 100;
+    }
+    void MovementCommandsManager::set_forward(float amount)
+    {
+        std::cout << __PRETTY_FUNCTION__ << " (" << amount << ")\n";
+        m_SticksDict[Sticks::RIGHT_Y] = amount / 100;
+    }
+
     void MovementCommandsManager::set_backward(float amount)
     {
-
-        /* 
-        def backward(self, val):
-        """Backward tells the drone to go in reverse. Pass in an int from 0-100."""
-        log.info('backward(val=%d)' % val)
-        self.right_y = val / 100.0 * -1
-         */
-        std::cout << "Setting backward(" << amount << ")\n";
+        std::cout << __PRETTY_FUNCTION__ << " (" << amount << ")\n";
         m_SticksDict[Sticks::RIGHT_Y] = amount / 100 * -1;
     }
 
-    MovementCommandsManager::MovementCommandsManager(/* args */)
+    MovementCommandsManager::MovementCommandsManager()
     {
         std::cout << __PRETTY_FUNCTION__ << "::" << __LINE__ << "::Initiated";
         for (int possible_stick_movement = Sticks::RIGHT_Y; possible_stick_movement != Sticks::FAST_MODE; possible_stick_movement++)

@@ -171,7 +171,7 @@ namespace tello_protocol
 
         // m_fly_mode = data[18];
         m_flight_data.fly_mode = data[18];
-        m_logger->warn("fly_mode: {}", std::to_string(m_flight_data.fly_mode));
+        // m_logger->warn("fly_mode: {}", std::to_string(m_flight_data.fly_mode));
         // m_throw_fly_timer = data[19];
         m_flight_data.throw_fly_timer = data[19];
         // m_camera_state = data[20];

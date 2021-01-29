@@ -13,6 +13,9 @@
 #include "DataMgr.hpp"
 #include "IObserver.hpp"
 #include "utils/tello_observer/IPositionVelocityObserver.hpp"
+#include "utils/tello_observer/IFlightDataObserver.hpp"
+#include "utils/tello_observer/IImuAttitudeObserver.hpp"
+
 
 class IDataMgrSubject
 {
@@ -20,5 +23,8 @@ public:
   virtual ~IDataMgrSubject(){};
   virtual void Attach(const OBSERVERS observer_type, IObserver *observer) = 0;
   virtual void Attach(const OBSERVERS observer_type, IPositionVelocityObserver *observer) = 0;
+  virtual void Attach(const OBSERVERS observer_type, IFlightDataObserver *observer) = 0;
+  virtual void Attach(const OBSERVERS observer_type, IImuAttitudeObserver *observer) = 0;
+  
   virtual void Notify(const OBSERVERS observer_type) = 0;
 };

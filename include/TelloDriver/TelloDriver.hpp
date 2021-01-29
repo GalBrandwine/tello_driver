@@ -46,19 +46,27 @@ public:
     /**
     * @brief Movements section
     **/
+    void CounterClockwise(int amount);
+    void Clockwise(int amount);
+    void Down(int amount);
+    void Up(int amount);
+    void Right(int amount);
+    void Left(int amount);
     void Backward(int amount);
     void Forward(int amount);
     void Takeoff();
     void Land();
-    const float GetAttLimit();
-    const short GetAltLimit();
-    const short GetWifiStrength();
-    const tello_protocol::Vec3 GetPos();
+
+    void SetAltLimitReq(int alt_limit);
+    // const float GetAttLimit();
+    // const short GetAltLimit();
+    // const short GetWifiStrength();
+    // const tello_protocol::Vec3 GetPos();
     std::shared_ptr<spdlog::logger> GetLogger() { return m_BaseLogger; };
     TelloDriver(spdlog::level::level_enum lvl = spdlog::level::info);
     ~TelloDriver();
-    tello_protocol::TelloCommander &GetTelloCommander();
-    tello_protocol::TelloTelemetry &GetTelloTelemetry();
+    // tello_protocol::TelloCommander &GetTelloCommander();
+    // tello_protocol::TelloTelemetry &GetTelloTelemetry();
 
     void Attach(OBSERVERS oberver_type, IObserver *observer);
     void Connect();

@@ -1,6 +1,61 @@
 #include "TelloCommander.hpp"
 namespace tello_protocol
 {
+
+    bool TelloCommander::SetFastMode(bool fastMode)
+    {
+        return m_MovementCommandsManager.SetFastMode(fastMode);
+    }
+
+    void TelloCommander::Down(int amount)
+    {
+        assert(amount >= 0 && amount <= 100);
+        if (!m_MovementCommandsManager.SetMovementCommand(tello_protocol::DOWN, amount))
+        {
+            m_logger->warn("Could not set " + std::string(__FUNCTION__) + "(" + std::to_string(amount) + ")");
+        }
+    }
+    void TelloCommander::Up(int amount)
+    {
+        assert(amount >= 0 && amount <= 100);
+        if (!m_MovementCommandsManager.SetMovementCommand(tello_protocol::UP, amount))
+        {
+            m_logger->warn("Could not set " + std::string(__FUNCTION__) + "(" + std::to_string(amount) + ")");
+        }
+    }
+    void TelloCommander::CounterClockwise(int amount)
+    {
+        assert(amount >= 0 && amount <= 100);
+        if (!m_MovementCommandsManager.SetMovementCommand(tello_protocol::COUNTER_CLOCKWISE, amount))
+        {
+            m_logger->warn("Could not set " + std::string(__FUNCTION__) + "(" + std::to_string(amount) + ")");
+        }
+    }
+    void TelloCommander::Clockwise(int amount)
+    {
+        assert(amount >= 0 && amount <= 100);
+        if (!m_MovementCommandsManager.SetMovementCommand(tello_protocol::CLOCKWISE, amount))
+        {
+            m_logger->warn("Could not set " + std::string(__FUNCTION__) + "(" + std::to_string(amount) + ")");
+        }
+    }
+    void TelloCommander::Left(int amount)
+    {
+        assert(amount >= 0 && amount <= 100);
+        if (!m_MovementCommandsManager.SetMovementCommand(tello_protocol::LEFT, amount))
+        {
+            m_logger->warn("Could not set " + std::string(__FUNCTION__) + "(" + std::to_string(amount) + ")");
+        }
+    }
+    void TelloCommander::Right(int amount)
+    {
+        assert(amount >= 0 && amount <= 100);
+        if (!m_MovementCommandsManager.SetMovementCommand(tello_protocol::RIGHT, amount))
+        {
+            m_logger->warn("Could not set " + std::string(__FUNCTION__) + "(" + std::to_string(amount) + ")");
+        }
+    }
+
     void TelloCommander::Backward(int amount)
     {
         assert(amount >= 0 && amount <= 100);
@@ -78,7 +133,7 @@ namespace tello_protocol
         auto conn_req = tello_protocol::Packet("conn_req:\x96\x17");
         m_socket->Send(conn_req.GetBuffer());
     }
-    
+
     void TelloCommander::SetSocket(std::shared_ptr<ISender> socket)
     {
         m_socket = socket;
