@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2021-01-29T14:38:50.697Z" agent="5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Safari/537.36" etag="obKpqxvV7Yj9t6WTYAej" version="14.1.8" type="github" pages="5">
+<mxfile host="app.diagrams.net" modified="2021-01-29T14:40:47.521Z" agent="5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Safari/537.36" etag="AKJzYL9sqkS8GT9XFf5D" version="14.1.8" type="github" pages="5">
   <diagram name="TelloDriver_HighLevel" id="KGe8z3dEAHJV09eYs3NV">
     <mxGraphModel dx="1350" dy="737" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
@@ -128,7 +128,7 @@
     </mxGraphModel>
   </diagram>
   <diagram name="TelloDriver_USER_relation" id="QFvQWEB1YWu_u-d4jWGM">
-    <mxGraphModel dx="-350" dy="1837" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="-575" dy="1714" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="RHNkftzMjbY-1YLAVl_H-0" />
         <mxCell id="RHNkftzMjbY-1YLAVl_H-1" parent="RHNkftzMjbY-1YLAVl_H-0" />
@@ -161,7 +161,7 @@
         <mxCell id="err5w4P7qRpTLmhLmQyV-2" value="" style="group" parent="RHNkftzMjbY-1YLAVl_H-1" vertex="1" connectable="0">
           <mxGeometry x="1882.91" y="-1000" width="395" height="250" as="geometry" />
         </mxCell>
-        <mxCell id="RHNkftzMjbY-1YLAVl_H-62" value="&lt;div style=&quot;text-align: left&quot;&gt;&lt;span&gt;User observers can atatch to DataManager using provided interfaces:&lt;/span&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#76608a;fontColor=#ffffff;strokeColor=#432D57;" parent="err5w4P7qRpTLmhLmQyV-2" vertex="1">
+        <mxCell id="RHNkftzMjbY-1YLAVl_H-62" value="&lt;div style=&quot;text-align: left&quot;&gt;&lt;span&gt;User observers can attach&amp;nbsp;to DataManager using provided interfaces:&lt;/span&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#76608a;fontColor=#ffffff;strokeColor=#432D57;" parent="err5w4P7qRpTLmhLmQyV-2" vertex="1">
           <mxGeometry width="395" height="250" as="geometry" />
         </mxCell>
         <mxCell id="RHNkftzMjbY-1YLAVl_H-65" value="PositionObserver" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#a0522d;strokeColor=#6D1F00;fontColor=#ffffff;" parent="err5w4P7qRpTLmhLmQyV-2" vertex="1">
@@ -213,14 +213,14 @@
     </mxGraphModel>
   </diagram>
   <diagram id="W9iecwfmqhMie7P5klMz" name="ClassRelation">
-    <mxGraphModel dx="3857" dy="2106" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="3375" dy="1843" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
         <mxCell id="gJZ2d8CcAuHiUnRdF-In-129" value="" style="rounded=1;whiteSpace=wrap;html=1;gradientDirection=north;fillColor=none;strokeWidth=5;" parent="1" vertex="1">
           <mxGeometry x="325" y="20" width="2660" height="1070" as="geometry" />
         </mxCell>
-        <mxCell id="108" value="&lt;div&gt;&lt;span&gt;Use&amp;nbsp;&lt;/span&gt;flight_data_processor&amp;nbsp;to parse&amp;nbsp; Physical flight data, I.G:&lt;/div&gt;&lt;div&gt;temprature,&lt;/div&gt;&lt;div&gt;height,&lt;/div&gt;&lt;div&gt;time_left_to_fliy,&lt;/div&gt;&lt;div&gt;battery,&lt;/div&gt;&lt;div&gt;wifi strength,&lt;/div&gt;&lt;div&gt;and many more.&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=#f0f0f0;" parent="1" vertex="1">
+        <mxCell id="108" value="&lt;div&gt;&lt;span&gt;Use&amp;nbsp;&lt;/span&gt;flight_data_processor&amp;nbsp;to parse&amp;nbsp; Physical flight data, I.G:&lt;/div&gt;&lt;div&gt;temperature,&lt;/div&gt;&lt;div&gt;height,&lt;/div&gt;&lt;div&gt;time_left_to_fliy,&lt;/div&gt;&lt;div&gt;battery,&lt;/div&gt;&lt;div&gt;wifi strength,&lt;/div&gt;&lt;div&gt;and many more.&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=#f0f0f0;" parent="1" vertex="1">
           <mxGeometry x="1845" y="910" width="330" height="100" as="geometry" />
         </mxCell>
         <mxCell id="22" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;endFill=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="5" target="21" edge="1">
@@ -329,7 +329,7 @@
         <mxCell id="63" value="Attached to" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;" parent="1" vertex="1">
           <mxGeometry x="1400" y="520" width="80" height="20" as="geometry" />
         </mxCell>
-        <mxCell id="65" value="Parse LogHeaderMsg data: &lt;br&gt;E.G Log version, builda date, ets. &lt;br&gt;Then insert it into TelloDataManager" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=#f0f0f0;" parent="1" vertex="1">
+        <mxCell id="65" value="Parse LogHeaderMsg data: &lt;br&gt;E.G Log version, build date, etc. &lt;br&gt;Then insert it into TelloDataManager" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=#f0f0f0;" parent="1" vertex="1">
           <mxGeometry x="1810" y="600" width="210" height="50" as="geometry" />
         </mxCell>
         <mxCell id="69" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="85" target="58" edge="1">
@@ -430,11 +430,11 @@
     </mxGraphModel>
   </diagram>
   <diagram name="TelloStickCommandsObserver" id="FhNDH0Sb4m0Vp22LEjI9">
-    <mxGraphModel dx="2700" dy="1474" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="1125" dy="614" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="RfRyReET_LkA4Ixt6ljJ-0" />
         <mxCell id="RfRyReET_LkA4Ixt6ljJ-1" parent="RfRyReET_LkA4Ixt6ljJ-0" />
-        <mxCell id="RfRyReET_LkA4Ixt6ljJ-2" value="&lt;h1 style=&quot;color: rgb(255 , 255 , 255) ; text-align: center&quot;&gt;&lt;font style=&quot;font-size: 24px&quot;&gt;StickCommandsObserver&lt;/font&gt;&lt;/h1&gt;&lt;div style=&quot;font-size: 16px&quot;&gt;&lt;font style=&quot;font-size: 16px&quot;&gt;The way Tello works is simple:&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;font-size: 16px&quot;&gt;&lt;font style=&quot;font-size: 16px&quot;&gt;If no stick command received, then hold position (And blink fast in &lt;font color=&quot;#ff8000&quot; style=&quot;font-size: 16px&quot;&gt;ORANGE&lt;/font&gt;).&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;font-size: 16px&quot;&gt;&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;br&gt;&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;font-size: 16px&quot;&gt;&lt;font style=&quot;font-size: 16px&quot;&gt;To over come this, TelloDriver need to send stickCommands all the time.&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;font-size: 16px&quot;&gt;&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;br&gt;&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;font-size: 16px&quot;&gt;&lt;font style=&quot;font-size: 16px&quot;&gt;The best way to do wo is to use an observer, to observe TelloTelemetry, and for every packet that comes from drone, this observer is &lt;i&gt;Notified.&amp;nbsp;&lt;/i&gt;&amp;nbsp;&lt;/font&gt;&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;" parent="RfRyReET_LkA4Ixt6ljJ-1" vertex="1">
+        <mxCell id="RfRyReET_LkA4Ixt6ljJ-2" value="&lt;h1 style=&quot;color: rgb(255 , 255 , 255) ; text-align: center&quot;&gt;&lt;font style=&quot;font-size: 24px&quot;&gt;StickCommandsObserver&lt;/font&gt;&lt;/h1&gt;&lt;div style=&quot;font-size: 16px&quot;&gt;&lt;font style=&quot;font-size: 16px&quot;&gt;The way Tello works is simple:&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;font-size: 16px&quot;&gt;&lt;font style=&quot;font-size: 16px&quot;&gt;If no stick command received, then hold position (And blink fast in &lt;font color=&quot;#ff8000&quot; style=&quot;font-size: 16px&quot;&gt;ORANGE&lt;/font&gt;).&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;font-size: 16px&quot;&gt;&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;br&gt;&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;font-size: 16px&quot;&gt;&lt;font style=&quot;font-size: 16px&quot;&gt;To overcome this, TelloDriver needs to send stick commands all the time.&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;font-size: 16px&quot;&gt;&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;br&gt;&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;font-size: 16px&quot;&gt;&lt;font style=&quot;font-size: 16px&quot;&gt;The best way to do so is to use an observer, to observe TelloTelemetry, and for every packet that comes from the drone, this observer is &lt;i&gt;Notified.&amp;nbsp;&lt;/i&gt;&amp;nbsp;&lt;/font&gt;&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;" parent="RfRyReET_LkA4Ixt6ljJ-1" vertex="1">
           <mxGeometry x="10" y="30" width="610" height="200" as="geometry" />
         </mxCell>
         <mxCell id="RfRyReET_LkA4Ixt6ljJ-4" value="&lt;h1&gt;&lt;font style=&quot;font-size: 12px&quot;&gt;MovementsCommandsManager&lt;/font&gt;&lt;/h1&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#60a917;strokeColor=#2D7600;fontColor=#ffffff;" parent="RfRyReET_LkA4Ixt6ljJ-1" vertex="1">
@@ -524,11 +524,11 @@
     </mxGraphModel>
   </diagram>
   <diagram name="TelloAckObserver_new" id="ViM56BXZPP_aGOe0TLqy">
-    <mxGraphModel dx="2700" dy="1474" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="1350" dy="737" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="uCvWZC21jyy_eqJl2pFl-0" />
         <mxCell id="uCvWZC21jyy_eqJl2pFl-1" parent="uCvWZC21jyy_eqJl2pFl-0" />
-        <mxCell id="uCvWZC21jyy_eqJl2pFl-2" value="&lt;h1 style=&quot;color: rgb(255 , 255 , 255) ; text-align: center&quot;&gt;&lt;font style=&quot;font-size: 24px&quot;&gt;TelloAckObserver&lt;/font&gt;&lt;/h1&gt;&lt;div style=&quot;font-size: 16px&quot;&gt;Once Connected to tello&#39;s wifi.&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;font-size: 16px&quot;&gt;The drone will send back every few secconds:&amp;nbsp;&lt;/span&gt;&lt;font style=&quot;font-size: 16px&quot;&gt;LOG_HEADER_MSG&lt;/font&gt;&lt;font style=&quot;font-size: 13px&quot;&gt;.&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font style=&quot;font-size: 13px&quot;&gt;andThis message contains few important fields:&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font style=&quot;font-size: 13px&quot;&gt;&lt;br&gt;&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font style=&quot;font-size: 13px&quot;&gt;&lt;b&gt;LOG_ID&lt;/b&gt; - This is a temporary ID. If TelloDriver sends back ACK_LOG_MSG with this ID (within time limits), then a Logging session will start. This is key point for getting log data such as IMU, POSITION, GYRO and many more data out of the drone.&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;b&gt;LOG_VERSION &lt;/b&gt;- Holds drone&#39;s firware build date.&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;" parent="uCvWZC21jyy_eqJl2pFl-1" vertex="1">
+        <mxCell id="uCvWZC21jyy_eqJl2pFl-2" value="&lt;h1 style=&quot;color: rgb(255 , 255 , 255) ; text-align: center&quot;&gt;&lt;font style=&quot;font-size: 24px&quot;&gt;TelloAckObserver&lt;/font&gt;&lt;/h1&gt;&lt;div style=&quot;font-size: 16px&quot;&gt;Once Connected to Tello&#39;s wifi.&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;font-size: 16px&quot;&gt;The drone will send back every few seconds:&amp;nbsp;&lt;/span&gt;&lt;font style=&quot;font-size: 16px&quot;&gt;LOG_HEADER_MSG&lt;/font&gt;&lt;font style=&quot;font-size: 13px&quot;&gt;.&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font style=&quot;font-size: 13px&quot;&gt;andThis message contains few important fields:&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font style=&quot;font-size: 13px&quot;&gt;&lt;br&gt;&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font style=&quot;font-size: 13px&quot;&gt;&lt;b&gt;LOG_ID&lt;/b&gt; - This is a temporary ID. If TelloDriver sends back to drone ACK_LOG_MSG with this ID (within time limits), then a Logging session will start. This is a key point for getting log data such as IMU, POSITION, GYRO, and many more data out of the drone.&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;b&gt;LOG_VERSION &lt;/b&gt;- Holds drone&#39;s firmware build date.&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;" parent="uCvWZC21jyy_eqJl2pFl-1" vertex="1">
           <mxGeometry y="10" width="830" height="200" as="geometry" />
         </mxCell>
         <mxCell id="uCvWZC21jyy_eqJl2pFl-6" value="TelloCommander" style="rounded=1;whiteSpace=wrap;html=1;" parent="uCvWZC21jyy_eqJl2pFl-1" vertex="1">
