@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2021-01-29T15:55:56.527Z" agent="5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Safari/537.36" etag="OFo3AMqkAKiJyTEnDO0Q" version="14.1.8" type="github" pages="6">
+<mxfile host="app.diagrams.net" modified="2021-01-29T15:57:04.809Z" agent="5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Safari/537.36" etag="iCeMXNCHB-9TEuW_89Df" version="14.1.8" type="github" pages="6">
   <diagram name="TelloDriver_HighLevel" id="KGe8z3dEAHJV09eYs3NV">
     <mxGraphModel dx="1929" dy="1053" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
@@ -639,7 +639,7 @@
     </mxGraphModel>
   </diagram>
   <diagram id="gkqQ2Xib8iGFBs4npfwz" name="Bare Tello">
-    <mxGraphModel dx="1350" dy="737" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="1350" dy="676" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="9j-1TJ_jHQqPMjkIAx45-0" />
         <mxCell id="9j-1TJ_jHQqPMjkIAx45-1" parent="9j-1TJ_jHQqPMjkIAx45-0" />
@@ -652,14 +652,14 @@
         <mxCell id="9j-1TJ_jHQqPMjkIAx45-6" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=classic;startFill=1;" edge="1" parent="9j-1TJ_jHQqPMjkIAx45-1" source="9j-1TJ_jHQqPMjkIAx45-3" target="9j-1TJ_jHQqPMjkIAx45-5">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="9j-1TJ_jHQqPMjkIAx45-3" value="My driver" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="9j-1TJ_jHQqPMjkIAx45-1">
+        <mxCell id="9j-1TJ_jHQqPMjkIAx45-3" value="My cpp driver" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="9j-1TJ_jHQqPMjkIAx45-1">
           <mxGeometry x="280" y="340" width="290" height="130" as="geometry" />
         </mxCell>
         <mxCell id="9j-1TJ_jHQqPMjkIAx45-5" value="User" style="whiteSpace=wrap;html=1;rounded=1;strokeColor=#6c8ebf;fillColor=#dae8fc;" vertex="1" parent="9j-1TJ_jHQqPMjkIAx45-1">
           <mxGeometry x="365" y="585" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="9j-1TJ_jHQqPMjkIAx45-7" value="Position, flight_data, IMU etc." style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;" vertex="1" parent="9j-1TJ_jHQqPMjkIAx45-1">
-          <mxGeometry x="425" y="520" width="170" height="20" as="geometry" />
+        <mxCell id="9j-1TJ_jHQqPMjkIAx45-7" value="Video, Position, flight_data, IMU etc." style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;" vertex="1" parent="9j-1TJ_jHQqPMjkIAx45-1">
+          <mxGeometry x="425" y="520" width="210" height="20" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
