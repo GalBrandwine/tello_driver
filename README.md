@@ -3,6 +3,8 @@
 A **cpp** tello_driver for the DJI tello drone, that truly supports the **unofficial** SDK.
 Meant to be included as a library, to other projects. See *[examples](examples)*.
 
+![](docs/TelloDriver-TelloDriver_USER_relation.png)
+
 ## Implemented Capabilities from TelloPy
 
 Not all TelloPy cabapilities were implemented.
