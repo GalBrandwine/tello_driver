@@ -82,7 +82,7 @@ namespace tello_protocol
         }
         else if (cmd == tello_protocol::ALT_LIMIT_MSG)
         {
-            m_logger->info("ALT_LIMIT_MSG received: {}", short(received.GetData()[1]));
+            // m_logger->info("ALT_LIMIT_MSG received: {}", short(received.GetData()[1]));
             // m_FlightData->SetAltLimit(received.GetData());
         }
         if (cmd == tello_protocol::ATT_LIMIT_MSG)

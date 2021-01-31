@@ -44,7 +44,25 @@ namespace tello_protocol
         bool SendStickCommands() override;
 
         void SendLandReq();
-        void SetAltLimitReq(int);
+
+        /**
+         * @brief Sen SetAltLimit command, with new limit.
+         * After sending the packed, call GetAltLimitReq().
+         * So drone will send back as acknowledeg the new limit.
+         * 
+         * @param limit - new altitude limit.
+         */
+        void SetAltLimitReq(int limit);
+
+        /**
+         * @brief Send GetAltLimit request.
+         * This will result with an incomming data from drone with id tello_protocol::ALT_LIMIT_MSG.
+         * 
+         * @todo Add observer on this incomming data to TelloTelemetry.
+         * 
+         */
+        void GetAltLimitReq();
+
         void SendTakeoffReq();
 
         /**

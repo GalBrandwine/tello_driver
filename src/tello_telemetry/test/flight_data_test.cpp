@@ -473,8 +473,8 @@ TEST(TelloTelemetryTest, GET_ALT_LIMIT_MSG)
         if (cmd == tello_protocol::ALT_LIMIT_MSG)
         {
             std::cout << received.GetData();
-            flight_data.SetAltLimit(received.GetData());
-            ASSERT_GE(flight_data.GetAltLimit(), 0) << "Default value is 10[m]";
+            // flight_data.SetAltLimit(received.GetData());
+            // ASSERT_GE(flight_data.GetAltLimit(), 0) << "Default value is 10[m]";
             keep_receiving = false;
         }
         std::fill(buffer_.begin(), buffer_.end(), 0);

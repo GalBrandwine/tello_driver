@@ -79,10 +79,10 @@ namespace tello_protocol
     **/
     void MovementsToPacketConverter::fill_axis(const std::unordered_map<Sticks, float> &stick_movements_dict)
     {
-        m_axis[0] += 660.0f * stick_movements_dict.find(Sticks::RIGHT_X)->second;
-        m_axis[1] += 660.0f * stick_movements_dict.find(Sticks::RIGHT_Y)->second;
-        m_axis[2] += 660.0f * stick_movements_dict.find(Sticks::LEFT_Y)->second;
-        m_axis[3] += 660.0f * stick_movements_dict.find(Sticks::LEFT_X)->second;
+        m_axis[0] = STICK_NEUTRAL_CONVERTION_VALUE + 660.0f * stick_movements_dict.find(Sticks::RIGHT_X)->second;
+        m_axis[1] = STICK_NEUTRAL_CONVERTION_VALUE + 660.0f * stick_movements_dict.find(Sticks::RIGHT_Y)->second;
+        m_axis[2] = STICK_NEUTRAL_CONVERTION_VALUE + 660.0f * stick_movements_dict.find(Sticks::LEFT_Y)->second;
+        m_axis[3] = STICK_NEUTRAL_CONVERTION_VALUE + 660.0f * stick_movements_dict.find(Sticks::LEFT_X)->second;
         m_axis[4] = bool(stick_movements_dict.find(Sticks::FAST_MODE)->second);
 
         // std::cout << "Stick commands [int]:"

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(TelloDriver VERSION "0.0.21")
+project(TelloDriver VERSION "0.0.22")
 
 set(CMAKE_CXX_STANDARD 14)
 
@@ -10,6 +10,7 @@ set(OBSERVERS
   ${CMAKE_SOURCE_DIR}/src/tello_telemetry/IncommingDataObservers/TelloLogDataMsgObserver.cpp
   ${CMAKE_SOURCE_DIR}/src/tello_telemetry/IncommingDataObservers/TelloConnAckMsgObserver.cpp
   ${CMAKE_SOURCE_DIR}/src/tello_telemetry/IncommingDataObservers/TelloWifiMsgObserver.cpp
+  ${CMAKE_SOURCE_DIR}/src/tello_telemetry/IncommingDataObservers/TelloAltLimitMsgObserver.cpp
   ${CMAKE_SOURCE_DIR}/src/tello_telemetry/IncommingDataObservers/TelloFlightDataMsgObserver.cpp
  )
 

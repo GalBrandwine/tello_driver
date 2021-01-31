@@ -93,6 +93,17 @@ namespace tello_protocol
         auto pkt = tello_protocol::Packet(tello_protocol::SET_ALT_LIMIT_CMD);
         pkt.AddByte(limit);
         pkt.AddByte(0x00);
+        pkt.Fixup();
+        m_socket->Send(pkt.GetBuffer());
+
+        GetAltLimitReq();
+    }
+
+    void TelloCommander::GetAltLimitReq()
+    {
+        m_logger->debug("Sending GetAltitudeLimit request. (cmd=0x{:x} seq=0x{:x})", tello_protocol::ALT_LIMIT_MSG, 0x01e4);
+        auto pkt = tello_protocol::Packet(tello_protocol::ALT_LIMIT_MSG);
+        pkt.Fixup();
         m_socket->Send(pkt.GetBuffer());
     }
 

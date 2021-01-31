@@ -4,6 +4,6 @@
 class IFlightDataGetter
 {
 public:
-    virtual const tello_protocol::FlightDataStruct &GetFlightData() = 0;
+    virtual void GetFlightData(tello_protocol::FlightDataStruct& flight_data_out) = 0;
     virtual ~IFlightDataGetter(){};
 };

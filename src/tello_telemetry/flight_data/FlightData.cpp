@@ -44,15 +44,38 @@ namespace tello_protocol
      * 
      * @param altlimit 
      */
-    void FlightData::SetAltLimit(const std::string &altlimit)
+    // void FlightData::SetAltLimit(const std::string &altlimit)
+    // {
+    //     std::memcpy(&m_alt_limit, &altlimit[1], sizeof(short));
+    //     m_logger->info("Setting AltLimit: {}[m]", m_alt_limit);
+    // }
+    void FlightData::GetFlightData(tello_protocol::FlightDataStruct &flight_data_out)
     {
-        std::memcpy(&m_alt_limit, &altlimit[1], sizeof(short));
-        m_logger->info("Setting AltLimit: {}[m]", m_alt_limit);
-    }
-
-    const FlightDataStruct &FlightData::GetFlightData()
-    {
-        return m_flight_data;
+        // flight_data_out.alt_limit;       // Dont copy, this data is received elsewhere.
+        // flight_data_out.wifi_strength;   // Dont copy, this data is received elsewhere.
+        // flight_data_out.attitude_limit = m_flight_data.attitude_limit;
+        flight_data_out.battery_percentage = m_flight_data.battery_percentage;
+        flight_data_out.camera_state = m_flight_data.camera_state;
+        flight_data_out.drone_battery_left = m_flight_data.drone_battery_left;
+        flight_data_out.drone_fly_time_left = m_flight_data.drone_fly_time_left;
+        flight_data_out.east_speed = m_flight_data.east_speed;
+        flight_data_out.electrical_machinery_state = m_flight_data.electrical_machinery_state;
+        flight_data_out.flight_data_extras = m_flight_data.flight_data_extras;
+        flight_data_out.flight_data_states = m_flight_data.flight_data_states;
+        flight_data_out.fly_mode = m_flight_data.fly_mode;
+        flight_data_out.fly_speed = m_flight_data.fly_speed;
+        flight_data_out.fly_time = m_flight_data.fly_time;
+        flight_data_out.front_info = m_flight_data.front_info;
+        flight_data_out.ground_speed = m_flight_data.ground_speed;
+        flight_data_out.height = m_flight_data.height;
+        flight_data_out.imu_calibration_state = m_flight_data.imu_calibration_state;
+        flight_data_out.light_strength = m_flight_data.light_strength;
+        flight_data_out.low_battery_threhold = m_flight_data.low_battery_threhold; /** @todo maybe this also received elsewhere, using a SetBatteryThresCmd */
+        flight_data_out.north_speed = m_flight_data.north_speed;
+        flight_data_out.smart_video_exit_mode = m_flight_data.smart_video_exit_mode;
+        flight_data_out.temperature_height = m_flight_data.temperature_height;
+        flight_data_out.throw_fly_timer = m_flight_data.throw_fly_timer;
+        flight_data_out.wifi_disturb = m_flight_data.wifi_disturb;
     }
 
     bool FlightData::Update(const std::vector<unsigned char> &data)

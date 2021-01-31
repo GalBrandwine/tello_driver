@@ -17,7 +17,8 @@ namespace tello_protocol
          * 
          * @return const tello_protocol::FlightDataStruct - filled with flight data
          */
-        const tello_protocol::FlightDataStruct &GetFlightData() override;
+        // const tello_protocol::FlightDataStruct &GetFlightData() override;
+        void GetFlightData(tello_protocol::FlightDataStruct &flight_data_out)override;
 
         const double GetNorthSpeed() const;
         const double GetEastSpeed() const;
@@ -58,8 +59,8 @@ namespace tello_protocol
         const float GetAttLimit() const { return m_attitude_limit; };
         void SetAttLimit(const std::string &);
 
-        const short GetAltLimit() { return m_alt_limit; };
-        void SetAltLimit(const std::string &);
+        // const short GetAltLimit() { return m_alt_limit; };
+        // void SetAltLimit(const std::string &);
 
         // void SetWifiStrength(short strength) { m_wifi_strength = strength; };
         // const short GetWifiStrength() const { return m_wifi_strength; };
@@ -119,7 +120,7 @@ namespace tello_protocol
         double m_throw_fly_timer = -1;
         double m_wifi_disturb = -1;
         short m_wifi_strength = -1;
-        short m_alt_limit = -1;
+        // short m_alt_limit = -1;
         double m_wind_state = -1;
         float m_attitude_limit = -1;
         short m_low_battery_threhold = -1;

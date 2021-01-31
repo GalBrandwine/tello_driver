@@ -70,7 +70,8 @@ int main()
 
     TelloDriver tello(spdlog::level::info);
     tello.Connect();
-
+    tello.SetAltLimitReq(55);
+    
     std::cout << "Attaching user observer\n";
     PosObserver pos_vel_obs;
 
@@ -89,7 +90,7 @@ int main()
     {
         if (!pos_vel_obs.GetFlightData().flight_data_extras.battery_low)
         {
-            tello.GetLogger()->info("Battery: {}", std::to_string(pos_vel_obs.GetFlightData().battery_percentage));
+            // tello.GetLogger()->info("Battery: {}", std::to_string(pos_vel_obs.GetFlightData().battery_percentage));
         }
         else if (!pos_vel_obs.GetFlightData().flight_data_extras.battery_lower)
         {

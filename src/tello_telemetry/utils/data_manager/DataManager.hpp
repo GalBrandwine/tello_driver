@@ -13,6 +13,7 @@
 #include "ILogDataMsgDataManager.hpp"
 #include "IConnAckMsgDataManager.hpp"
 #include "IWifiMsgDataManager.hpp"
+#include "IAltLimitMsgDataManager.hpp"
 #include "ILogDataConnectionInformationSupply.hpp"
 #include "IFlightDataMsgDataManager.hpp"
 namespace tello_protocol
@@ -31,10 +32,18 @@ namespace tello_protocol
           public ILogDataMsgDataManager,
           public IConnAckMsgDataManager,
           public IWifiMsgDataManager,
+          public IAltLimitMsgDataManager,
           public ILogDataConnectionInformationSupply,
           public IFlightDataMsgDataManager
     {
     public:
+        /**
+         * @brief Set the Alt Limit Received as a response to the request tello_protocol::GET_ALT_LIMIT_CMD
+         * 
+         * @param alt_limit - requested limit, sent back from drone as an approval.
+         */
+        void SetAltLimit(unsigned char alt_limit) override;
+
         /**
          * @brief Set the Flight Data object
          * 
@@ -80,7 +89,7 @@ namespace tello_protocol
         void Attach(const OBSERVERS observer_type, IPositionVelocityObserver *observer) override;
         void Attach(const OBSERVERS observer_type, IFlightDataObserver *observer) override;
         void Attach(const OBSERVERS observer_type, IImuAttitudeObserver *observer) override;
-        
+
         // void Attach(const OBSERVERS observer_type, IConnectionEstablishedObserver *observer) override;
 
         /**

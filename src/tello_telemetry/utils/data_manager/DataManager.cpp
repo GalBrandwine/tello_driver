@@ -8,14 +8,15 @@ namespace tello_protocol
 
     void DataManager::SetFlightData(const std::shared_ptr<IFlightDataGetter> flight_data_processor)
     {
-
-        auto old_wifi_strength = m_flightData.wifi_strength; /**< Save wifi strength, for it is not maintained with flight_data_processor. */
-        m_flightData = flight_data_processor->GetFlightData();
-
-        m_flightData.wifi_strength = old_wifi_strength;
+        flight_data_processor->GetFlightData(m_flightData);
         Notify(OBSERVERS::FLIGHT_DATA_MSG);
     }
 
+    void DataManager::SetAltLimit(unsigned char alt_limit)
+    {
+        m_logger->debug("SetAltLimit recieved: {}", std::to_string(alt_limit));
+        m_flightData.alt_limit = alt_limit;
+    }
     void DataManager::SetWifiMsg(const unsigned char &wifi_strength)
     {
         m_logger->debug("SetWifiMsg recieved: {}", wifi_strength);
@@ -187,8 +188,10 @@ namespace tello_protocol
                 break;
             case OBSERVERS::POSITION_VELOCITY_LOG:
                 notify_position_velocity(observer);
+                break;
             case OBSERVERS::FLIGHT_DATA_MSG:
                 notify_flight_data_received(observer);
+                break;
             case OBSERVERS::IMU_ATTITUDE_LOG:
                 notify_imu_attitude_received(observer);
                 break;

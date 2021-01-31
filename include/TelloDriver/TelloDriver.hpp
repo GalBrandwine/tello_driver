@@ -12,6 +12,7 @@
 #include "TelloCommander.hpp"
 #include "utils/data_manager/DataManager.hpp"
 
+#include "TelloAltLimitMsgObserver.hpp"
 #include "TelloWifiMsgObserver.hpp"
 #include "TelloConnAckMsgObserver.hpp"
 #include "TelloLogDataMsgObserver.hpp"
@@ -80,6 +81,15 @@ private:
      * @section Incomming data observers
      * 
     *************************************/
+
+    /**
+     * @brief TelloAltLimitMsgObserver attached to TelloTelemetry via ISubject interface.
+     * Observe for AltLimitMsg sent back from drone.
+     * Received only as an acknowledgent for a SetAltLimitCmd sent by the user.
+     * 
+     * Should contain the new altitude limit.
+     */
+    std::shared_ptr<IObserver> m_TelloAltLimitMsgObserver;
 
     /**
      * @brief TelloFlightDataMsgObserver attached to TelloTelemetry via ISubject interface.
