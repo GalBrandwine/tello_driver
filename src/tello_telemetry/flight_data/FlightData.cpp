@@ -34,26 +34,11 @@ namespace tello_protocol
         m_logger->info("Setting Att: {}[deg]", m_attitude_limit);
     }
 
-    /**
-     * @brief Set alt_limit as received back from drone.
-     * This message is sent back after a SET_ALT_LIMIT command
-     * 
-     * @todo Move this into DataManager, and attach an observer to TelloTelemetr.
-     * So if User call SET_ALT_LIMIT command,
-     * the observer will catch the incomming reponse and insert the data into DataManager.
-     * 
-     * @param altlimit 
-     */
-    // void FlightData::SetAltLimit(const std::string &altlimit)
-    // {
-    //     std::memcpy(&m_alt_limit, &altlimit[1], sizeof(short));
-    //     m_logger->info("Setting AltLimit: {}[m]", m_alt_limit);
-    // }
     void FlightData::GetFlightData(tello_protocol::FlightDataStruct &flight_data_out)
     {
         // flight_data_out.alt_limit;       // Dont copy, this data is received elsewhere.
         // flight_data_out.wifi_strength;   // Dont copy, this data is received elsewhere.
-        // flight_data_out.attitude_limit = m_flight_data.attitude_limit;
+        // flight_data_out.attitude_limit = m_flight_data.attitude_limit;  // Dont copy, this data is received elsewhere.
         flight_data_out.battery_percentage = m_flight_data.battery_percentage;
         flight_data_out.camera_state = m_flight_data.camera_state;
         flight_data_out.drone_battery_left = m_flight_data.drone_battery_left;
@@ -70,7 +55,7 @@ namespace tello_protocol
         flight_data_out.height = m_flight_data.height;
         flight_data_out.imu_calibration_state = m_flight_data.imu_calibration_state;
         flight_data_out.light_strength = m_flight_data.light_strength;
-        flight_data_out.low_battery_threhold = m_flight_data.low_battery_threhold; /** @todo maybe this also received elsewhere, using a SetBatteryThresCmd */
+        flight_data_out.low_battery_threshold = m_flight_data.low_battery_threshold; /** @todo maybe this also received elsewhere, using a SetBatteryThresCmd */
         flight_data_out.north_speed = m_flight_data.north_speed;
         flight_data_out.smart_video_exit_mode = m_flight_data.smart_video_exit_mode;
         flight_data_out.temperature_height = m_flight_data.temperature_height;

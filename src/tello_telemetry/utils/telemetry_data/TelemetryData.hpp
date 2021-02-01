@@ -77,9 +77,6 @@ namespace tello_protocol
         char fly_mode = -1;
         double fly_speed = -1;
         float fly_time = -1;
-        // double front_in = -1;
-        // double front_lsc = -1;
-        // double front_out = -1;
         float ground_speed = -1;
         short height = -1;
         double imu_calibration_state = -1;
@@ -92,7 +89,7 @@ namespace tello_protocol
         short wifi_strength = -1;
         short alt_limit = -1;
         float attitude_limit = -1;
-        short low_battery_threhold = -1;
+        short low_battery_threshold = -1;
         FlightDataStateFlags flight_data_states;
         FlightDataExtras flight_data_extras;
         FlightDataFrontInfo front_info;

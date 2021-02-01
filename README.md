@@ -32,10 +32,10 @@ Not all TelloPy cabapilities were implemented.
 - [ ] throw_and_go
 - [x] land
 - [ ] palm_land
-- [ ] get_alt_limit **Tested**
-- [ ] set_alt_limit **Tested**
-- [ ] get_att_limit **Tested**
-- [ ] set_att_limit **Tested**
+- [x] get_alt_limit **Tested**
+- [x] set_alt_limit **Tested**
+- [x] get_att_limit **Tested**
+- [x] set_att_limit **Tested**
 - [ ] get_low_bat_threshold **Tested**
 - [ ] set_low_bat_threshold **Tested**
 - [ ] __send_time_command

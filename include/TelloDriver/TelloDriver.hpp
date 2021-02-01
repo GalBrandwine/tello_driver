@@ -61,15 +61,12 @@ public:
 
     void SetAltLimitReq(int alt_limit);
     void SetAttLimitReq(float alt_limit);
-    // const float GetAttLimit();
-    // const short GetAltLimit();
-    // const short GetWifiStrength();
-    // const tello_protocol::Vec3 GetPos();
+
     std::shared_ptr<spdlog::logger> GetLogger() { return m_BaseLogger; };
+    
     TelloDriver(spdlog::level::level_enum lvl = spdlog::level::info);
     ~TelloDriver();
-    // tello_protocol::TelloCommander &GetTelloCommander();
-    // tello_protocol::TelloTelemetry &GetTelloTelemetry();
+
 
     void Attach(OBSERVERS oberver_type, IObserver *observer);
     void Connect();

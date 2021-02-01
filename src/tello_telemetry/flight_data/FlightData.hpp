@@ -13,44 +13,43 @@ namespace tello_protocol
     {
     public:
         /**
-         * @brief Get the Flight Data object
+         * @brief Fill the Flight Data struct
          * 
-         * @return const tello_protocol::FlightDataStruct - filled with flight data
+         * @param[out] flight_data_out 
          */
-        // const tello_protocol::FlightDataStruct &GetFlightData() override;
-        void GetFlightData(tello_protocol::FlightDataStruct &flight_data_out)override;
+        void GetFlightData(tello_protocol::FlightDataStruct &flight_data_out) override;
 
-        const double GetNorthSpeed() const;
-        const double GetEastSpeed() const;
-        const double GetGroundSpeed() const;
-        const tello_protocol::Vec3 GetNEDSpeeds() const;
-        const double GetFlyTime() const;
-        const double GetIMUState() const;
-        const double GetPressureState() const;
-        const double GetDownVisualState() const;
-        const double GetPowerState() const;
-        const double GetBatteryState() const;
-        const double GetGravityState() const;
-        const double GetWindState() const;
-        const double GetIMUCalibrationState() const;
-        const double GetBatteryPrecentage() const;
-        const double GetDroneBatteryLeft() const;
-        const double GetDroneFLyTimeLeft() const;
-        const double GetEmSky() const;
-        const double GetEmGround() const;
-        const double GetEmOpen() const;
-        const double GetDroneHover() const;
-        const double GetOutageRecording() const;
-        const double GetBatteryLow() const;
-        const double GetBatteryLower() const;
-        const double GetFactoryMode() const;
-        const double GetThrowFlyTimer() const;
-        const double GetCameraState() const;
-        const double GetElectricalMachineryState() const;
-        const double GetFrontIn() const;
-        const double GetFrontOut() const;
-        const double GetFrontLsc() const;
-        const double GetTemperatureHeight() const;
+        // const double GetNorthSpeed() const;
+        // const double GetEastSpeed() const;
+        // const double GetGroundSpeed() const;
+        // const tello_protocol::Vec3 GetNEDSpeeds() const;
+        // const double GetFlyTime() const;
+        // const double GetIMUState() const;
+        // const double GetPressureState() const;
+        // const double GetDownVisualState() const;
+        // const double GetPowerState() const;
+        // const double GetBatteryState() const;
+        // const double GetGravityState() const;
+        // const double GetWindState() const;
+        // const double GetIMUCalibrationState() const;
+        // const double GetBatteryPrecentage() const;
+        // const double GetDroneBatteryLeft() const;
+        // const double GetDroneFLyTimeLeft() const;
+        // const double GetEmSky() const;
+        // const double GetEmGround() const;
+        // const double GetEmOpen() const;
+        // const double GetDroneHover() const;
+        // const double GetOutageRecording() const;
+        // const double GetBatteryLow() const;
+        // const double GetBatteryLower() const;
+        // const double GetFactoryMode() const;
+        // const double GetThrowFlyTimer() const;
+        // const double GetCameraState() const;
+        // const double GetElectricalMachineryState() const;
+        // const double GetFrontIn() const;
+        // const double GetFrontOut() const;
+        // const double GetFrontLsc() const;
+        // const double GetTemperatureHeight() const;
         // Height member is unknown
         const double GetHeight() const;
         const short GetLowBatThreshold() const { return m_low_battery_threhold; };

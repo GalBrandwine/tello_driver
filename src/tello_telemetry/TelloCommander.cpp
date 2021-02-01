@@ -9,7 +9,7 @@ namespace tello_protocol
 
     void TelloCommander::Down(int amount)
     {
-        assert(amount >= 0 && amount <= 100);
+        assert(amount >= 0 && amount <= 100 && "Amount must be within limits.");
         if (!m_MovementCommandsManager.SetMovementCommand(tello_protocol::DOWN, amount))
         {
             m_logger->warn("Could not set " + std::string(__FUNCTION__) + "(" + std::to_string(amount) + ")");
@@ -17,7 +17,7 @@ namespace tello_protocol
     }
     void TelloCommander::Up(int amount)
     {
-        assert(amount >= 0 && amount <= 100);
+        assert(amount >= 0 && amount <= 100 && "Amount must be within limits.");
         if (!m_MovementCommandsManager.SetMovementCommand(tello_protocol::UP, amount))
         {
             m_logger->warn("Could not set " + std::string(__FUNCTION__) + "(" + std::to_string(amount) + ")");
@@ -25,7 +25,7 @@ namespace tello_protocol
     }
     void TelloCommander::CounterClockwise(int amount)
     {
-        assert(amount >= 0 && amount <= 100);
+        assert(amount >= 0 && amount <= 100 && "Amount must be within limits.");
         if (!m_MovementCommandsManager.SetMovementCommand(tello_protocol::COUNTER_CLOCKWISE, amount))
         {
             m_logger->warn("Could not set " + std::string(__FUNCTION__) + "(" + std::to_string(amount) + ")");
@@ -33,7 +33,7 @@ namespace tello_protocol
     }
     void TelloCommander::Clockwise(int amount)
     {
-        assert(amount >= 0 && amount <= 100);
+        assert(amount >= 0 && amount <= 100 && "Amount must be within limits.");
         if (!m_MovementCommandsManager.SetMovementCommand(tello_protocol::CLOCKWISE, amount))
         {
             m_logger->warn("Could not set " + std::string(__FUNCTION__) + "(" + std::to_string(amount) + ")");
@@ -41,7 +41,7 @@ namespace tello_protocol
     }
     void TelloCommander::Left(int amount)
     {
-        assert(amount >= 0 && amount <= 100);
+        assert(amount >= 0 && amount <= 100 && "Amount must be within limits.");
         if (!m_MovementCommandsManager.SetMovementCommand(tello_protocol::LEFT, amount))
         {
             m_logger->warn("Could not set " + std::string(__FUNCTION__) + "(" + std::to_string(amount) + ")");
@@ -49,7 +49,7 @@ namespace tello_protocol
     }
     void TelloCommander::Right(int amount)
     {
-        assert(amount >= 0 && amount <= 100);
+        assert(amount >= 0 && amount <= 100 && "Amount must be within limits.");
         if (!m_MovementCommandsManager.SetMovementCommand(tello_protocol::RIGHT, amount))
         {
             m_logger->warn("Could not set " + std::string(__FUNCTION__) + "(" + std::to_string(amount) + ")");
@@ -58,7 +58,7 @@ namespace tello_protocol
 
     void TelloCommander::Backward(int amount)
     {
-        assert(amount >= 0 && amount <= 100);
+        assert(amount >= 0 && amount <= 100 && "Amount must be within limits.");
         if (!m_MovementCommandsManager.SetMovementCommand(tello_protocol::BACKWARD, amount))
         {
             m_logger->warn("Could not set " + std::string(__FUNCTION__) + "(" + std::to_string(amount) + ")");
@@ -66,7 +66,7 @@ namespace tello_protocol
     }
     void TelloCommander::Forward(int amount)
     {
-        assert(amount >= 0 && amount <= 100);
+        assert(amount >= 0 && amount <= 100 && "Amount must be within limits.");
         if (!m_MovementCommandsManager.SetMovementCommand(tello_protocol::FORWARD, amount))
         {
             m_logger->warn("Could not set " + std::string(__FUNCTION__) + "(" + std::to_string(amount) + ")");
@@ -88,7 +88,8 @@ namespace tello_protocol
 
     void TelloCommander::SetAttLimitReq(int limit)
     {
-        assert(limit >= 32 && "limit must be above 31.");
+        assert(limit > 31 && "limit must be above 31.");
+
         m_logger->info("Set attitude limit={} (cmd=0x{:x} seq=0x{:x})", limit, tello_protocol::ATT_LIMIT_CMD, 0x01e4);
 
         unsigned char ch[4];
@@ -97,7 +98,7 @@ namespace tello_protocol
         auto pkt = tello_protocol::Packet(tello_protocol::ATT_LIMIT_CMD);
         pkt.AddByte(0x00);
         pkt.AddByte(0x00);
-        pkt.AddByte(ch[0]); /**<  'attitude limit' formatted in int of 4 bytes */
+        pkt.AddByte(ch[0]); /**<  'attitude limit' formatted in int */
         pkt.AddByte(0x41);
         pkt.Fixup();
         m_socket->Send(pkt.GetBuffer());
