@@ -11,6 +11,7 @@ set(OBSERVERS
   ${CMAKE_SOURCE_DIR}/src/tello_telemetry/IncommingDataObservers/TelloConnAckMsgObserver.cpp
   ${CMAKE_SOURCE_DIR}/src/tello_telemetry/IncommingDataObservers/TelloWifiMsgObserver.cpp
   ${CMAKE_SOURCE_DIR}/src/tello_telemetry/IncommingDataObservers/TelloAltLimitMsgObserver.cpp
+  ${CMAKE_SOURCE_DIR}/src/tello_telemetry/IncommingDataObservers/TelloAttLimitMsgObserver.cpp
   ${CMAKE_SOURCE_DIR}/src/tello_telemetry/IncommingDataObservers/TelloFlightDataMsgObserver.cpp
  )
 

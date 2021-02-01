@@ -12,6 +12,12 @@ namespace tello_protocol
         Notify(OBSERVERS::FLIGHT_DATA_MSG);
     }
 
+    void DataManager::SetAttLimit(float att_limit)
+    {
+        m_logger->debug("SetAttLimit recieved: {}", std::to_string(att_limit));
+        m_flightData.attitude_limit = att_limit;
+    }
+
     void DataManager::SetAltLimit(unsigned char alt_limit)
     {
         m_logger->debug("SetAltLimit recieved: {}", std::to_string(alt_limit));

@@ -1,6 +1,26 @@
 #include "commands_test.hpp"
 #include "TelloDriver/TelloDriver.hpp"
 
+// Setup
+class Dummy : public IFlightDataObserver
+{
+private:
+    tello_protocol::FlightDataStruct m_flight_data;
+
+public:
+    void Update(const tello_protocol::FlightDataStruct &flight_data) override;
+    void Update(const std::vector<unsigned char> &message_from_subject) override{};
+    const tello_protocol::FlightDataStruct &GetFlightData() const { return m_flight_data; };
+    Dummy(/* args */);
+    ~Dummy();
+};
+Dummy::Dummy(){};
+Dummy::~Dummy(){};
+void Dummy::Update(const tello_protocol::FlightDataStruct &flight_data)
+{
+    m_flight_data = flight_data;
+};
+
 using namespace std::chrono_literals;
 
 /* High-level testing: 
@@ -119,6 +139,44 @@ TEST(WetTelloSticksCommandTest, SendBackwardStickCommand)
     std::this_thread::sleep_for(std::chrono::seconds(5));
     tello.Land();
     std::this_thread::sleep_for(std::chrono::seconds(5));
+
+    std::cout << "Done " << testing::UnitTest::GetInstance()->current_test_info()->name() << std::endl;
+}
+
+/**
+ * @brief Test SetAttLimit command
+ * Setup:
+ * * Create Tello instance.
+ * * Attach to FlightData.
+ * * Connect to drone.
+ * Run:
+ * * Send SetAttLimitReq(new_limit)
+ * Test:
+ * * See If implemented observer being called with new AttLimit.
+**/
+TEST(WetTelloSticksCommandTest, SendSetAttLimitTest)
+{
+    // Setup
+    TelloDriver tello(spdlog::level::info);
+    Dummy dummy;
+    tello.Attach(OBSERVERS::FLIGHT_DATA_MSG, &dummy);
+
+    // Run
+    tello.Connect();
+    if (!tello.WaitForConnection(10))
+    {
+        tello.GetLogger()->error("Couldn't Connect to drone.");
+        ASSERT_TRUE(false);
+    }
+
+    int limit = 34;
+    tello.SetAttLimitReq(limit);
+
+    // Wait for Drone to reply.
+    std::this_thread::sleep_for(std::chrono::seconds(5));
+
+    // Test
+    ASSERT_EQ(dummy.GetFlightData().attitude_limit, limit);
 
     std::cout << "Done " << testing::UnitTest::GetInstance()->current_test_info()->name() << std::endl;
 }

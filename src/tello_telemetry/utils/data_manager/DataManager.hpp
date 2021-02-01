@@ -14,6 +14,7 @@
 #include "IConnAckMsgDataManager.hpp"
 #include "IWifiMsgDataManager.hpp"
 #include "IAltLimitMsgDataManager.hpp"
+#include "IAttLimitMsgDataManager.hpp"
 #include "ILogDataConnectionInformationSupply.hpp"
 #include "IFlightDataMsgDataManager.hpp"
 namespace tello_protocol
@@ -33,10 +34,18 @@ namespace tello_protocol
           public IConnAckMsgDataManager,
           public IWifiMsgDataManager,
           public IAltLimitMsgDataManager,
+          public IAttLimitMsgDataManager,
           public ILogDataConnectionInformationSupply,
           public IFlightDataMsgDataManager
     {
     public:
+            /**
+         * @brief Set the Att Limit Received as a response to the request tello_protocol::GET_ALT_LIMIT_CMD
+         * 
+         * @param att_limit - requested limit, sent back from drone as an approval.
+         */
+        void SetAttLimit(float att_limit) override;
+
         /**
          * @brief Set the Alt Limit Received as a response to the request tello_protocol::GET_ALT_LIMIT_CMD
          * 

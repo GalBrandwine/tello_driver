@@ -70,7 +70,6 @@ int main()
 
     TelloDriver tello(spdlog::level::info);
     tello.Connect();
-    tello.SetAltLimitReq(55);
     
     std::cout << "Attaching user observer\n";
     PosObserver pos_vel_obs;

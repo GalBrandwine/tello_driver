@@ -86,6 +86,33 @@ namespace tello_protocol
         return true;
     }
 
+    void TelloCommander::SetAttLimitReq(int limit)
+    {
+        assert(limit >= 32 && "limit must be above 31.");
+        m_logger->info("Set attitude limit={} (cmd=0x{:x} seq=0x{:x})", limit, tello_protocol::ATT_LIMIT_CMD, 0x01e4);
+
+        unsigned char ch[4];
+        std::memcpy(ch, &limit, sizeof(int));
+
+        auto pkt = tello_protocol::Packet(tello_protocol::ATT_LIMIT_CMD);
+        pkt.AddByte(0x00);
+        pkt.AddByte(0x00);
+        pkt.AddByte(ch[0]); /**<  'attitude limit' formatted in int of 4 bytes */
+        pkt.AddByte(0x41);
+        pkt.Fixup();
+        m_socket->Send(pkt.GetBuffer());
+
+        GetAttLimitReq();
+    }
+
+    void TelloCommander::GetAttLimitReq()
+    {
+        m_logger->debug("Sending GetAttLimitReq request. (cmd=0x{:x} seq=0x{:x})", tello_protocol::ATT_LIMIT_MSG, 0x01e4);
+        auto pkt = tello_protocol::Packet(tello_protocol::ATT_LIMIT_MSG);
+        pkt.Fixup();
+        m_socket->Send(pkt.GetBuffer());
+    }
+
     void TelloCommander::SetAltLimitReq(int limit)
     {
         m_logger->debug("Set altitude limit={} (cmd=0x{:x} seq=0x{:x})", limit, tello_protocol::SET_ALT_LIMIT_CMD, 0x01e4);

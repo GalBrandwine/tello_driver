@@ -46,6 +46,39 @@ namespace tello_protocol
         void SendLandReq();
 
         /**
+         * @brief 
+         * 
+         *     # def set_att_limit(self, limit):
+         * self.log.info('set attitude limit=%s (cmd=0x%02x seq=0x%04x)' % (
+         * int(limit), ATT_LIMIT_CMD, self.pkt_seq_num))
+         * pkt = Packet(ATT_LIMIT_CMD)
+         * pkt.add_byte(0x00)        
+         * pkt.add_byte(0x00)
+         * pkt.add_byte( int(float_to_hex(float(limit))[4:6], 16) ) # 'attitude limit' formatted in float of 4 bytes
+         * pkt.add_byte(0x41)
+         * pkt.fixup()
+         * self.send_packet(pkt)
+         * self.get_att_limit()
+
+         * 
+         */
+        void SetAttLimitReq(int limit);
+
+        /**
+         * @brief Send ATT_LIMIT_MSG to drone.
+         * In response the drone will send back ATT_LIMIT_MSG with att_limit data.
+         * 
+         *     # def get_att_limit(self):
+         * ''' ... '''
+         * self.log.debug('get attitude limit (cmd=0x%02x seq=0x%04x)' % (
+         * ATT_LIMIT_MSG, self.pkt_seq_num))
+         * pkt = Packet(ATT_LIMIT_MSG)
+         * pkt.fixup()
+         * return self.send_packet(pkt)
+         */
+        void GetAttLimitReq();
+
+        /**
          * @brief Sen SetAltLimit command, with new limit.
          * After sending the packed, call GetAltLimitReq().
          * So drone will send back as acknowledeg the new limit.
