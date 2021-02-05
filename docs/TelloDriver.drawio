@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2021-02-05T09:30:30.110Z" agent="5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Safari/537.36" etag="WFJag-mPqm4edjgiWWEl" version="14.2.7" type="github" pages="7">
+<mxfile host="app.diagrams.net" modified="2021-02-05T09:30:37.395Z" agent="5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Safari/537.36" etag="HzXGZxUvbW9Aba0QEKUR" version="14.2.7" type="github" pages="7">
   <diagram name="TelloDriver_HighLevel" id="KGe8z3dEAHJV09eYs3NV">
     <mxGraphModel dx="1350" dy="737" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
@@ -665,7 +665,7 @@
     </mxGraphModel>
   </diagram>
   <diagram name="Decoupling Tello" id="k_GfAFuUgdH8WF3FIxxu">
-    <mxGraphModel dx="931" dy="508" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="1929" dy="1053" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="-Ea7pDmFBXKXa0FTbNWK-0" />
         <mxCell id="-Ea7pDmFBXKXa0FTbNWK-1" parent="-Ea7pDmFBXKXa0FTbNWK-0" />
