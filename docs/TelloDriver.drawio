@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2021-02-05T09:33:30.364Z" agent="5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Safari/537.36" etag="nv7WSmBYjGGxwmDzrplb" version="14.2.7" type="github" pages="7">
+<mxfile host="app.diagrams.net" modified="2021-02-05T09:33:52.979Z" agent="5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Safari/537.36" etag="2Dyr84MKI9QUJOm1cQw2" version="14.2.7" type="github" pages="7">
   <diagram name="TelloDriver_HighLevel" id="KGe8z3dEAHJV09eYs3NV">
     <mxGraphModel dx="1350" dy="737" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
@@ -724,8 +724,8 @@
         <mxCell id="-Ea7pDmFBXKXa0FTbNWK-16" value="Update(RawData)" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;" vertex="1" parent="-Ea7pDmFBXKXa0FTbNWK-1">
           <mxGeometry x="310" y="570" width="110" height="20" as="geometry" />
         </mxCell>
-        <mxCell id="-Ea7pDmFBXKXa0FTbNWK-17" value="Holds all the FlightData" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;" vertex="1" parent="-Ea7pDmFBXKXa0FTbNWK-1">
-          <mxGeometry x="610" y="900" width="140" height="20" as="geometry" />
+        <mxCell id="-Ea7pDmFBXKXa0FTbNWK-17" value="Holds all the FlightData&lt;br&gt;Holds all the WifiData" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;" vertex="1" parent="-Ea7pDmFBXKXa0FTbNWK-1">
+          <mxGeometry x="610" y="895" width="140" height="30" as="geometry" />
         </mxCell>
         <mxCell id="-Ea7pDmFBXKXa0FTbNWK-22" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.758;exitY=-0.01;exitDx=0;exitDy=0;endArrow=block;endFill=0;exitPerimeter=0;" edge="1" parent="-Ea7pDmFBXKXa0FTbNWK-1" source="-Ea7pDmFBXKXa0FTbNWK-18" target="-Ea7pDmFBXKXa0FTbNWK-19">
           <mxGeometry relative="1" as="geometry" />
