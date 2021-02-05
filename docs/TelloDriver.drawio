@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2021-02-05T09:30:37.395Z" agent="5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Safari/537.36" etag="HzXGZxUvbW9Aba0QEKUR" version="14.2.7" type="github" pages="7">
+<mxfile host="app.diagrams.net" modified="2021-02-05T09:33:30.364Z" agent="5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Safari/537.36" etag="nv7WSmBYjGGxwmDzrplb" version="14.2.7" type="github" pages="7">
   <diagram name="TelloDriver_HighLevel" id="KGe8z3dEAHJV09eYs3NV">
     <mxGraphModel dx="1350" dy="737" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
@@ -665,7 +665,7 @@
     </mxGraphModel>
   </diagram>
   <diagram name="Decoupling Tello" id="k_GfAFuUgdH8WF3FIxxu">
-    <mxGraphModel dx="1929" dy="1053" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="931" dy="508" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="-Ea7pDmFBXKXa0FTbNWK-0" />
         <mxCell id="-Ea7pDmFBXKXa0FTbNWK-1" parent="-Ea7pDmFBXKXa0FTbNWK-0" />
@@ -683,7 +683,7 @@
             <mxPoint x="299" y="600" as="sourcePoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="-Ea7pDmFBXKXa0FTbNWK-23" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;endArrow=classic;endFill=1;" edge="1" parent="-Ea7pDmFBXKXa0FTbNWK-1" source="-Ea7pDmFBXKXa0FTbNWK-5" target="-Ea7pDmFBXKXa0FTbNWK-18">
+        <mxCell id="-Ea7pDmFBXKXa0FTbNWK-23" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;endArrow=classic;endFill=1;" edge="1" parent="-Ea7pDmFBXKXa0FTbNWK-1" source="-Ea7pDmFBXKXa0FTbNWK-5" target="-Ea7pDmFBXKXa0FTbNWK-18">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="-Ea7pDmFBXKXa0FTbNWK-25" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1.005;exitY=0.662;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;endArrow=classic;endFill=1;exitPerimeter=0;" edge="1" parent="-Ea7pDmFBXKXa0FTbNWK-1" source="-Ea7pDmFBXKXa0FTbNWK-5" target="-Ea7pDmFBXKXa0FTbNWK-24">
@@ -727,14 +727,14 @@
         <mxCell id="-Ea7pDmFBXKXa0FTbNWK-17" value="Holds all the FlightData" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;" vertex="1" parent="-Ea7pDmFBXKXa0FTbNWK-1">
           <mxGeometry x="610" y="900" width="140" height="20" as="geometry" />
         </mxCell>
-        <mxCell id="-Ea7pDmFBXKXa0FTbNWK-22" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=0;exitDx=0;exitDy=0;endArrow=block;endFill=0;" edge="1" parent="-Ea7pDmFBXKXa0FTbNWK-1" source="-Ea7pDmFBXKXa0FTbNWK-18" target="-Ea7pDmFBXKXa0FTbNWK-19">
+        <mxCell id="-Ea7pDmFBXKXa0FTbNWK-22" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.758;exitY=-0.01;exitDx=0;exitDy=0;endArrow=block;endFill=0;exitPerimeter=0;" edge="1" parent="-Ea7pDmFBXKXa0FTbNWK-1" source="-Ea7pDmFBXKXa0FTbNWK-18" target="-Ea7pDmFBXKXa0FTbNWK-19">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="-Ea7pDmFBXKXa0FTbNWK-28" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;endArrow=block;endFill=0;" edge="1" parent="-Ea7pDmFBXKXa0FTbNWK-1" source="-Ea7pDmFBXKXa0FTbNWK-18" target="-Ea7pDmFBXKXa0FTbNWK-27">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="-Ea7pDmFBXKXa0FTbNWK-18" value="DataManager" style="whiteSpace=wrap;html=1;rounded=1;strokeColor=#9673a6;fillColor=#e1d5e7;" vertex="1" parent="-Ea7pDmFBXKXa0FTbNWK-1">
-          <mxGeometry x="430" y="830" width="350" height="60" as="geometry" />
+          <mxGeometry x="390" y="830" width="400" height="60" as="geometry" />
         </mxCell>
         <mxCell id="-Ea7pDmFBXKXa0FTbNWK-19" value="&amp;lt;&amp;lt;InserNewLogDataMsgInterface&amp;gt;&amp;gt;" style="whiteSpace=wrap;html=1;rounded=1;strokeColor=#666666;fillColor=#f5f5f5;fontColor=#333333;" vertex="1" parent="-Ea7pDmFBXKXa0FTbNWK-1">
           <mxGeometry x="600" y="730" width="190" height="60" as="geometry" />
