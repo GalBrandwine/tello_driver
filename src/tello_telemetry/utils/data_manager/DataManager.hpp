@@ -15,6 +15,7 @@
 #include "IWifiMsgDataManager.hpp"
 #include "IAltLimitMsgDataManager.hpp"
 #include "IAttLimitMsgDataManager.hpp"
+#include "ILowBatThreshMsgDataManager.hpp"
 #include "ILogDataConnectionInformationSupply.hpp"
 #include "IFlightDataMsgDataManager.hpp"
 namespace tello_protocol
@@ -35,11 +36,19 @@ namespace tello_protocol
           public IWifiMsgDataManager,
           public IAltLimitMsgDataManager,
           public IAttLimitMsgDataManager,
+          public ILowBatThreshMsgDataManager,
           public ILogDataConnectionInformationSupply,
           public IFlightDataMsgDataManager
     {
     public:
-            /**
+        /**
+         * @brief Set the Low battery threshold received as a response to the request tello_protocol::LOW_BAT_THRESHOLD_CMD
+         * 
+         * @param low_bat_thresh - low_thresh stored in the drone, sent back from drone as an approval.
+         */
+        void SetLowBatThreshLimit(unsigned char low_bat_thresh) override;
+
+        /**
          * @brief Set the Att Limit Received as a response to the request tello_protocol::GET_ALT_LIMIT_CMD
          * 
          * @param att_limit - requested limit, sent back from drone as an approval.

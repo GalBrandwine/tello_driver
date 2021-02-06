@@ -55,7 +55,6 @@ namespace tello_protocol
             m_logger->warn("Could not set " + std::string(__FUNCTION__) + "(" + std::to_string(amount) + ")");
         }
     }
-
     void TelloCommander::Backward(int amount)
     {
         assert(amount >= 0 && amount <= 100 && "Amount must be within limits.");
@@ -84,6 +83,43 @@ namespace tello_protocol
         }
         m_socket->Send(pkt.GetBuffer());
         return true;
+    }
+
+    void TelloCommander::ThrowAndGo()
+    {
+        m_logger->info("Sending throw_and_go (cmd=0x{:x} seq=0x{:x})", tello_protocol::THROW_AND_GO_CMD, 0x48);
+        auto pkt = Packet(tello_protocol::THROW_AND_GO_CMD, 0x48);
+        pkt.AddByte(0x00);
+        pkt.AddTime();
+        pkt.Fixup();
+        m_socket->Send(pkt.GetBuffer());
+    }
+
+    void TelloCommander::SendTimeCommand()
+    {
+        m_logger->info("Sending TimeCmd to the drone (cmd=0x{:x} seq=0x{:x})", tello_protocol::TIME_CMD, 0x50);
+        auto pkt = Packet(tello_protocol::TIME_CMD, 0x50);
+        pkt.AddByte(0x00);
+        pkt.AddTime();
+        pkt.Fixup();
+        m_socket->Send(pkt.GetBuffer());
+    }
+    void TelloCommander::GetLowBatThreshold()
+    {
+        m_logger->info("Get low battery threshold (cmd=0x{:x} seq=0x{:x})", tello_protocol::LOW_BAT_THRESHOLD_MSG, 0x01e4);
+        auto pkt = Packet(tello_protocol::LOW_BAT_THRESHOLD_MSG);
+        pkt.Fixup();
+        m_socket->Send(pkt.GetBuffer());
+    }
+    void TelloCommander::SetLowBatThreshold(int threshold)
+    {
+        m_logger->info("Set low battery threshold={} (cmd=0x{:x} seq=0x{:x})", threshold, tello_protocol::LOW_BAT_THRESHOLD_CMD, 0x01e4);
+        auto pkt = Packet(tello_protocol::LOW_BAT_THRESHOLD_CMD);
+        pkt.AddByte(threshold);
+        pkt.Fixup();
+        m_socket->Send(pkt.GetBuffer());
+
+        GetLowBatThreshold();
     }
 
     void TelloCommander::SetAttLimitReq(int limit)
@@ -126,7 +162,6 @@ namespace tello_protocol
 
         GetAltLimitReq();
     }
-
     void TelloCommander::GetAltLimitReq()
     {
         m_logger->debug("Sending GetAltitudeLimit request. (cmd=0x{:x} seq=0x{:x})", tello_protocol::ALT_LIMIT_MSG, 0x01e4);
@@ -183,7 +218,6 @@ namespace tello_protocol
         m_logger->info(m_logger->name() + " Initiated.");
         m_logger->set_level(lvl);
     }
-
     TelloCommander::~TelloCommander()
     {
         m_logger->info(m_logger->name() + " Destructing.");

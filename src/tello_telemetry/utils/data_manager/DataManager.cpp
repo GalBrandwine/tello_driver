@@ -14,19 +14,30 @@ namespace tello_protocol
 
     void DataManager::SetAttLimit(float att_limit)
     {
-        m_logger->debug("SetAttLimit recieved: {}", std::to_string(att_limit));
+        m_logger->debug("SetAttLimit received: {}", std::to_string(att_limit));
         m_flightData.attitude_limit = att_limit;
+        Notify(OBSERVERS::FLIGHT_DATA_MSG);
     }
 
     void DataManager::SetAltLimit(unsigned char alt_limit)
     {
-        m_logger->debug("SetAltLimit recieved: {}", std::to_string(alt_limit));
+        m_logger->debug("SetAltLimit received: {}", std::to_string(alt_limit));
         m_flightData.alt_limit = alt_limit;
+        Notify(OBSERVERS::FLIGHT_DATA_MSG);
     }
+    
+    void DataManager::SetLowBatThreshLimit(unsigned char low_bat_thresh)
+    {
+        m_logger->debug("SetLowBatThreshLimit received: {}", std::to_string(low_bat_thresh));
+        m_flightData.low_battery_threshold = low_bat_thresh;
+        Notify(OBSERVERS::FLIGHT_DATA_MSG);
+    }
+
     void DataManager::SetWifiMsg(const unsigned char &wifi_strength)
     {
-        m_logger->debug("SetWifiMsg recieved: {}", wifi_strength);
+        m_logger->debug("SetWifiMsg received: {}", wifi_strength);
         m_flightData.wifi_strength = wifi_strength;
+        Notify(OBSERVERS::FLIGHT_DATA_MSG);
     }
 
     void DataManager::SetConnReqAck()
@@ -39,7 +50,7 @@ namespace tello_protocol
     {
         /**
          * @brief Upon SetLogData, also Notify all attached to CONN_ACK_MSG.
-         * Sometimes conenection to the drone might be already extablished to the drone wont sent CONN_ACK_MSG.
+         * Sometimes conenction to the drone might be already established to the drone wont sent CONN_ACK_MSG.
          * We need to trigger it: SetConnAcked();
          * 
          */
@@ -112,7 +123,7 @@ namespace tello_protocol
         }
         catch (const std::exception &e)
         {
-            m_logger->error("Cought dynamic_cast exception: {}", e.what());
+            m_logger->error("Caught dynamic_cast exception: {}", e.what());
         }
     }
     void DataManager::notify_flight_data_received(IObserver *observer)
@@ -132,7 +143,7 @@ namespace tello_protocol
         }
         catch (const std::exception &e)
         {
-            m_logger->error("Cought dynamic_cast exception: {}", e.what());
+            m_logger->error("Caught dynamic_cast exception: {}", e.what());
         }
     }
 

@@ -55,6 +55,10 @@ void TelloDriver::SetAttLimitReq(float att_limit)
     m_TelloCommander.SetAttLimitReq(att_limit);
 }
 
+void TelloDriver::SetBatThreshReq(int bat_thresh)
+{
+    m_TelloCommander.SetLowBatThreshold(bat_thresh);
+}
 void TelloDriver::Land()
 {
     m_TelloCommander.SendLandReq();
@@ -63,11 +67,14 @@ void TelloDriver::Takeoff()
 {
     m_TelloCommander.SendTakeoffReq();
 }
-
-void TelloDriver::Attach(OBSERVERS oberver_type, IObserver *observer)
+void TelloDriver::ThrowAndGo()
 {
-    m_BaseLogger->info("Attaching " + observer_name(oberver_type));
-    m_DataManager.Attach(oberver_type, observer);
+    m_TelloCommander.ThrowAndGo();
+}
+void TelloDriver::Attach(OBSERVERS observer_type, IObserver *observer)
+{
+    m_BaseLogger->info("Attaching " + observer_name(observer_type));
+    m_DataManager.Attach(observer_type, observer);
 }
 
 void TelloDriver::Connect()
@@ -100,6 +107,14 @@ bool TelloDriver::WaitForConnection(int timeout)
         std::this_thread::sleep_for(50ms);
     }
 
+    /**
+     * @brief Get Initiated data stored in drone.
+     * 
+     */
+    m_TelloCommander.SendTimeCommand();
+    m_TelloCommander.GetLowBatThreshold();
+    m_TelloCommander.GetAltLimitReq();
+    m_TelloCommander.GetAttLimitReq();
     return true;
 }
 
@@ -109,13 +124,13 @@ TelloDriver::TelloDriver(spdlog::level::level_enum lvl)
       m_TelloCommander(spdlog::stdout_color_mt("tello_commander"), lvl),
       m_DataManager(spdlog::stdout_color_mt("data_manager"), spdlog::level::debug)
 {
-    m_BaseLogger->info("\n\n********\n\nTelloDriver created! version: {}\n\n********\n\n", TelloDriverVersion);
+    m_BaseLogger->info("\n\n********\n\nTelloDriver created! \nversion: {}\n\n********\n\n", TelloDriverVersion);
     m_BaseLogger->set_level(lvl);
 
     auto shared_socket = std::make_shared<TelloSocket>("192.168.10.1", 8889, 9000);
     m_TelloTelemetry.SetSocket(shared_socket);
     m_TelloCommander.SetSocket(shared_socket);
-    
+
     /**
      * @brief Observers initiation.
      * 
@@ -126,6 +141,7 @@ TelloDriver::TelloDriver(spdlog::level::level_enum lvl)
     m_TelloWifiMsgObserver = std::make_shared<tello_protocol::TelloWifiMsgObserver>(m_TelloTelemetry, m_DataManager, spdlog::stdout_color_mt("TelloWifiMsgObserver"), lvl);
     m_TelloAltLimitMsgObserver = std::make_shared<tello_protocol::TelloAltLimitMsgObserver>(m_TelloTelemetry, m_DataManager, spdlog::stdout_color_mt("TelloAltLimitMsgObserver"), lvl);
     m_TelloAttLimitMsgObserver = std::make_shared<tello_protocol::TelloAttLimitMsgObserver>(m_TelloTelemetry, m_DataManager, spdlog::stdout_color_mt("TelloAttLimitMsgObserver"), lvl);
+    m_TelloLowBatThreshMsgObserver = std::make_shared<tello_protocol::TelloLowBatThreshMsgObserver>(m_TelloTelemetry, m_DataManager, spdlog::stdout_color_mt("TelloLowBatThreshMsgObserver"), lvl);
     m_TelloLogDataMsgObserver = std::make_shared<tello_protocol::TelloLogDataMsgObserver>(m_TelloTelemetry, m_DataManager, spdlog::stdout_color_mt("TelloLogDataMsgObserver"), lvl);
     m_TelloFlightDataMsgObserver = std::make_shared<tello_protocol::TelloFlightDataMsgObserver>(m_TelloTelemetry, m_DataManager, spdlog::stdout_color_mt("TelloFlightDataMsgObserver"), lvl);
     m_TelloLogHeaderMsgObserver = std::make_shared<tello_protocol::TelloLogHeaderMsgObserver>(m_TelloTelemetry, m_DataManager, spdlog::stdout_color_mt("TelloLogHeaderMsgObserver"), lvl);

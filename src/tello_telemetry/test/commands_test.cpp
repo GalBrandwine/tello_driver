@@ -23,13 +23,14 @@ void Dummy::Update(const tello_protocol::FlightDataStruct &flight_data)
 
 using namespace std::chrono_literals;
 
-/* High-level testing: 
- * Test the whole pipeline. E.g:
+/**
+ * @brief Test the whole pipeline. 
+ * E.g:
  * 1. Instantiate TelloDriver
  * 2. Send connect req.
  * 3. Wait until connection has been established.
  * */
-TEST(WetTelloCommandTest, TrySendRecieveConnReq)
+TEST(WetTelloCommandTest, TrySendReceiveConnReq)
 {
     TelloDriver tello(spdlog::level::debug);
     tello.Connect();
@@ -38,7 +39,73 @@ TEST(WetTelloCommandTest, TrySendRecieveConnReq)
 }
 
 /**
-* Test if driver allert abount drone disconnection.
+ * @test Test if ThrowAndGoCommand works.
+ * @warning This test require drone movements!
+ * 
+ * Setup:
+ * * Create Tello instance.
+ * * Attach to FlightData.
+ * Run:
+ * * Connect to drone.
+ * * Send GetLowBatThresh() command
+ * Test:
+ * * See if Received LowBatThresh and stored corresclty.
+ */
+TEST(WetTelloCommandTest, TryThrowAndGoTest)
+{
+    // Setup
+    TelloDriver tello(spdlog::level::info);
+    Dummy dummy;
+    tello.Attach(OBSERVERS::FLIGHT_DATA_MSG, &dummy);
+
+    // Run
+    tello.Connect();
+    if (!tello.WaitForConnection(10))
+    {
+        tello.GetLogger()->error("Couldn't Connect to drone.");
+        ASSERT_TRUE(false);
+    }
+
+    // int new_thresh = 50;
+    // tello.SetBatThreshReq(new_thresh);
+
+    // Test
+    tello.ThrowAndGo();
+    tello.GetLogger()->info("Now the user should throw the drone away..\nWaiting for 5 secs.");
+    std::this_thread::sleep_for(std::chrono::seconds(5));
+
+    bool condition_met = false;
+    int num_of_tries = 1000;
+    while (num_of_tries >= 0)
+    {
+        auto fly_mode = dummy.GetFlightData().fly_mode;
+        tello.GetLogger()->info("Current fly mode: {}", std::to_string(fly_mode));
+        tello.GetLogger()->info("bat: {}", std::to_string(dummy.GetFlightData().battery_percentage));
+        tello.GetLogger()->info("drone_battery_left: {}", std::to_string(dummy.GetFlightData().drone_battery_left));
+        tello.GetLogger()->info("fly_time: {}", std::to_string(dummy.GetFlightData().fly_time));
+        tello.GetLogger()->info("drone_fly_time_left: {}\n", std::to_string(dummy.GetFlightData().drone_fly_time_left));
+        num_of_tries--;
+        std::this_thread::sleep_for(std::chrono::milliseconds(50));
+    }
+
+    tello.GetLogger()->info("*************** Landing ***************");
+    tello.Land();
+
+    num_of_tries = 1000;
+    while (num_of_tries >= 0)
+    {
+        auto fly_mode = dummy.GetFlightData().fly_mode;
+        tello.GetLogger()->info("Current fly mode: {}", fly_mode);
+        num_of_tries--;
+        std::this_thread::sleep_for(std::chrono::milliseconds(50));
+    }
+    ASSERT_TRUE(condition_met);
+
+    std::cout << "Done " << testing::UnitTest::GetInstance()->current_test_info()->name() << std::endl;
+}
+
+/**
+* @test Test if driver allert about drone disconnection.
 * Manually turn off the drone after connection
 **/
 TEST(WetTelloSticksCommandTest, TestDisconnectionAllert)
@@ -67,8 +134,9 @@ TEST(WetTelloSticksCommandTest, TestDisconnectionAllert)
 
     std::cout << "Done " << testing::UnitTest::GetInstance()->current_test_info()->name() << std::endl;
 }
+
 /**
- * Test if drone recieves neutral stick commands. 
+ * @test Test if drone receives neutral stick commands. 
  * @example: 
  *  No movements. Just keep alive heartbeat.
  *  If everything work properly. Drone's LED suppose to blink with GREEN
@@ -90,8 +158,7 @@ TEST(WetTelloSticksCommandTest, SendNeutralStickCommand)
     int counter = 100;
     while (counter-- > 0)
     {
-        // auto droneMode = tello.GetTelloTelemetry().GetFlightData()->GetFlightMode();
-        // tello.GetLogger()->info("DroneMode: " + std::to_string(droneMode));
+
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
 
@@ -99,7 +166,9 @@ TEST(WetTelloSticksCommandTest, SendNeutralStickCommand)
 }
 
 /**
- * @warning: this test envolve drone movements!
+ * @test Movements
+ * 
+ * @warning: this test evolve drone movements!
  * 1. Takeoff
  * 2. Move backward 1% stick, for 1 sec.
  * 3. Land
@@ -144,7 +213,7 @@ TEST(WetTelloSticksCommandTest, SendBackwardStickCommand)
 }
 
 /**
- * @brief Test SetAttLimit command
+ * @test Test SetAttLimit command
  * Setup:
  * * Create Tello instance.
  * * Attach to FlightData.
@@ -173,10 +242,103 @@ TEST(WetTelloSticksCommandTest, SendSetAttLimitTest)
     tello.SetAttLimitReq(limit);
 
     // Wait for Drone to reply.
-    std::this_thread::sleep_for(std::chrono::seconds(5));
+    bool condition_met = false;
+    int num_of_tries = 100;
+
+    while (!condition_met and num_of_tries >= 0)
+    {
+        condition_met = dummy.GetFlightData().attitude_limit == limit;
+        num_of_tries--;
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    }
 
     // Test
-    ASSERT_EQ(dummy.GetFlightData().attitude_limit, limit);
+    ASSERT_TRUE(condition_met);
+
+    std::cout << "Done " << testing::UnitTest::GetInstance()->current_test_info()->name() << std::endl;
+}
+
+/**
+ * @test Test If LowBatThreshMsg received and stored correctly.
+ * Setup:
+ * * Create Tello instance.
+ * * Attach to FlightData.
+ * * Connect to drone.
+ * Run:
+ * * Send GetLowBatThresh() command
+ * Test:
+ * * See if Received LowBatThresh and stored corresclty.
+**/
+TEST(WetTelloSticksCommandTest, GetLowBatThreshMsgTest)
+{
+    // Setup
+    TelloDriver tello(spdlog::level::info);
+    Dummy dummy;
+    tello.Attach(OBSERVERS::FLIGHT_DATA_MSG, &dummy);
+
+    // Run
+    tello.Connect();
+    if (!tello.WaitForConnection(10))
+    {
+        tello.GetLogger()->error("Couldn't Connect to drone.");
+        ASSERT_TRUE(false);
+    }
+
+    // Test
+    bool condition_met = false;
+    int num_of_tries = 100;
+    while (!condition_met and num_of_tries >= 0)
+    {
+        condition_met = dummy.GetFlightData().low_battery_threshold != -1;
+        num_of_tries--;
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    }
+
+    ASSERT_TRUE(condition_met);
+
+    std::cout << "Done " << testing::UnitTest::GetInstance()->current_test_info()->name() << std::endl;
+}
+
+/**
+ * @test Test If LOW_BAT_THRESHOLD_CMD command working properly.
+ * Setup:
+ * * Create Tello instance.
+ * * Attach to FlightData.
+ * * Connect to drone.
+ * Run:
+ * * Send SetLowBatThresh(new_thresh) command
+ * Test:
+ * * See if received LowBatThresh has desired new thresh.
+**/
+TEST(WetTelloSticksCommandTest, SetLowBatThreshMsgTest)
+{
+    // Setup
+    TelloDriver tello(spdlog::level::info);
+    Dummy dummy;
+    tello.Attach(OBSERVERS::FLIGHT_DATA_MSG, &dummy);
+
+    // Run
+    tello.Connect();
+    if (!tello.WaitForConnection(10))
+    {
+        tello.GetLogger()->error("Couldn't Connect to drone.");
+        ASSERT_TRUE(false);
+    }
+
+    int new_thresh = 50;
+    tello.SetBatThreshReq(new_thresh);
+
+    // Test
+    bool condition_met = false;
+    int num_of_tries = 100;
+    while (!condition_met and num_of_tries >= 0)
+    {
+        condition_met = dummy.GetFlightData().low_battery_threshold == new_thresh;
+        num_of_tries--;
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    }
+
+    ASSERT_TRUE(condition_met);
 
     std::cout << "Done " << testing::UnitTest::GetInstance()->current_test_info()->name() << std::endl;
 }

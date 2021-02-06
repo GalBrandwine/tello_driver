@@ -47,6 +47,20 @@ namespace tello_protocol
         void SendLandReq();
 
         /**
+         * @brief Send LOW_BAT_THRESHOLD_CMD to drone, with new threshold.
+         * 
+         * @param threshold - new threshold to be set.
+         */
+        void SetLowBatThreshold(int threshold);
+
+        /**
+         * @brief Send to drone LOW_BAT_THRESHOLD_MSG.
+         * In response the drone send back stored LowBatThresh
+         * 
+         */
+        void GetLowBatThreshold();
+
+        /**
          * @brief Send ATT_LIMIT_CMD to drone, with new LIMIT.
          * Call GetAttLimitReq(), for making sure the drone received new LIMIT.
          * 
@@ -64,7 +78,7 @@ namespace tello_protocol
         /**
          * @brief Sen SetAltLimit command, with new limit.
          * After sending the packed, call GetAltLimitReq().
-         * So drone will send back as acknowledeg the new limit.
+         * So drone will send back as acknowledge the new limit.
          * 
          * @param limit - new altitude limit.
          */
@@ -72,13 +86,18 @@ namespace tello_protocol
 
         /**
          * @brief Send GetAltLimit request.
-         * This will result with an incomming data from drone with id tello_protocol::ALT_LIMIT_MSG.
+         * This will result with an incoming data from drone with id tello_protocol::ALT_LIMIT_MSG.
          * 
-         * @todo Add observer on this incomming data to TelloTelemetry.
+         * @todo Add observer on this incoming data to TelloTelemetry.
          * 
          */
         void GetAltLimitReq();
 
+        /**
+         * @brief Throw_and_go starts a throw and go sequence
+         * 
+         */
+        void ThrowAndGo();
         void SendTakeoffReq();
 
         /**
@@ -103,6 +122,12 @@ namespace tello_protocol
          * 
          */
         void SetSocket(std::shared_ptr<ISender>);
+
+        /**
+         * @brief Send TimeCmd to the drone.
+         * Send this time command upon connection.
+         */
+        void SendTimeCommand();
 
         TelloCommander(std::shared_ptr<spdlog::logger>, spdlog::level::level_enum lvl = spdlog::level::info);
         ~TelloCommander();

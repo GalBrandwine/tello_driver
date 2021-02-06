@@ -87,12 +87,12 @@ namespace tello_protocol
         }
         if (cmd == tello_protocol::ATT_LIMIT_MSG)
         {
-            m_logger->info("ATT_LIMIT_MSG received: {}", float(received.GetData()[1]));
+            // m_logger->info("ATT_LIMIT_MSG received: {}", float(received.GetData()[1]));
             // m_FlightData->SetAttLimit(received.GetData());
         }
         if (cmd == tello_protocol::LOW_BAT_THRESHOLD_MSG)
         {
-            m_logger->info("recv: low battery threshold: {}", received.GetData());
+            // m_logger->info("recv: low battery threshold: {}", received.GetData());
         }
 
         if (cmd == tello_protocol::FLIGHT_MSG)
@@ -101,7 +101,7 @@ namespace tello_protocol
              * @todo  implemented IncommingFlightDataMsgObserver.
              * 
              */
-            
+
             // std::stringstream wrnSS;
             // wrnSS << __FUNCTION__ << "[" << __LINE__ << "]::"
             //       << "Data packet didnt math its expected length. dropping.";
@@ -113,6 +113,23 @@ namespace tello_protocol
             //           << "Data packet didnt math its expected length. dropping.";
             //     m_logger->warn(wrnSS.str());
             // }
+            /* 
+
+             */
+        }
+        if (cmd == tello_protocol::TIME_CMD)
+        {
+            // m_logger->info("recv: time data: {}", spdlog::to_hex(data));
+            // int sec, min, hour;
+            
+            // std::memcpy(&hour, &data[8], sizeof(char));
+
+            // std::time_t result;// = std::time(&data[7]);
+            // std::memcpy(&result, &data[7], sizeof(result));
+            // std::cout << std::asctime(std::localtime(&result))
+            //           << result << " seconds since the Epoch\n";
+            
+            // m_logger->info(sec);
         }
 
         std::fill(m_buffer.begin(), m_buffer.end(), 0);

@@ -12,6 +12,7 @@
 #include "TelloCommander.hpp"
 #include "utils/data_manager/DataManager.hpp"
 
+#include "TelloLowBatThreshMsgObserver.hpp"
 #include "TelloAttLimitMsgObserver.hpp"
 #include "TelloAltLimitMsgObserver.hpp"
 #include "TelloWifiMsgObserver.hpp"
@@ -46,7 +47,7 @@ class TelloDriver
 {
 public:
     /**
-    * @brief Movements section
+    * @brief Movements commands
     **/
     void CounterClockwise(int amount);
     void Clockwise(int amount);
@@ -56,19 +57,24 @@ public:
     void Left(int amount);
     void Backward(int amount);
     void Forward(int amount);
+    /**
+     * @brief High level commands
+     * 
+     */
+    void ThrowAndGo();
     void Takeoff();
     void Land();
 
     void SetAltLimitReq(int alt_limit);
     void SetAttLimitReq(float alt_limit);
+    void SetBatThreshReq(int bat_thresh);
 
     std::shared_ptr<spdlog::logger> GetLogger() { return m_BaseLogger; };
-    
+
     TelloDriver(spdlog::level::level_enum lvl = spdlog::level::info);
     ~TelloDriver();
 
-
-    void Attach(OBSERVERS oberver_type, IObserver *observer);
+    void Attach(OBSERVERS observer_type, IObserver *observer);
     void Connect();
     bool WaitForConnection(int);
 
@@ -77,9 +83,15 @@ private:
 
     /*************************************
      * 
-     * @section Incomming data observers
+     * @section Incoming data observers
      * 
     *************************************/
+
+    /**
+     * @brief TelloLowBatThreshMsgObserver attached to TelloTelemetry via ISubject interface.
+     * Observe for LOW_BAT_THRESHOLD_MSG sent back from drone.
+     */
+    std::shared_ptr<IObserver> m_TelloLowBatThreshMsgObserver;
 
     /**
      * @brief TelloAttLimitMsgObserver attached to TelloTelemetry via ISubject interface.
@@ -92,7 +104,7 @@ private:
     /**
      * @brief TelloAltLimitMsgObserver attached to TelloTelemetry via ISubject interface.
      * Observe for AltLimitMsg sent back from drone.
-     * Received only as an acknowledgent for a SetAltLimitCmd sent by the user.
+     * Received only as an acknowledgment for a SetAltLimitCmd sent by the user.
      * 
      * Should contain the new altitude limit.
      */
@@ -125,7 +137,7 @@ private:
      * @brief TelloLogDataMsgObserver attached to TelloTelemetry via ISubject interface.
      * It being callback upon new data arival to TelloTelemtry. 
      * 
-     * 1. Upon callback, it creates LogData opbject, then pass raw_data into this LogData.
+     * 1. Upon callback, it creates LogData object, then pass raw_data into this LogData.
      * 2. Pass this LogData (filled with processed log data E.G position, velocity etc) into TelloDataManager:
      * via SetLogData() that is available due to ILogDataMsgDataManager interface.
      * 
@@ -134,7 +146,7 @@ private:
 
     /**
      * @brief TelloConnAckMsgObserver attached to TelloTelemetry via ISubject interface.
-     * Upon callback, this obeserver will check if raw_data contain \'conn_ack\'. 
+     * Upon callback, this observer will check if raw_data contain \'conn_ack\'. 
      * If so this observer will call DataManager::SetConnReqAck()
      * 
      */

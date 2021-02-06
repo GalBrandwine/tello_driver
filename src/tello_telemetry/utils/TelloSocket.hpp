@@ -74,5 +74,5 @@ private:
 
     std::thread m_in_socket_thread;
     bool m_keep_running = true;
-    bool m_any_revieved = false;
+    bool m_any_received = false;
 };

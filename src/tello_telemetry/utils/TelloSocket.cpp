@@ -56,15 +56,18 @@ TelloSocket::~TelloSocket()
 {
     m_keep_running = false;
     boost::system::error_code ignored;
-    
-    m_tello_socket->shutdown(m_tello_socket->shutdown_both, ignored);
+
+    if (m_tello_socket != nullptr)
+    {
+        m_tello_socket->shutdown(m_tello_socket->shutdown_both, ignored);
+    }
 
     if (m_in_socket_thread.joinable())
     {
-        m_any_revieved = true;
+        m_any_received = true;
         m_in_socket_thread.join();
     }
-    std::cout << "TelloSocket Destrtucted.\n";
+    std::cout << "TelloSocket Destructed.\n";
 }
 
 TelloSocket::TelloSocket(const std::string &droneIp, const short droneCommandPort, const short droneDataPort)

@@ -2,15 +2,6 @@
 #include <iostream>
 
 /*******************************************
- * Perform simple takeoff, then land.
- * No stick stimulations.
- * No close-loop operations.
- * *******************************************/
-
-#include "TelloDriver/TelloDriver.hpp"
-#include <iostream>
-
-/*******************************************
  * @brief In this example I show how to create an object the contains TelloDriver, and attach itself to TelloDriver.
  * 
  * *******************************************/
@@ -117,12 +108,12 @@ void Examples::StartScenario1()
     m_tello.Backward(stick);
 
     stick = 5;
-    m_tello.GetLogger()->info("Sending Fowrard {}% command!", stick);
+    m_tello.GetLogger()->info("Sending Forward {}% command!", stick);
     m_tello.Forward(stick);
     std::this_thread::sleep_for(std::chrono::seconds(1));
 
     stick = 0;
-    m_tello.GetLogger()->info("Sending Fowrard {}% command!", stick);
+    m_tello.GetLogger()->info("Sending Forward {}% command!", stick);
     m_tello.Forward(stick);
 
     m_tello.GetLogger()->info("Sending Land command!");

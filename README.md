@@ -7,20 +7,20 @@ Meant to be included as a library, to other projects. See *[examples](examples)*
 
 ## Implemented Capabilities from TelloPy
 
-Not all TelloPy cabapilities were implemented.
+Not all TelloPy capabilities were implemented.
 
 ### Message receiving
 
 - [x] Parsing LOG_HEADER_MSG  
 - [x] Parsing LOG_DATA_MSG  
-- [ ] Parsing LOG_CONFIG_MSG. **Note: Didnt find any reason to implement this**.
+- [ ] Parsing LOG_CONFIG_MSG. **Note: didn't find any reason to implement this**.
 - [x] Parsing WIFI_MSG
 - [x] Parsing ALT_LIMIT_MSG
 - [x] Parsing ATT_LIMIT_MSG
 - [x] Parsing LOW_BAT_THRESHOLD_MSG.
-- [ ] Parsing LIGHT_MSG. **Note: Not enough doccumentation. didnt understand what is this message**.
+- [ ] Parsing LIGHT_MSG. **Note: Not enough documentation. didn't understand what is this message**.
 - [x] Parsing FLIGHT_MSG
-- [x] Parsing TIME_CMD. **Note could not reproduce**.
+- [x] Parsing TIME_CMD. **Successfully sending TIME_CMD, but I could not parse correctly the TIME_MSG received as a response**.
 - [ ] Capturing all ACK messages:
 - [ ] Parsing TELLO_CMD_FILE_SIZE
 - [ ] Parsing TELLO_CMD_FILE_DATA
@@ -29,16 +29,16 @@ Not all TelloPy cabapilities were implemented.
 
 - [x] Send conn_req **(Port 9617)**
 - [x] takeoff
-- [ ] throw_and_go
+- [x] throw_and_go
 - [x] land
 - [ ] palm_land
 - [x] get_alt_limit **Tested**
 - [x] set_alt_limit **Tested**
 - [x] get_att_limit **Tested**
 - [x] set_att_limit **Tested**
-- [ ] get_low_bat_threshold **Tested**
-- [ ] set_low_bat_threshold **Tested**
-- [ ] __send_time_command
+- [x] get_low_bat_threshold **Tested**
+- [x] set_low_bat_threshold **Tested**
+- [x] __send_time_command **Note: It sends time to the drone, but the response of the drone is not clear.**
 - [ ] __send_start_video
 - [ ] __send_video_mode
 - [ ] set_video_mode (With zoom)
