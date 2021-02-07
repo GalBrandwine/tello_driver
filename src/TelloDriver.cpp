@@ -59,6 +59,11 @@ void TelloDriver::SetBatThreshReq(int bat_thresh)
 {
     m_TelloCommander.SetLowBatThreshold(bat_thresh);
 }
+void TelloDriver::Emergency()
+{
+    m_TelloCommander.SendEmergencyCmd();
+}
+
 void TelloDriver::Land()
 {
     m_TelloCommander.SendLandReq();
@@ -71,6 +76,11 @@ void TelloDriver::ThrowAndGo()
 {
     m_TelloCommander.ThrowAndGo();
 }
+void TelloDriver::PalmLand()
+{
+    m_TelloCommander.PalmLand();
+}
+
 void TelloDriver::Attach(OBSERVERS observer_type, IObserver *observer)
 {
     m_BaseLogger->info("Attaching " + observer_name(observer_type));

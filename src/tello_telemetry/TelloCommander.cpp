@@ -94,8 +94,16 @@ namespace tello_protocol
         pkt.Fixup();
         m_socket->Send(pkt.GetBuffer());
     }
-
+    void TelloCommander::PalmLand()
+    {
+        m_logger->info("Sending PalmLand to the drone (cmd=0x{:x})", tello_protocol::PALM_LAND_CMD);
+        auto pkt = Packet(tello_protocol::PALM_LAND_CMD);
+        pkt.AddByte(0x00);
+        pkt.Fixup();
+        m_socket->Send(pkt.GetBuffer());
+    }
     void TelloCommander::SendTimeCommand()
+
     {
         m_logger->info("Sending TimeCmd to the drone (cmd=0x{:x} seq=0x{:x})", tello_protocol::TIME_CMD, 0x50);
         auto pkt = Packet(tello_protocol::TIME_CMD, 0x50);
@@ -141,7 +149,6 @@ namespace tello_protocol
 
         GetAttLimitReq();
     }
-
     void TelloCommander::GetAttLimitReq()
     {
         m_logger->debug("Sending GetAttLimitReq request. (cmd=0x{:x} seq=0x{:x})", tello_protocol::ATT_LIMIT_MSG, 0x01e4);
@@ -179,12 +186,21 @@ namespace tello_protocol
         pkt.Fixup();
         m_socket->Send(pkt.GetBuffer());
     }
-
     void TelloCommander::SendLandReq()
     {
         m_logger->debug("Sending land");
 
         auto pkt = tello_protocol::Packet(tello_protocol::LAND_CMD);
+        pkt.AddByte(0x00);
+        pkt.Fixup();
+        m_socket->Send(pkt.GetBuffer());
+    }
+
+    void TelloCommander::SendEmergencyCmd()
+    {
+        // m_logger->info("Sending EMERGENCY_CMD to the drone (cmd=0x{:x})", tello_protocol::EMERGENCY_CMD);
+        m_logger->info("Sending EMERGENCY_CMD to the drone");
+        auto pkt = tello_protocol::Packet(tello_protocol::EMERGENCY_CMD);
         pkt.AddByte(0x00);
         pkt.Fixup();
         m_socket->Send(pkt.GetBuffer());

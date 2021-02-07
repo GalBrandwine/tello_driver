@@ -85,53 +85,57 @@ namespace tello_protocol
             // m_logger->info("ALT_LIMIT_MSG received: {}", short(received.GetData()[1]));
             // m_FlightData->SetAltLimit(received.GetData());
         }
-        if (cmd == tello_protocol::ATT_LIMIT_MSG)
+        else if (cmd == tello_protocol::ATT_LIMIT_MSG)
         {
             // m_logger->info("ATT_LIMIT_MSG received: {}", float(received.GetData()[1]));
             // m_FlightData->SetAttLimit(received.GetData());
         }
-        if (cmd == tello_protocol::LOW_BAT_THRESHOLD_MSG)
+        else if (cmd == tello_protocol::LOW_BAT_THRESHOLD_MSG)
         {
             // m_logger->info("recv: low battery threshold: {}", received.GetData());
         }
 
-        if (cmd == tello_protocol::FLIGHT_MSG)
+        else if (cmd == tello_protocol::FLIGHT_MSG)
         {
-            /**
-             * @todo  implemented IncommingFlightDataMsgObserver.
-             * 
-             */
-
-            // std::stringstream wrnSS;
-            // wrnSS << __FUNCTION__ << "[" << __LINE__ << "]::"
-            //       << "Data packet didnt math its expected length. dropping.";
-            // m_logger->warn(wrnSS.str());
-            // if (!m_FlightData->SetData(received.GetData()))
-            // {
-            //     std::stringstream wrnSS;
-            //     wrnSS << __FUNCTION__ << "[" << __LINE__ << "]::"
-            //           << "Data packet didnt math its expected length. dropping.";
-            //     m_logger->warn(wrnSS.str());
-            // }
-            /* 
-
-             */
         }
-        if (cmd == tello_protocol::TIME_CMD)
+        else if (cmd == tello_protocol::TIME_CMD)
         {
             // m_logger->info("recv: time data: {}", spdlog::to_hex(data));
             // int sec, min, hour;
-            
+
             // std::memcpy(&hour, &data[8], sizeof(char));
 
             // std::time_t result;// = std::time(&data[7]);
             // std::memcpy(&result, &data[7], sizeof(result));
             // std::cout << std::asctime(std::localtime(&result))
             //           << result << " seconds since the Epoch\n";
-            
+
             // m_logger->info(sec);
         }
+        else if (cmd == 0x0035)
+        {
+            /**
+             * @brief This is undocumented, need help to understand what this message is!
+             * @todo Infer this message and implement a observer to it.
+             * 
+             * I think this message  relate to on-air/on-ground modes and timings
+             * 
+             */
+            // 0000: cc 60 00 27 88 35 00 23 00 00 81 21
+            m_logger->error("recv undocumented: some ack: {}", spdlog::to_hex(data));
+            m_logger->error("cmd: {}", std::to_string(cmd));
+            short undoc;
+            std::memcpy(&undoc, &data[7], sizeof(short));
+            m_logger->error("data: {}", spdlog::to_hex(data));
+            m_logger->error("undoc: {}", undoc);
 
+            /* code */
+        }
+
+        else
+        {
+            m_logger->error("recv: some ack: {}", spdlog::to_hex(data));
+        }
         std::fill(m_buffer.begin(), m_buffer.end(), 0);
         return true;
     }

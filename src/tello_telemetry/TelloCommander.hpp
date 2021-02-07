@@ -36,7 +36,7 @@ namespace tello_protocol
          * 
          * 1. Create empty packet with STICK_CMD header.
          * 2. Get movements from MovementCommandsManager
-         * 3. Convert them stickCommandt into packet data.
+         * 3. Convert them stickCommands into packet data.
          * 4. Send to drone.
          * 
          * @return true if packet converter successfully
@@ -46,6 +46,12 @@ namespace tello_protocol
 
         void SendLandReq();
 
+        /**
+         * @brief Sends EMERGENCY_CMD to the drone. 
+         * @warning This will kill all motors at once.
+         * 
+         */
+        void SendEmergencyCmd();
         /**
          * @brief Send LOW_BAT_THRESHOLD_CMD to drone, with new threshold.
          * 
@@ -98,6 +104,12 @@ namespace tello_protocol
          * 
          */
         void ThrowAndGo();
+
+        /**
+         * @brief Tells the drone to wait for a hand underneath it and then land
+         * 
+         */
+        void PalmLand();
         void SendTakeoffReq();
 
         /**

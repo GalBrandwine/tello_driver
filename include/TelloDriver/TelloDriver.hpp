@@ -62,9 +62,11 @@ public:
      * 
      */
     void ThrowAndGo();
+    void PalmLand();
     void Takeoff();
     void Land();
-
+    void Emergency();
+    
     void SetAltLimitReq(int alt_limit);
     void SetAttLimitReq(float alt_limit);
     void SetBatThreshReq(int bat_thresh);
