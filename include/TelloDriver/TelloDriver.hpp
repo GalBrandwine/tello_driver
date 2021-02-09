@@ -12,6 +12,7 @@
 #include "TelloCommander.hpp"
 #include "utils/data_manager/DataManager.hpp"
 
+#include "TelloPowerOnTimerMsgObserver.hpp"
 #include "TelloLowBatThreshMsgObserver.hpp"
 #include "TelloAttLimitMsgObserver.hpp"
 #include "TelloAltLimitMsgObserver.hpp"
@@ -66,7 +67,7 @@ public:
     void Takeoff();
     void Land();
     void Emergency();
-    
+
     void SetAltLimitReq(int alt_limit);
     void SetAttLimitReq(float alt_limit);
     void SetBatThreshReq(int bat_thresh);
@@ -88,6 +89,13 @@ private:
      * @section Incoming data observers
      * 
     *************************************/
+
+    /**
+     * @brief TelloPowerOnTimerMsgObserver attached to TelloTelemetry via ISubject interface.
+     * Observer for power on timer message.
+     * 
+     */
+    std::shared_ptr<IObserver> m_TelloPowerOnTimerMsgObserver;
 
     /**
      * @brief TelloLowBatThreshMsgObserver attached to TelloTelemetry via ISubject interface.

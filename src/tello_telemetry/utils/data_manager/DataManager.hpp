@@ -17,6 +17,7 @@
 #include "IAttLimitMsgDataManager.hpp"
 #include "ILowBatThreshMsgDataManager.hpp"
 #include "ILogDataConnectionInformationSupply.hpp"
+#include "IPowerOnTimerMsgDataManager.hpp"
 #include "IFlightDataMsgDataManager.hpp"
 namespace tello_protocol
 {
@@ -38,9 +39,20 @@ namespace tello_protocol
           public IAttLimitMsgDataManager,
           public ILowBatThreshMsgDataManager,
           public ILogDataConnectionInformationSupply,
+          public IPowerOnTimerMsgDataManager,
           public IFlightDataMsgDataManager
     {
     public:
+        /**
+         * @brief Set the PowerOnTimer message.
+         * This message containts:
+         * * Short  - Counting timer since power on.
+         * * Boolean- First flight since power on.
+         * 
+         * @param power_on_timer 
+         */
+        void SetPowerOnTimer(const tello_protocol::PowerOnTimerInfo &power_on_timer) override;
+
         /**
          * @brief Set the Low battery threshold received as a response to the request tello_protocol::LOW_BAT_THRESHOLD_CMD
          * 
@@ -64,6 +76,8 @@ namespace tello_protocol
 
         /**
          * @brief Set the Flight Data object
+         * This is the official FlightData struct filler function.
+         * Other DataManager setters insert complementry data into FlightData struct.
          * 
          * @param flight_data_processor 
          */

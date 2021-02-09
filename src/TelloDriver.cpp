@@ -148,6 +148,7 @@ TelloDriver::TelloDriver(spdlog::level::level_enum lvl)
 
     // m_TelloConnAckMsgObserver = std::make_shared<tello_protocol::TelloConnAckMsgObserver>(m_TelloTelemetry, m_DataManager, spdlog::stdout_color_mt("TelloConnAckMsgObserver"), lvl);
     m_TelloAckLogHeaderIdSenderObserver = std::make_shared<tello_protocol::TelloAckLogHeaderIdSenderObserver>(m_TelloCommander, m_DataManager, spdlog::stdout_color_mt("TelloAckLogHeaderIdSenderObserver"), lvl);
+    m_TelloPowerOnTimerMsgObserver = std::make_shared<tello_protocol::TelloPowerOnTimerMsgObserver>(m_TelloTelemetry, m_DataManager, spdlog::stdout_color_mt("TelloPowerOnTimerMsgObserver"), lvl);
     m_TelloWifiMsgObserver = std::make_shared<tello_protocol::TelloWifiMsgObserver>(m_TelloTelemetry, m_DataManager, spdlog::stdout_color_mt("TelloWifiMsgObserver"), lvl);
     m_TelloAltLimitMsgObserver = std::make_shared<tello_protocol::TelloAltLimitMsgObserver>(m_TelloTelemetry, m_DataManager, spdlog::stdout_color_mt("TelloAltLimitMsgObserver"), lvl);
     m_TelloAttLimitMsgObserver = std::make_shared<tello_protocol::TelloAttLimitMsgObserver>(m_TelloTelemetry, m_DataManager, spdlog::stdout_color_mt("TelloAttLimitMsgObserver"), lvl);

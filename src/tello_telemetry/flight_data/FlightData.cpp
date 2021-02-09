@@ -12,11 +12,11 @@ namespace tello_protocol
      * 
      * @param lowbatthreshold 
      */
-    void FlightData::SetLowBatThreshold(const std::string &lowbatthreshold)
-    {
-        std::memcpy(&m_low_battery_threhold, &lowbatthreshold[1], sizeof(short));
-        m_logger->info("Setting LowBatThreshold: {}%", m_low_battery_threhold);
-    }
+    // void FlightData::SetLowBatThreshold(const std::string &lowbatthreshold)
+    // {
+    //     std::memcpy(&m_low_battery_threshold, &lowbatthreshold[1], sizeof(short));
+    //     m_logger->info("Setting LowBatThreshold: {}%", m_low_battery_threshold);
+    // }
 
     /**
      * @brief Set attlimit as received back from drone.
@@ -28,11 +28,11 @@ namespace tello_protocol
      * 
      * @param attlimit 
      */
-    void FlightData::SetAttLimit(const std::string &attlimit)
-    {
-        std::memcpy(&m_attitude_limit, &attlimit[1], sizeof(float));
-        m_logger->info("Setting Att: {}[deg]", m_attitude_limit);
-    }
+    // void FlightData::SetAttLimit(const std::string &attlimit)
+    // {
+    //     std::memcpy(&m_attitude_limit, &attlimit[1], sizeof(float));
+    //     m_logger->info("Setting Att: {}[deg]", m_attitude_limit);
+    // }
 
     void FlightData::GetFlightData(tello_protocol::FlightDataStruct &flight_data_out)
     {
@@ -68,11 +68,11 @@ namespace tello_protocol
         if (data.size() < 24)
         {
             if (m_logger)
-                m_logger->warn("data length didnt match.");
+                m_logger->warn("data length didn't match.");
             return false;
         }
 
-        short temp;
+        
         std::memcpy(&m_flight_data.height, &data[0], sizeof(short));
         // m_logger->warn("data {}", temp);
         // m_flight_data.height = temp;
@@ -209,6 +209,6 @@ namespace tello_protocol
     }
     FlightData::~FlightData()
     {
-        m_logger->info(m_logger->name() + " Destructing.");
+        m_logger->info(m_logger->name() + "::FlightData Destructing.");
     };
 } // namespace tello_protocol

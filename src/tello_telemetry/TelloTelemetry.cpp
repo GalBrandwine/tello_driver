@@ -20,7 +20,7 @@ namespace tello_protocol
         HowManyObserver();
         while (iterator != list_observer_.end())
         {
-            (*iterator)->Update(m_recieved_data);
+            (*iterator)->Update(m_received_data);
             ++iterator;
         }
     }
@@ -122,12 +122,12 @@ namespace tello_protocol
              * 
              */
             // 0000: cc 60 00 27 88 35 00 23 00 00 81 21
-            m_logger->error("recv undocumented: some ack: {}", spdlog::to_hex(data));
-            m_logger->error("cmd: {}", std::to_string(cmd));
-            short undoc;
-            std::memcpy(&undoc, &data[7], sizeof(short));
-            m_logger->error("data: {}", spdlog::to_hex(data));
-            m_logger->error("undoc: {}", undoc);
+            // m_logger->error("recv undocumented: some ack: {}", spdlog::to_hex(data));
+            // m_logger->error("cmd: {}", std::to_string(cmd));
+            // short undoc;
+            // std::memcpy(&undoc, &data[7], sizeof(short));
+            // m_logger->error("data: {}", spdlog::to_hex(data));
+            // m_logger->error("undoc: {}", undoc);
 
             /* code */
         }
@@ -160,28 +160,28 @@ namespace tello_protocol
             if (m_BytesReceived > 0)
             {
                 m_IsConnectedToDrone = true;
-                m_time_of_last_packet_recieved = time_now;
+                m_time_of_last_packet_received = time_now;
                 m_anyDataReceived = true;
 
                 /**
                  * @brief Pack data from sender, And notify all observers.
                  * 
                  */
-                m_recieved_data = std::vector<unsigned char>(m_buffer.begin(), m_buffer.begin() + m_BytesReceived);
+                m_received_data = std::vector<unsigned char>(m_buffer.begin(), m_buffer.begin() + m_BytesReceived);
                 Notify();
 
                 /**
                  * @todo Move all processing into attached observers.
                  * 
                  */
-                if (!process_data(m_recieved_data))
+                if (!process_data(m_received_data))
                 {
                     m_logger->error("Could not process data! Dumping:\n {DATA SUPPOSE TO BE HERE}");
                 }
             }
 
-            duration = time_now - m_time_of_last_packet_recieved;
-            m_logger->debug("Milisec since last recieved packet [ms]: " + std::to_string(duration.count()));
+            duration = time_now - m_time_of_last_packet_received;
+            m_logger->debug("Millisec since last received packet [ms]: " + std::to_string(duration.count()));
 
             if (m_anyDataReceived && duration.count() > DISCONNECT_TIMEOUT_MS)
             {
@@ -301,7 +301,7 @@ namespace tello_protocol
         m_logger->info(m_logger->name() + " Initiated.");
 
         const auto p1 = std::chrono::system_clock::now();
-        m_time_of_last_packet_recieved = std::chrono::duration_cast<std::chrono::milliseconds>(p1.time_since_epoch());
+        m_time_of_last_packet_received = std::chrono::duration_cast<std::chrono::milliseconds>(p1.time_since_epoch());
         m_buffer = std::vector<unsigned char>(1024);
     }
 
@@ -312,6 +312,13 @@ namespace tello_protocol
         if (m_Listener.joinable())
             m_Listener.join();
         m_logger->info(m_logger->name() + " thread joined");
-    }
+        m_logger->info(m_logger->name() + " Emptying observer list");
+        while (!list_observer_.empty())
+        {
+            list_observer_.pop_back();
+        }
+        m_logger->info(m_logger->name() + " Done emptying observer list");
+        m_logger->info(m_logger->name() + " Destructed.");
+        }
 
 } // namespace tello_protocol

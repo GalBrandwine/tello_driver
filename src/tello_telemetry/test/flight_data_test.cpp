@@ -1,4 +1,5 @@
 #include "flight_data_test.hpp"
+#include "helper.hpp"
 
 using namespace std::chrono_literals;
 TEST(TelloCommandTest, SendConnReq)
@@ -230,7 +231,7 @@ TEST(TelloTelemetryTest, ReceiveLogDataMvoMsg)
 
         else if (cmd == tello_protocol::LOG_DATA_MSG)
         {
-            
+
             std::vector<unsigned char> trimmed(data.begin() + 10, data.end());
             // telloTelemerty.GetLogData()->Update(trimmed);
             log_data_msg_counter++;
@@ -830,7 +831,7 @@ TEST(TelloTelemetryTest, SET_LOW_BAT_THRESHOLD)
         send_pkt(pkt);
     };
 
-    tello_protocol::TelloTelemetry tello_telemetry(spdlog::stdout_color_mt("tello_telemetry"),spdlog::level::debug);
+    tello_protocol::TelloTelemetry tello_telemetry(spdlog::stdout_color_mt("tello_telemetry"), spdlog::level::debug);
     auto flight_data = std::make_shared<tello_protocol::FlightData>(spdlog::stdout_color_mt("flight_data"));
     // tello_telemetry.SetFlightData(flight_data);
 
@@ -841,7 +842,7 @@ TEST(TelloTelemetryTest, SET_LOW_BAT_THRESHOLD)
     {
         get_low_bat_threshold();
         r = tello_socket.receive(asio::buffer(buffer_));
-        
+
         std::vector<unsigned char> data(buffer_.begin(), buffer_.begin() + r); // Strip last 2 bytes. they are CRC16
 
         auto received = tello_protocol::Packet(data);
@@ -859,139 +860,117 @@ TEST(TelloTelemetryTest, SET_LOW_BAT_THRESHOLD)
     TearDownTestCase();
 }
 
-// TEST(TelloTelemetryTest, SEND_TIME_COMMAND)
-// {
-//     /*
-//     NOTE: I could not triggered thhe drone toe send 'TIME_CMD'.
-//     I dont know why this feature exists. But it will remain unsupported in the tello_driver
-//     */
+/**
+ * @test Keep track of incoming undocumented data msg of type 0x0035
+ * Setup:
+ * * Create Tello instance.
+ * * Attach to FlightData.
+ * * Connect to drone.
+ * Run:
+ * * Sleep for a while. For gaining some PowerOn time.
+ * Test:
+ * * power_on_timer GREATER or EQUAL to time slept.
+ * 
+ * @note Notes on message 0x0035
+ * * This is a short message: length of 11 bytes (data starts from byte number 7, last 2 are CRC)
+ * * Data[7:8]:short   - Seems to be POWER_ON timer.
+ * * Data[9]:bool      - <p>Unclear, it becomes true upon first takeoff since poweroff, \n
+ *                       and remains TRUE while ON_AIR for first flight sinc POWER_ON.</p>
+**/
+TEST(WetTelloUndoccumentedDataTest, UndoccumentedDataMsg_0x0035_power_on_timer)
+{
+    // Setup
+    TelloDriver tello(spdlog::level::info);
+    Dummy dummy;
+    tello.Attach(OBSERVERS::FLIGHT_DATA_MSG, &dummy);
 
-//     // Setup
-//     using asio::ip::udp;
-//     asio::io_service io_service_; // Manages IO for this socket
-//     unsigned short port = 9000;
-//     unsigned short drone_port = 8889;
-//     std::string drone_ip = "192.168.10.1";
-//     udp::endpoint remote_endpoint_(asio::ip::address_v4::from_string(drone_ip), drone_port); // Socket for sending CMD to drone
-//     udp::socket tello_socket(io_service_, udp::endpoint(udp::v4(), port));                   // The socket for receiving data
-//     using namespace std::chrono_literals;
-//     bool keep_receiving = true;
-//     auto buffer_ = std::vector<unsigned char>(1024);
-//     size_t r = 0;
-//     auto test_logger = spdlog::stdout_color_mt("test_logger");
-//     //Run
+    // Run
+    tello.Connect();
+    if (!tello.WaitForConnection(10))
+    {
+        tello.GetLogger()->error("Couldn't Connect to drone.");
+        ASSERT_TRUE(false);
+    }
 
-//     // Connect
-//     auto pkt = tello_protocol::Packet("conn_req:\x96\x17");
-//     tello_socket.send_to(asio::buffer(pkt.GetBuffer()), remote_endpoint_);
-//     // std::this_thread::sleep_for(0.5s);
+    int sleep = 5;
+    std::this_thread::sleep_for(std::chrono::seconds(sleep));
 
-//     auto send_pkt = [&tello_socket, &remote_endpoint_, &test_logger](const tello_protocol::Packet &pkt) {
-//         tello_socket.send_to(asio::buffer(pkt.GetBuffer()), remote_endpoint_);
-//     };
+    // Test
+    ASSERT_GE(dummy.GetFlightData().power_on_timer_info.power_on_timer, sleep);
 
-//     auto send_time_command = [&send_pkt, &test_logger]() {
-//         test_logger->info("set time (cmd=0x{:x} seq=0x{:x})", tello_protocol::TIME_CMD, 0x01e4);
-//         auto pkt = tello_protocol::Packet(tello_protocol::TIME_CMD, 0x50);
-//         pkt.AddByte(0);
+    std::cout << "Done " << testing::UnitTest::GetInstance()->current_test_info()->name() << std::endl;
+}
 
-//         // Time Preperations
-//         time_t now = time(0);
-//         auto timenow = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
-//         // convert now to string form
-//         char *dt = ctime(&timenow);
-//         std::cout << "The local date and time is: " << dt << std::endl;
-//         tm *gmtm = gmtime(&timenow);
-//         gmtm->tm_hour+=2;
+/**
+ * @test Keep track of incoming undocumented data msg of type 0x0035
+ * Preconditions:
+ * * Drone didn't flew since turned on.
+ * 
+ * Setup:
+ * * Create Tello instance.
+ * * Attach to FlightData.
+ * * Connect to drone.
+ * Run:
+ * Test1:
+ * * first_flight_since_power_on equal to FALSE.
+ * Run:
+ * * Takeoff()
+ * Test2:
+ * * first_flight_since_power_on equal to TRUE.
+ * Run:
+ * * Land()
+ * Test3:
+ * * first_flight_since_power_on equal to FALSE.
+ * Run:
+ * * Takeoff()
+ * Test4:
+ * * first_flight_since_power_on equal to FALSE.
+ * 
+ * @note Notes on message 0x0035
+ * * This is a short message: length of 11 bytes (data starts from byte number 7, last 2 are CRC)
+ * * Data[7:8]:short   - Seems to be POWER_ON timer.
+ * * Data[9]:bool      - <p>Unclear, it becomes true upon first takeoff since poweroff, \n
+ *                       and remains TRUE while ON_AIR for first flight sinc POWER_ON.</p>
+**/
+TEST(WetTelloUndoccumentedDataTest, UndoccumentedDataMsg_0x0035_first_flight_since_power_on)
+{
+    // Setup
+    TelloDriver tello(spdlog::level::info);
+    Dummy dummy;
+    tello.Attach(OBSERVERS::FLIGHT_DATA_MSG, &dummy);
+    int sleep = 5;
 
-//         pkt.AddTime(gmtm);
-//         test_logger->info("Time sent: {}", spdlog::to_hex(pkt.GetBuffer()));
-//         pkt.Fixup();
-//         send_pkt(pkt);
-//     };
+    // Run
+    tello.Connect();
+    if (!tello.WaitForConnection(10))
+    {
+        tello.GetLogger()->error("Couldn't Connect to drone.");
+        ASSERT_TRUE(false);
+    }
 
-//     auto tello_telemetry = tello_protocol::TelloTelemetry(spdlog::stdout_color_mt("tello_telemetry"));
-//     auto flight_data = std::make_shared<tello_protocol::FlightData>(spdlog::stdout_color_mt("flight_data"));
-//     tello_telemetry.SetFlightData(flight_data);
+    // Test1
+    ASSERT_FALSE(dummy.GetFlightData().power_on_timer_info.first_flight_since_power_on);
 
-//     // Test:
-//     while (keep_receiving)
-//     {
+    tello.Takeoff();
+    std::this_thread::sleep_for(std::chrono::seconds(sleep));
 
-//         r = tello_socket.receive(asio::buffer(buffer_));
+    // Test2
+    ASSERT_TRUE(dummy.GetFlightData().power_on_timer_info.first_flight_since_power_on);
 
-//         std::vector<unsigned char> data(buffer_.begin(), buffer_.begin() + r); // Strip last 2 bytes. they are CRC16
+    tello.Land();
+    std::this_thread::sleep_for(std::chrono::seconds(sleep));
 
-//         auto received = tello_protocol::Packet(data);
-//         auto cmd = uint16(received.GetBuffer()[5], received.GetBuffer()[6]);
-//         if (received.GetBuffer().find("conn_ack") == 0)
-//         {
-//             test_logger->info("Connected (port={:x}{:x})", data[9], data[10]);
-//             send_time_command();
-//         }
-//         if (cmd == tello_protocol::TIME_CMD)
-//         {
-//             test_logger->info("Time received: {}", spdlog::to_hex(received.GetData()));
-//             keep_receiving = false;
-//         }
-//         std::fill(buffer_.begin(), buffer_.end(), 0);
-//         std::this_thread::sleep_for(0.05s);
-//     }
-//     TearDownTestCase();
-// }
+    // Test3
+    ASSERT_FALSE(dummy.GetFlightData().power_on_timer_info.first_flight_since_power_on);
 
-// TEST(TelloCommandTest, SendTakeoff)
-// {
-//     /*
-//     This is the most stupid test I have ever done.
-//     Im testing 'Takeoff' command, without even knowing how to land the drone.
+    tello.Takeoff();
+    std::this_thread::sleep_for(std::chrono::seconds(sleep));
 
-//     Luckily, this is a small drone,
-//     so I just caught it by hand.
+    // Test4
+    ASSERT_FALSE(dummy.GetFlightData().power_on_timer_info.first_flight_since_power_on);
 
-//     NEVER DO SUCH A THING WITH BIG DRONES!!!
-//     */
+    tello.Land();
+    std::this_thread::sleep_for(std::chrono::seconds(sleep));
 
-//     // Setup
-//     using asio::ip::udp;
-//     asio::io_service io_service_; // Manages IO for this socket
-//     unsigned short port = 9000;
-//     unsigned short drone_port = 8889;
-//     std::string drone_ip = "192.168.10.1";
-//     udp::endpoint remote_endpoint_(asio::ip::address_v4::from_string(drone_ip), drone_port);
-//     udp::socket tello_socket(io_service_, udp::endpoint(udp::v4(), port)); // The socket
-//     using namespace std::chrono_literals;
-//     bool keep_sending = true;
-//     auto buffer_ = std::vector<unsigned char>(1024);
-//     //Run
-
-//     // Connect
-//     auto pkt = tello_protocol::Packet("conn_req:\x96\x17");
-//     tello_socket.send_to(asio::buffer(pkt.GetBuffer()), remote_endpoint_);
-
-//     size_t r = 0;
-
-//     tello_socket.send_to(asio::buffer(pkt.GetBuffer()), remote_endpoint_);
-//     std::this_thread::sleep_for(0.5s);
-
-//     while (keep_sending)
-//     {
-//         r = tello_socket.receive(asio::buffer(buffer_));
-//         if (r == 11)
-//             keep_sending = false;
-//         std::this_thread::sleep_for(0.5s);
-//     }
-
-//     // Set max height
-//     pkt = tello_protocol::Packet(tello_protocol::SET_ALT_LIMIT_CMD);
-//     pkt.AddByte(0x1e); // 30m maximum height
-//     pkt.AddByte(0x00); // little endian
-//     tello_socket.send_to(asio::buffer(pkt.GetBuffer()), remote_endpoint_);
-
-//     // Test
-//     pkt = tello_protocol::Packet(tello_protocol::TAKEOFF_CMD);
-//     pkt.Fixup();
-//     tello_socket.send_to(asio::buffer(pkt.GetBuffer()), remote_endpoint_);
-
-//     TearDownTestCase();
-// }
+    std::cout << "Done " << testing::UnitTest::GetInstance()->current_test_info()->name() << std::endl;
+}

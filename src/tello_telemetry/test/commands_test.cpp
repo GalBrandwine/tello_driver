@@ -1,25 +1,25 @@
 #include "commands_test.hpp"
+#include "helper.hpp"
 #include "TelloDriver/TelloDriver.hpp"
 
-// Setup
-class Dummy : public IFlightDataObserver
-{
-private:
-    tello_protocol::FlightDataStruct m_flight_data;
+// class Dummy : public IFlightDataObserver
+// {
+// private:
+//     tello_protocol::FlightDataStruct m_flight_data;
 
-public:
-    void Update(const tello_protocol::FlightDataStruct &flight_data) override;
-    void Update(const std::vector<unsigned char> &message_from_subject) override{};
-    const tello_protocol::FlightDataStruct &GetFlightData() const { return m_flight_data; };
-    Dummy(/* args */);
-    ~Dummy();
-};
-Dummy::Dummy(){};
-Dummy::~Dummy(){};
-void Dummy::Update(const tello_protocol::FlightDataStruct &flight_data)
-{
-    m_flight_data = flight_data;
-};
+// public:
+//     void Update(const tello_protocol::FlightDataStruct &flight_data) override;
+//     void Update(const std::vector<unsigned char> &message_from_subject) override{};
+//     const tello_protocol::FlightDataStruct &GetFlightData() const { return m_flight_data; };
+//     Dummy(/* args */);
+//     ~Dummy();
+// };
+// Dummy::Dummy(){};
+// Dummy::~Dummy(){};
+// void Dummy::Update(const tello_protocol::FlightDataStruct &flight_data)
+// {
+//     m_flight_data = flight_data;
+// };
 
 using namespace std::chrono_literals;
 

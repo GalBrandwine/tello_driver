@@ -6,6 +6,12 @@ namespace tello_protocol
         return m_connection_information;
     }
 
+    void DataManager::SetPowerOnTimer(const tello_protocol::PowerOnTimerInfo &power_on_timer)
+    {
+        m_flightData.power_on_timer_info = power_on_timer;
+        Notify(OBSERVERS::FLIGHT_DATA_MSG);
+    }
+    
     void DataManager::SetFlightData(const std::shared_ptr<IFlightDataGetter> flight_data_processor)
     {
         flight_data_processor->GetFlightData(m_flightData);
@@ -25,7 +31,7 @@ namespace tello_protocol
         m_flightData.alt_limit = alt_limit;
         Notify(OBSERVERS::FLIGHT_DATA_MSG);
     }
-    
+
     void DataManager::SetLowBatThreshLimit(unsigned char low_bat_thresh)
     {
         m_logger->debug("SetLowBatThreshLimit received: {}", std::to_string(low_bat_thresh));

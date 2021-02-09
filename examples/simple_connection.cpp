@@ -62,7 +62,7 @@ void PosObserver::Update(const tello_protocol::PoseVelData &pos_vel)
 void PosObserver::Update(const std::vector<unsigned char> &message_from_subject)
 {
     std::string s(message_from_subject.begin(), message_from_subject.end());
-    std::cout << "received tello current log version: " << s << "\n";
+    // std::cout << "received tello current log version: " << s << "\n";
 }
 
 int main()

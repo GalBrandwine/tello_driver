@@ -59,6 +59,7 @@ namespace tello_protocol
     static const unsigned int LOW_BAT_THRESHOLD_MSG = 0x1057;   //
     static const unsigned int ATT_LIMIT_CMD = 0x1058;           // #Stated incorrectly by Wiki (checked from raw packets)
     static const unsigned int ATT_LIMIT_MSG = 0x1059;           //
+    static const unsigned int POWER_ON_TIMER_MSG = 0x0035;      // Undocumented message.
 
     static const std::string EMERGENCY_CMD("emergency");
 

@@ -26,6 +26,12 @@ namespace tello_protocol
         ON_GROUND = 0
     };
 
+    struct PowerOnTimerInfo
+    {
+        short power_on_timer = 0;
+        bool first_flight_since_power_on = false;
+    };
+
     struct FlightDataFrontInfo
     {
         bool front_in = false;
@@ -93,6 +99,7 @@ namespace tello_protocol
         FlightDataStateFlags flight_data_states;
         FlightDataExtras flight_data_extras;
         FlightDataFrontInfo front_info;
+        PowerOnTimerInfo power_on_timer_info;
     };
     /**
      * @brief 

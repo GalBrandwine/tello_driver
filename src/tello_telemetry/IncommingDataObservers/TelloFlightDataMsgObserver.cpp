@@ -44,5 +44,6 @@ namespace tello_protocol
 
     TelloFlightDataMsgObserver::~TelloFlightDataMsgObserver()
     {
+        m_logger->info(m_logger->name() + " Destructed.");
     }
 } // namespace tello_protocol
