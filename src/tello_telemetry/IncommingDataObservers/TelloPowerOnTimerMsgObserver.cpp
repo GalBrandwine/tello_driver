@@ -22,8 +22,8 @@ namespace tello_protocol
             std::memcpy(&poti.power_on_timer, &message_from_subject[7], sizeof(short));
             m_logger->debug("Power ON timer: {}", poti.power_on_timer);
 
-            std::memcpy(&poti.first_flight_since_power_on, &message_from_subject[9], sizeof(bool));
-            m_logger->debug("First takeoff since power on: {}", poti.first_flight_since_power_on);
+            std::memcpy(&poti.undocumented_bool, &message_from_subject[9], sizeof(bool));
+            m_logger->debug("First takeoff since power on: {}", poti.undocumented_bool);
             m_power_on_timer_msg_data_mgr.SetPowerOnTimer(poti);
         }
     }

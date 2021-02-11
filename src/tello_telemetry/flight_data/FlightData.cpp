@@ -24,7 +24,7 @@ namespace tello_protocol
      * 
      * @todo Move this into DataManager, and attach an observer to TelloTelemetr.
      * So if User call SET_ATT_LIMIT command,
-     * the observer will catch the incomming reponse and insert the data into DataManager.
+     * the observer will catch the incoming reponse and insert the data into DataManager.
      * 
      * @param attlimit 
      */

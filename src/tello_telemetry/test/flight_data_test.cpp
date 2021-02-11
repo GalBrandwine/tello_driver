@@ -80,7 +80,7 @@ TEST(TelloTelemetryTest, ReceiveLogHeaderOnce)
     int received_counter;
     auto buffer_ = std::vector<unsigned char>(1024);
     size_t r = 0;
-    tello_protocol::TelloTelemetry telloTelemerty(spdlog::stdout_color_mt("tellemetry"));
+    tello_protocol::TelloTelemetry telloTelemetry(spdlog::stdout_color_mt("telemetry"));
     //Run
 
     // Connect
@@ -128,9 +128,9 @@ TEST(TelloTelemetryTest, ReceiveLogHeaderOnce)
             // Until sending back to drone 'ack_conn'.
             auto id = uint16(data[9], data[10]);
 
-            // telloTelemerty.SetBuildDate(received.GetBuffer().substr(28, 26));
+            // telloTelemetry.SetBuildDate(received.GetBuffer().substr(28, 26));
             // DJI LOG VERSION something like this: DJI_LOG_V3I��Rc
-            // telloTelemerty.SetDJILogVersion(received.GetBuffer().substr(245, 6));
+            // telloTelemetry.SetDJILogVersion(received.GetBuffer().substr(245, 6));
 
             // After sending back ack. the drone will not sent LOG_HEADER_MSG anymore.
             send_ack_log(id);
@@ -175,9 +175,9 @@ TEST(TelloTelemetryTest, ReceiveLogDataMvoMsg)
     auto buffer_ = std::vector<unsigned char>(1024);
     size_t r = 0;
     // Create TelloTelemetry instance.
-    tello_protocol::TelloTelemetry telloTelemerty(spdlog::stdout_color_mt("tellemetry"));
+    tello_protocol::TelloTelemetry telloTelemetry(spdlog::stdout_color_mt("telemetry"));
     auto logdata = std::make_shared<tello_protocol::LogData>(spdlog::stdout_color_mt("logdata"));
-    // telloTelemerty.SetLogData(logdata);
+    // telloTelemetry.SetLogData(logdata);
 
     //Run
 
@@ -222,8 +222,8 @@ TEST(TelloTelemetryTest, ReceiveLogDataMvoMsg)
         if (cmd == tello_protocol::LOG_HEADER_MSG)
         {
             /* 
-            This part is covered in previeus 'ReceiveLogHeaderOnce' test case.
-            It is necessary if drone hasnt started LOG_DATA session.
+            This part is covered in previous 'ReceiveLogHeaderOnce' test case.
+            It is necessary if drone hasn't started LOG_DATA session.
             */
             auto id = uint16(data[9], data[10]);
             send_ack(id);
@@ -233,14 +233,14 @@ TEST(TelloTelemetryTest, ReceiveLogDataMvoMsg)
         {
 
             std::vector<unsigned char> trimmed(data.begin() + 10, data.end());
-            // telloTelemerty.GetLogData()->Update(trimmed);
+            // telloTelemetry.GetLogData()->Update(trimmed);
             log_data_msg_counter++;
         }
 
         std::fill(buffer_.begin(), buffer_.end(), 0);
     }
 
-    // ASSERT_GT(telloTelemerty.GetLogData()->GetLogMvo().GetUpdateCounter(), 0);
+    // ASSERT_GT(telloTelemetry.GetLogData()->GetLogMvo().GetUpdateCounter(), 0);
     TearDownTestCase();
 }
 TEST(TelloTelemetryTest, ReceiveLogDataImuMsg)
@@ -265,9 +265,9 @@ TEST(TelloTelemetryTest, ReceiveLogDataImuMsg)
     auto buffer_ = std::vector<unsigned char>(1024);
 
     // Create TelloTelemetry instance.
-    tello_protocol::TelloTelemetry telloTelemerty(spdlog::stdout_color_mt("tellemetry"));
+    tello_protocol::TelloTelemetry telloTelemetry(spdlog::stdout_color_mt("telemetry"));
     auto logdata = std::make_shared<tello_protocol::LogData>(spdlog::stdout_color_mt("logdata"));
-    // telloTelemerty.SetLogData(logdata);
+    // telloTelemetry.SetLogData(logdata);
 
     //Run
 
@@ -300,8 +300,8 @@ TEST(TelloTelemetryTest, ReceiveLogDataImuMsg)
         if (cmd == tello_protocol::LOG_HEADER_MSG)
         {
             /* 
-            This part is covered in previeus 'ReceiveLogHeaderOnce' test case.
-            It is necessary if drone hasnt started LOG_DATA session.
+            This part is covered in previous 'ReceiveLogHeaderOnce' test case.
+            It is necessary if drone hasn't started LOG_DATA session.
             */
             auto id = uint16(data[9], data[10]);
             send_ack(id);
@@ -310,14 +310,14 @@ TEST(TelloTelemetryTest, ReceiveLogDataImuMsg)
         else if (cmd == tello_protocol::LOG_DATA_MSG)
         {
             std::vector<unsigned char> trimmed(data.begin() + 10, data.end());
-            // telloTelemerty.GetLogData()->Update(trimmed);
+            // telloTelemetry.GetLogData()->Update(trimmed);
             log_data_msg_counter++;
         }
 
         std::fill(buffer_.begin(), buffer_.end(), 0);
     }
 
-    // ASSERT_GT(telloTelemerty.GetLogData()->GetLogImuAtti().GetUpdateCounter(), 0);
+    // ASSERT_GT(telloTelemetry.GetLogData()->GetLogImuAtti().GetUpdateCounter(), 0);
     TearDownTestCase();
 }
 TEST(TelloTelemetryTest, ReceiveFlightData)
@@ -592,7 +592,7 @@ TEST(TelloTelemetryTest, GET_ATT_LIMIT_MSG)
     };
 
     auto get_att_limit = [&send_pkt, &test_logger]() {
-        test_logger->info("get attiude (cmd=0x{:x} seq=0x{:x})", tello_protocol::ATT_LIMIT_MSG, 0x01e4);
+        test_logger->info("get attitude (cmd=0x{:x} seq=0x{:x})", tello_protocol::ATT_LIMIT_MSG, 0x01e4);
         auto pkt = tello_protocol::Packet(tello_protocol::ATT_LIMIT_MSG);
         pkt.Fixup();
         send_pkt(pkt);
@@ -622,7 +622,7 @@ TEST(TelloTelemetryTest, GET_ATT_LIMIT_MSG)
     TearDownTestCase();
 }
 
-TEST(TelloTelemetryTest, SET_ATT_LIMIG_MSG)
+TEST(TelloTelemetryTest, SET_ATT_LIMIT_MSG)
 {
 
     // Setup
@@ -683,7 +683,7 @@ TEST(TelloTelemetryTest, SET_ATT_LIMIG_MSG)
     };
 
     auto get_att_limit = [&send_pkt, &test_logger]() {
-        test_logger->info("get attiude (cmd=0x{:x} seq=0x{:x})", tello_protocol::ATT_LIMIT_MSG, 0x01e4);
+        test_logger->info("get attitude (cmd=0x{:x} seq=0x{:x})", tello_protocol::ATT_LIMIT_MSG, 0x01e4);
         auto pkt = tello_protocol::Packet(tello_protocol::ATT_LIMIT_MSG);
         pkt.Fixup();
         send_pkt(pkt);
@@ -750,7 +750,7 @@ TEST(TelloTelemetryTest, GET_LOW_BAT_THRESHOLD)
     };
 
     auto get_low_bat_threshold = [&send_pkt, &test_logger]() {
-        test_logger->info("get attiude (cmd=0x{:x} seq=0x{:x})", tello_protocol::LOW_BAT_THRESHOLD_MSG, 0x01e4);
+        test_logger->info("get attitude (cmd=0x{:x} seq=0x{:x})", tello_protocol::LOW_BAT_THRESHOLD_MSG, 0x01e4);
         auto pkt = tello_protocol::Packet(tello_protocol::LOW_BAT_THRESHOLD_MSG);
         pkt.Fixup();
         send_pkt(pkt);
@@ -825,7 +825,7 @@ TEST(TelloTelemetryTest, SET_LOW_BAT_THRESHOLD)
     };
 
     auto get_low_bat_threshold = [&send_pkt, &test_logger]() {
-        test_logger->info("get attiude (cmd=0x{:x} seq=0x{:x})", tello_protocol::LOW_BAT_THRESHOLD_MSG, 0x01e4);
+        test_logger->info("get attitude (cmd=0x{:x} seq=0x{:x})", tello_protocol::LOW_BAT_THRESHOLD_MSG, 0x01e4);
         auto pkt = tello_protocol::Packet(tello_protocol::LOW_BAT_THRESHOLD_MSG);
         pkt.Fixup();
         send_pkt(pkt);
@@ -912,19 +912,11 @@ TEST(WetTelloUndoccumentedDataTest, UndoccumentedDataMsg_0x0035_power_on_timer)
  * * Connect to drone.
  * Run:
  * Test1:
- * * first_flight_since_power_on equal to FALSE.
+ * * undocumented_bool equal to FALSE.
  * Run:
  * * Takeoff()
  * Test2:
- * * first_flight_since_power_on equal to TRUE.
- * Run:
- * * Land()
- * Test3:
- * * first_flight_since_power_on equal to FALSE.
- * Run:
- * * Takeoff()
- * Test4:
- * * first_flight_since_power_on equal to FALSE.
+ * * undocumented_bool equal to TRUE.
  * 
  * @note Notes on message 0x0035
  * * This is a short message: length of 11 bytes (data starts from byte number 7, last 2 are CRC)
@@ -932,7 +924,7 @@ TEST(WetTelloUndoccumentedDataTest, UndoccumentedDataMsg_0x0035_power_on_timer)
  * * Data[9]:bool      - <p>Unclear, it becomes true upon first takeoff since poweroff, \n
  *                       and remains TRUE while ON_AIR for first flight sinc POWER_ON.</p>
 **/
-TEST(WetTelloUndoccumentedDataTest, UndoccumentedDataMsg_0x0035_first_flight_since_power_on)
+TEST(WetTelloUndoccumentedDataTest, UndoccumentedDataMsg_0x0035_has_flown_since_power_on)
 {
     // Setup
     TelloDriver tello(spdlog::level::info);
@@ -949,25 +941,13 @@ TEST(WetTelloUndoccumentedDataTest, UndoccumentedDataMsg_0x0035_first_flight_sin
     }
 
     // Test1
-    ASSERT_FALSE(dummy.GetFlightData().power_on_timer_info.first_flight_since_power_on);
+    EXPECT_FALSE(dummy.GetFlightData().power_on_timer_info.undocumented_bool);
 
     tello.Takeoff();
     std::this_thread::sleep_for(std::chrono::seconds(sleep));
 
     // Test2
-    ASSERT_TRUE(dummy.GetFlightData().power_on_timer_info.first_flight_since_power_on);
-
-    tello.Land();
-    std::this_thread::sleep_for(std::chrono::seconds(sleep));
-
-    // Test3
-    ASSERT_FALSE(dummy.GetFlightData().power_on_timer_info.first_flight_since_power_on);
-
-    tello.Takeoff();
-    std::this_thread::sleep_for(std::chrono::seconds(sleep));
-
-    // Test4
-    ASSERT_FALSE(dummy.GetFlightData().power_on_timer_info.first_flight_since_power_on);
+    EXPECT_TRUE(dummy.GetFlightData().power_on_timer_info.undocumented_bool);
 
     tello.Land();
     std::this_thread::sleep_for(std::chrono::seconds(sleep));

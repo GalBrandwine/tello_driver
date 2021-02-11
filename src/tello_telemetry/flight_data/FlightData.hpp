@@ -19,13 +19,6 @@ namespace tello_protocol
          */
         void GetFlightData(tello_protocol::FlightDataStruct &flight_data_out) override;
 
-        // const double GetHeight() const;
-        // const short GetLowBatThreshold() const { return m_low_battery_threshold; };
-        // void SetLowBatThreshold(const std::string &);
-
-        
-
-
         bool Update(const std::vector<unsigned char> &data);
 
         FlightData(std::shared_ptr<spdlog::logger>);
@@ -37,7 +30,6 @@ namespace tello_protocol
         double m_imu_calibration_state = -1;
         double m_imu_state = -1;
         double m_light_strength = -1;
-        // float m_north_speed = -1;
         double m_outage_recording = -1;
         double m_power_state = -1;
         double m_pressure_state = -1;

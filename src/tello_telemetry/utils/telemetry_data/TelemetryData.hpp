@@ -29,7 +29,7 @@ namespace tello_protocol
     struct PowerOnTimerInfo
     {
         short power_on_timer = 0;
-        bool first_flight_since_power_on = false;
+        bool undocumented_bool = false;
     };
 
     struct FlightDataFrontInfo
@@ -73,9 +73,7 @@ namespace tello_protocol
     {
 
         char battery_percentage = -1;
-
         char camera_state = -1;
-
         short drone_battery_left = -1;
         short drone_fly_time_left = -1;
         float east_speed = -1;

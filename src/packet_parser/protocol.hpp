@@ -63,23 +63,59 @@ namespace tello_protocol
 
     static const std::string EMERGENCY_CMD("emergency");
 
-    //Flip commands taken from Go version of code
-    //FlipFront flips forward.;
-    static const int FlipFront = 0;
-    //FlipLeft flips left.;
-    static const int FlipLeft = 1;
-    //FlipBack flips backwards.;
-    static const int FlipBack = 2;
-    //FlipRight flips to the right.;
-    static const int FlipRight = 3;
-    //FlipForwardLeft flips forwards and to the left.;
-    static const int FlipForwardLeft = 4;
-    //FlipBackLeft flips backwards and to the left.;
-    static const int FlipBackLeft = 5;
-    //FlipBackRight flips backwards and to the right.;
-    static const int FlipBackRight = 6;
-    //FlipForwardRight flips forwards and to the right.;
-    static const int FlipForwardRight = 7;
+    // //Flip commands taken from Go version of code
+    // //FlipFront flips forward.;
+    // static const int FlipFront = 0;
+    // //FlipLeft flips left.;
+    // static const int FlipLeft = 1;
+    // //FlipBack flips backwards.;
+    // static const int FlipBack = 2;
+    // //FlipRight flips to the right.;
+    // static const int FlipRight = 3;
+    // //FlipForwardLeft flips forwards and to the left.;
+    // static const int FlipForwardLeft = 4;
+    // //FlipBackLeft flips backwards and to the left.;
+    // static const int FlipBackLeft = 5;
+    // //FlipBackRight flips backwards and to the right.;
+    // static const int FlipBackRight = 6;
+    // //FlipForwardRight flips forwards and to the right.;
+    // static const int FlipForwardRight = 7;
+    enum FlipDirections
+    {
+        FlipFront = 0,
+        FlipLeft,
+        FlipBack,
+        FlipRight,
+        FlipForwardLeft,
+        FlipBackLeft,
+        FlipBackRight,
+        FlipForwardRight
+    };
+
+    static const std::string flip_direction_to_string(FlipDirections direction)
+    {
+        switch (direction)
+        {
+        case FlipDirections::FlipFront:
+            return "FlipFront";
+        case FlipDirections::FlipLeft:
+            return "FlipLeft";
+        case FlipDirections::FlipBack:
+            return "FlipBack";
+        case FlipDirections::FlipRight:
+            return "FlipRight";
+        case FlipDirections::FlipForwardLeft:
+            return "FlipForwardLeft";
+        case FlipDirections::FlipBackLeft:
+            return "FlipBackLeft";
+        case FlipDirections::FlipBackRight:
+            return "FlipBackRight";
+        case FlipDirections::FlipForwardRight:
+            return "FlipForwardRight";
+        default:
+            return "NOT_IMPLEMENTED";
+        }
+    }
 
     class Packet
     {

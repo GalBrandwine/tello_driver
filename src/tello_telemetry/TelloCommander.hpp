@@ -13,6 +13,14 @@ namespace tello_protocol
     class TelloCommander : public ISendAckLog, public ISendStickCommands
     {
     public:
+
+        /**
+         * \section Flip-section
+         * \brief This section expose high level flip commands, as implemented in [TelloPy](https://github.com/hanyazou/TelloPy/blob/develop-0.7.0/tellopy/_internal/tello.py#L328)
+         * 
+         */
+        void Flip(tello_protocol::FlipDirections direction);
+        
         /**
          * \section Movements-section
          * \brief This section expose movements commands, as implemented in [TelloPy](https://github.com/hanyazou/TelloPy/blob/develop-0.7.0/tellopy/_internal/tello.py#L328)

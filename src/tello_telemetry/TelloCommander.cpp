@@ -1,6 +1,17 @@
 #include "TelloCommander.hpp"
 namespace tello_protocol
 {
+    void TelloCommander::Flip(tello_protocol::FlipDirections direction)
+    {
+
+        m_logger->info("Sending Flip {} command throw_and_go (cmd=0x{:x} seq=0x{:x})", tello_protocol::flip_direction_to_string(direction), direction, 0x48);
+        auto pkt = tello_protocol::Packet(FLIP_CMD, 0x70);
+
+        pkt.AddByte(direction);
+
+        pkt.Fixup();
+        m_socket->Send(pkt.GetBuffer());
+    }
 
     bool TelloCommander::SetFastMode(bool fastMode)
     {

@@ -13,3 +13,10 @@ simple_takeoff.cpp
 )
 add_dependencies(simple_takeoff ${CMAKE_PROJECT_NAME})
 target_link_libraries(simple_takeoff PUBLIC  ${CMAKE_PROJECT_NAME})
+
+
+add_executable(simple_land
+simple_land.cpp
+)
+add_dependencies(simple_land ${CMAKE_PROJECT_NAME})
+target_link_libraries(simple_land PUBLIC  ${CMAKE_PROJECT_NAME})

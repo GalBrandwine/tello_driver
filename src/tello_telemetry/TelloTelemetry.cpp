@@ -36,7 +36,7 @@ namespace tello_protocol
 
         // if (received.GetBuffer().substr(0, 8) == "conn_ack")
         // {
-        //     m_connReqAckRecieved = true;
+        
         // }
 
         unsigned short cmd;
@@ -130,6 +130,11 @@ namespace tello_protocol
             // m_logger->error("undoc: {}", undoc);
 
             /* code */
+        }
+        else if (cmd == tello_protocol::LIGHT_MSG)
+        {
+            m_logger->error("recv: light: {}", spdlog::to_hex(data));
+            // log.debug("recv: light: %s" % byte_to_hexstring(data[9:-2]))
         }
 
         else
@@ -230,7 +235,7 @@ namespace tello_protocol
 
     // bool TelloTelemetry::IsConnReqAckReceived() const
     // {
-    //     return m_connReqAckRecieved;
+    
     // }
     // bool TelloTelemetry::IsLogHeaderReceived() const
     // {
@@ -319,6 +324,6 @@ namespace tello_protocol
         }
         m_logger->info(m_logger->name() + " Done emptying observer list");
         m_logger->info(m_logger->name() + " Destructed.");
-        }
+    }
 
 } // namespace tello_protocol

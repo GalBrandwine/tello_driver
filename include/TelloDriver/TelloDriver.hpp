@@ -62,12 +62,14 @@ public:
      * @brief High level commands
      * 
      */
+    void Flip(tello_protocol::FlipDirections direction);
     void ThrowAndGo();
     void PalmLand();
     void Takeoff();
     void Land();
     void Emergency();
 
+    bool SetFastMode(bool fastMode);
     void SetAltLimitReq(int alt_limit);
     void SetAttLimitReq(float alt_limit);
     void SetBatThreshReq(int bat_thresh);

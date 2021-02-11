@@ -2,25 +2,6 @@
 #include "helper.hpp"
 #include "TelloDriver/TelloDriver.hpp"
 
-// class Dummy : public IFlightDataObserver
-// {
-// private:
-//     tello_protocol::FlightDataStruct m_flight_data;
-
-// public:
-//     void Update(const tello_protocol::FlightDataStruct &flight_data) override;
-//     void Update(const std::vector<unsigned char> &message_from_subject) override{};
-//     const tello_protocol::FlightDataStruct &GetFlightData() const { return m_flight_data; };
-//     Dummy(/* args */);
-//     ~Dummy();
-// };
-// Dummy::Dummy(){};
-// Dummy::~Dummy(){};
-// void Dummy::Update(const tello_protocol::FlightDataStruct &flight_data)
-// {
-//     m_flight_data = flight_data;
-// };
-
 using namespace std::chrono_literals;
 
 /**
@@ -262,6 +243,147 @@ TEST(WetTelloCommandTests, PalmLandTest)
 }
 
 /**
+ * @test Test if SetFastMode working properly.
+ * 
+ * @warning: this test evolve drone movements!
+ * 
+ * Setup:
+ * Create Tello instance.
+ * Attach to FlightData.
+ * Connect to drone.
+ * Run:
+ * * Takeoff()
+ * Test:
+ * * Send Flip commands to all possible directions.
+ * * Land()
+**/
+TEST(WetTelloCommandTests, SendFlipCommands)
+{
+    std::cout << "Start " << testing::UnitTest::GetInstance()->current_test_info()->name() << std::endl;
+    // Setup
+    TelloDriver tello(spdlog::level::info);
+    Dummy dummy;
+    tello.Attach(OBSERVERS::FLIGHT_DATA_MSG, &dummy);
+
+    // Run
+    tello.Connect();
+    if (!tello.WaitForConnection(10))
+    {
+        tello.GetLogger()->error("Couldn't Connect to drone.");
+        ASSERT_TRUE(false);
+    }
+
+    // Test
+    tello.GetLogger()->info("Takeoff");
+    tello.Takeoff();
+
+    while (dummy.GetFlightData().fly_mode < 11)
+    {
+        tello.GetLogger()->info("Waiting for takeoff");
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+    }
+
+    while (dummy.GetFlightData().fly_mode == 11)
+    {
+        tello.GetLogger()->info("Takingoff");
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+    }
+
+    tello.GetLogger()->info(tello_protocol::flip_direction_to_string(tello_protocol::FlipDirections::FlipFront));
+    tello.Flip(tello_protocol::FlipDirections::FlipFront);
+    while (dummy.GetFlightData().fly_mode <34)
+    {
+        tello.GetLogger()->info("In Holding position fly_mode");
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+    }
+
+    while (dummy.GetFlightData().fly_mode == 34)
+    {
+        tello.GetLogger()->info("In Acrobat fly_mode");
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+    }
+
+    // while (dummy.GetFlightData().fly_mode == 6)
+    // {
+    //     tello.GetLogger()->info("In Holding position fly_mode");
+    //     std::this_thread::sleep_for(std::chrono::seconds(1));
+    // }
+
+    tello.GetLogger()->info(tello_protocol::flip_direction_to_string(tello_protocol::FlipDirections::FlipBack));
+    tello.Flip(tello_protocol::FlipDirections::FlipBack);
+
+    while (dummy.GetFlightData().fly_mode <= 6)
+    {
+        tello.GetLogger()->info("In Holding position fly_mode");
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+    }
+
+    while (dummy.GetFlightData().fly_mode == 34)
+    {
+        tello.GetLogger()->info("In Acrobat fly_mode");
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+    }
+
+    // while (dummy.GetFlightData().fly_mode == 6)
+    // {
+    //     tello.GetLogger()->info("In Holding position fly_mode");
+    //     std::this_thread::sleep_for(std::chrono::seconds(1));
+    // }
+
+    // tello.GetLogger()->info(tello_protocol::flip_direction_to_string(tello_protocol::FlipDirections::FlipBackLeft));
+    // tello.Flip(tello_protocol::FlipDirections::FlipBackLeft);
+    // std::this_thread::sleep_for(std::chrono::seconds(2));
+
+    // tello.GetLogger()->info(tello_protocol::flip_direction_to_string(tello_protocol::FlipDirections::FlipBackRight));
+    // tello.Flip(tello_protocol::FlipDirections::FlipBackRight);
+    // std::this_thread::sleep_for(std::chrono::seconds(2));
+
+    // tello.GetLogger()->info(tello_protocol::flip_direction_to_string(tello_protocol::FlipDirections::FlipForwardLeft));
+    // tello.Flip(tello_protocol::FlipDirections::FlipForwardLeft);
+    // std::this_thread::sleep_for(std::chrono::seconds(2));
+
+    // tello.GetLogger()->info(tello_protocol::flip_direction_to_string(tello_protocol::FlipDirections::FlipForwardRight));
+    // tello.Flip(tello_protocol::FlipDirections::FlipForwardRight);
+    // std::this_thread::sleep_for(std::chrono::seconds(2));
+
+    // tello.GetLogger()->info(tello_protocol::flip_direction_to_string(tello_protocol::FlipDirections::FlipLeft));
+    // tello.Flip(tello_protocol::FlipDirections::FlipLeft);
+    // std::this_thread::sleep_for(std::chrono::seconds(2));
+
+    // tello.GetLogger()->info(tello_protocol::flip_direction_to_string(tello_protocol::FlipDirections::FlipRight));
+    // tello.Flip(tello_protocol::FlipDirections::FlipRight);
+    // std::this_thread::sleep_for(std::chrono::seconds(2));
+
+    // std::this_thread::sleep_for(std::chrono::seconds(5));
+    tello.Land();
+    while (dummy.GetFlightData().fly_mode <= 6)
+    {
+        tello.GetLogger()->info("In Holding position fly_mode");
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+    }
+
+    while (dummy.GetFlightData().fly_mode == 12)
+    {
+        tello.GetLogger()->info("Landing");
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+    }
+
+    while (dummy.GetFlightData().fly_mode <= 6)
+    {
+        tello.GetLogger()->info("In Holding position fly_mode");
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+    }
+
+    // while (dummy.GetFlightData().fly_mode == 1)
+    // {
+    //     tello.GetLogger()->info("On ground");
+    //     std::this_thread::sleep_for(std::chrono::seconds(1));
+    //     break;
+    // }
+    std::cout << "Done " << testing::UnitTest::GetInstance()->current_test_info()->name() << std::endl;
+}
+
+/**
 * @test Test if driver allert about drone disconnection.
 * Manually turn off the drone after connection
 **/
@@ -496,6 +618,67 @@ TEST(WetTelloBatteryTest, SetLowBatThreshMsgTest)
     }
 
     ASSERT_TRUE(condition_met);
+
+    std::cout << "Done " << testing::UnitTest::GetInstance()->current_test_info()->name() << std::endl;
+}
+
+/**
+ * @test Test if SetFastMode working properly.
+ * 
+ * @warning: this test evolve drone movements!
+ * 1. Takeoff
+ * 2. Move backward 10% stick, for 1 sec.
+ * 3. Land
+ * 
+ * Setup:
+ * Create Tello instance.
+ * Attach to FlightData.
+ * Connect to drone.
+ * Run:
+ * * Takeoff()
+ * Test:
+ * * Set backward stick 10%. (The drone will start to move)
+ * * SetFastMode(true)
+ * * Wait for 5 seconds
+ * * SetFastMode(false)
+ * * Set backward stick 0%. (The drone will stop moving)
+ * * Land()
+**/
+TEST(WetTelloSticksCommandTest, ToggleFastMode)
+{
+    // Setup
+    TelloDriver tello(spdlog::level::info);
+    Dummy dummy;
+    tello.Attach(OBSERVERS::FLIGHT_DATA_MSG, &dummy);
+
+    // Run
+    tello.Connect();
+    if (!tello.WaitForConnection(10))
+    {
+        tello.GetLogger()->error("Couldn't Connect to drone.");
+        ASSERT_TRUE(false);
+    }
+
+    // Test
+    tello.Takeoff();
+    std::this_thread::sleep_for(std::chrono::seconds(5));
+
+    tello.Backward(25);
+    std::this_thread::sleep_for(std::chrono::seconds(2));
+
+    tello.GetLogger()->warn("Setting FastMode true");
+    tello.SetFastMode(true);
+
+    std::this_thread::sleep_for(std::chrono::seconds(2));
+
+    tello.GetLogger()->warn("Setting FastMode false");
+    tello.SetFastMode(false);
+
+    tello.Backward(0);
+    std::this_thread::sleep_for(std::chrono::seconds(5));
+
+    tello.Land();
+    std::this_thread::sleep_for(std::chrono::seconds(5));
 
     std::cout << "Done " << testing::UnitTest::GetInstance()->current_test_info()->name() << std::endl;
 }

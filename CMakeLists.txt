@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(TelloDriver VERSION "0.0.24")
+project(TelloDriver VERSION "0.0.25")
 
 set(CMAKE_CXX_STANDARD 14)
 

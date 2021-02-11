@@ -45,6 +45,14 @@ void TelloDriver::Forward(int amount)
     m_TelloCommander.Forward(amount);
 }
 
+void TelloDriver::Flip(tello_protocol::FlipDirections direction)
+{
+    m_TelloCommander.Flip(direction);
+}
+bool TelloDriver::SetFastMode(bool fastMode)
+{
+    return m_TelloCommander.SetFastMode(fastMode);
+}
 void TelloDriver::SetAltLimitReq(int alt_limit)
 {
     m_TelloCommander.SetAltLimitReq(alt_limit);
