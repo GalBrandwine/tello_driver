@@ -14,7 +14,6 @@ namespace tello_protocol
             std::memcpy(&wifi_strength, &message_from_subject[9], sizeof(unsigned char));
             m_logger->debug("WIFI_MSG received: {}", wifi_strength);
             m_wifi_msg_data_mgr.SetWifiMsg(wifi_strength);
-            
         }
     }
 
@@ -31,5 +30,6 @@ namespace tello_protocol
 
     TelloWifiMsgObserver::~TelloWifiMsgObserver()
     {
+        m_logger->info(m_logger->name() + " Destructed.");
     }
 } // namespace tello_protocol

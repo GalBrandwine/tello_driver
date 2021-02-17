@@ -97,6 +97,7 @@ namespace tello_protocol
 
         else if (cmd == tello_protocol::FLIGHT_MSG)
         {
+            // m_logger->info("recv: FLIGHT_MSG: {}", spdlog::to_hex(data));
         }
         else if (cmd == tello_protocol::TIME_CMD)
         {

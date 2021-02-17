@@ -5,7 +5,7 @@ namespace tello_protocol
     void TelloAckLogHeaderIdSenderObserver::Update(const std::vector<unsigned char> &message_from_subject)
     {
         unsigned short id;
-        std::memcpy(&id,&message_from_subject,sizeof(unsigned short));
+        std::memcpy(&id, &message_from_subject, sizeof(unsigned short));
         m_commander.SendAckLog(id);
     }
 
@@ -22,5 +22,6 @@ namespace tello_protocol
 
     TelloAckLogHeaderIdSenderObserver::~TelloAckLogHeaderIdSenderObserver()
     {
+        m_logger->info(m_logger->name() + " Destructed.");
     }
 } // namespace tello_protocol

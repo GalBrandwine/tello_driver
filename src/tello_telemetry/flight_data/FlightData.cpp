@@ -2,37 +2,6 @@
 
 namespace tello_protocol
 {
-    /**
-     * @brief Set alt_low_bat as received back from drone.
-     * This message is sent back after a SET_LOW_BAT command
-     * 
-     * @todo Move this into DataManager, and attach an observer to TelloTelemetr.
-     * So if User call SET_LOW_BAT command,
-     * the observer will catch the incoming reponse and insert the data into DataManager.
-     * 
-     * @param lowbatthreshold 
-     */
-    // void FlightData::SetLowBatThreshold(const std::string &lowbatthreshold)
-    // {
-    //     std::memcpy(&m_low_battery_threshold, &lowbatthreshold[1], sizeof(short));
-    //     m_logger->info("Setting LowBatThreshold: {}%", m_low_battery_threshold);
-    // }
-
-    /**
-     * @brief Set attlimit as received back from drone.
-     * This message is sent back after a SET_ATT_LIMIT command
-     * 
-     * @todo Move this into DataManager, and attach an observer to TelloTelemetr.
-     * So if User call SET_ATT_LIMIT command,
-     * the observer will catch the incoming reponse and insert the data into DataManager.
-     * 
-     * @param attlimit 
-     */
-    // void FlightData::SetAttLimit(const std::string &attlimit)
-    // {
-    //     std::memcpy(&m_attitude_limit, &attlimit[1], sizeof(float));
-    //     m_logger->info("Setting Att: {}[deg]", m_attitude_limit);
-    // }
 
     void FlightData::GetFlightData(tello_protocol::FlightDataStruct &flight_data_out)
     {
@@ -72,11 +41,7 @@ namespace tello_protocol
             return false;
         }
 
-                std::memcpy(&m_flight_data.height, &data[0], sizeof(short));
-        // m_logger->warn("data {}", temp);
-        // m_flight_data.height = temp;
-
-        // m_height = int16(data[0], data[1]);
+        std::memcpy(&m_flight_data.height, &data[0], sizeof(short));
 
         // NED speeds
         std::memcpy(&m_flight_data.north_speed, &data[2], sizeof(short));
@@ -193,12 +158,6 @@ namespace tello_protocol
         m_flight_data.front_info.front_lsc = bool((data[22] >> 3) & 0x1);
         m_flight_data.temperature_height = bool((data[23] >> 0) & 0x1);
         // m_temperature_height = ((data[23] >> 0) & 0x1);
-
-        // if (m_logger)
-        // {
-        //     m_logger->info("Binary : {}", spdlog::to_hex(data));
-        // }
-
         return true;
     };
 
@@ -208,8 +167,6 @@ namespace tello_protocol
     }
     FlightData::~FlightData()
     {
-        m_logger->info(m_logger->name() + " Destructing.");
-        std::this_thread::sleep_for(std::chrono::milliseconds(500));
         m_logger->info(m_logger->name() + " Destructed.");
     };
 } // namespace tello_protocol

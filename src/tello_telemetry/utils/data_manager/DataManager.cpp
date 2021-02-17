@@ -28,7 +28,6 @@ namespace tello_protocol
         }
         catch (const std::exception &e)
         {
-            std::cerr << e.what() << '\n';
             m_logger->error("Couldn't get flight data: {}", e.what());
         }
     }
@@ -103,7 +102,6 @@ namespace tello_protocol
 
     void DataManager::SetLogID(const unsigned short id)
     {
-        m_logger->debug(__PRETTY_FUNCTION__);
         std::memcpy(&m_log_header_information.LogId, &id, sizeof(unsigned short));
         m_logger->debug("LogId: {};", id);
         Notify(ACK_LOG_HEADER);
@@ -124,6 +122,7 @@ namespace tello_protocol
     void DataManager::SetDJILogVersion(const std::vector<unsigned char> &log_version)
     {
         m_log_header_information.DJILogVersion = log_version;
+
         std::stringstream ss;
         for (auto &character : m_log_header_information.DJILogVersion)
         {
@@ -186,7 +185,6 @@ namespace tello_protocol
             void IPositionVelocityObserver::Update(const tello_protocol::PoseVelData &pos_vel)");
                 return;
             }
-
             casted->Update(m_posVel);
         }
         catch (const std::exception &e)
@@ -196,8 +194,7 @@ namespace tello_protocol
     }
 
     void DataManager::notify_log_req_received(IObserver *observer)
-    {  
-        m_logger->info("{}::{}", __PRETTY_FUNCTION__,__LINE__);
+    {
         try
         {
             observer->Update(m_log_header_information.LogId);
@@ -210,7 +207,7 @@ namespace tello_protocol
 
     void DataManager::notify_dji_log_version(IObserver *observer)
     {
-        m_logger->info("{}::{}", __PRETTY_FUNCTION__,__LINE__);
+
         std::vector<unsigned char> data;
         try
         {
@@ -227,10 +224,22 @@ namespace tello_protocol
 
     void DataManager::Notify(const OBSERVERS observer_type)
     {
+        if (m_attached_dict[observer_type].empty())
+        {
+            m_logger->info("No one is listening. Returning");
+            return;
+        }
+
         howManyObservers(observer_type);
 
         for (auto observer : m_attached_dict[observer_type])
         {
+
+            if (observer == nullptr)
+            {
+                return;
+            }
+
             switch (observer_type)
             {
             case OBSERVERS::ACK_LOG_HEADER:
@@ -287,6 +296,18 @@ namespace tello_protocol
 
     DataManager::~DataManager()
     {
-        m_logger->info(m_logger->name() + " Destructed!");
+        m_logger->debug(m_logger->name() + " Removing observers");
+
+        for (int observer_type_index = OBSERVERS::ACK_LOG_HEADER; observer_type_index != OBSERVERS::FLIGHT_DATA_MSG; observer_type_index++)
+        {
+            OBSERVERS observer_type = static_cast<OBSERVERS>(observer_type_index);
+
+            while (!m_attached_dict[observer_type].empty())
+            {
+                m_attached_dict[observer_type].pop_back();
+            }
+        }
+
+        m_logger->debug(m_logger->name() + " Destructed!");
     }
 } // namespace tello_protocol

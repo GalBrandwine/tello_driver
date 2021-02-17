@@ -23,7 +23,7 @@ namespace tello_protocol
             m_log_header_msg_data_mgr.SetBuildDate(build_date);
 
             auto log = received.GetBuffer().substr(received.GetBuffer().find("DJI"), 15);
-            std::vector<unsigned char> log_version(log.begin(),log.end());
+            std::vector<unsigned char> log_version(log.begin(), log.end());
             m_log_header_msg_data_mgr.SetDJILogVersion(log_version);
         }
     }
@@ -41,5 +41,6 @@ namespace tello_protocol
 
     TelloLogHeaderMsgObserver::~TelloLogHeaderMsgObserver()
     {
+        m_logger->info(m_logger->name() + " Destructed.");
     }
 } // namespace tello_protocol

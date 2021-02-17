@@ -34,5 +34,6 @@ namespace tello_protocol
 
     TelloLowBatThreshMsgObserver::~TelloLowBatThreshMsgObserver()
     {
+        m_logger->info(m_logger->name() + " Destructed.");
     }
 } // namespace tello_protocol

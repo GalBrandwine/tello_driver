@@ -88,8 +88,6 @@ namespace tello_protocol
 
     LogData::~LogData()
     {
-        m_logger->info(m_logger->name() + " Destructing.");
-        std::this_thread::sleep_for(std::chrono::milliseconds(500));
         m_logger->info(m_logger->name() + " Destructed.");
     }
 } // namespace tello_protocol

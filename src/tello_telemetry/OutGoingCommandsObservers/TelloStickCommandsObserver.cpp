@@ -29,5 +29,6 @@ namespace tello_protocol
 
     TelloStickCommandsObserver::~TelloStickCommandsObserver()
     {
+        m_logger->info(m_logger->name() + " Destructed.");
     }
 } // namespace tello_protocol

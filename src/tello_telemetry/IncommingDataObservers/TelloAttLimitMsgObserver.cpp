@@ -31,5 +31,6 @@ namespace tello_protocol
 
     TelloAttLimitMsgObserver::~TelloAttLimitMsgObserver()
     {
+        m_logger->info(m_logger->name() + " Destructed.");
     }
 } // namespace tello_protocol

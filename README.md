@@ -21,6 +21,7 @@ Not all TelloPy capabilities were implemented.
 - [ ] Parsing LIGHT_MSG. **Note: Not enough documentation. didn't understand what is this message**.
 - [x] Parsing FLIGHT_MSG
 - [x] Parsing TIME_CMD. **Successfully sending TIME_CMD, but I could not parse correctly the TIME_MSG received as a response**.
+- [x] Parsing POWER_ON_TIMER_MSG. **Undocumented date**
 - [ ] Capturing all ACK messages:
 - [ ] Parsing TELLO_CMD_FILE_SIZE
 - [ ] Parsing TELLO_CMD_FILE_DATA
@@ -31,13 +32,13 @@ Not all TelloPy capabilities were implemented.
 - [x] takeoff
 - [x] throw_and_go
 - [x] land
-- [ ] palm_land
-- [x] get_alt_limit **Tested**
-- [x] set_alt_limit **Tested**
-- [x] get_att_limit **Tested**
-- [x] set_att_limit **Tested**
-- [x] get_low_bat_threshold **Tested**
-- [x] set_low_bat_threshold **Tested**
+- [x] palm_land
+- [x] get_alt_limit
+- [x] set_alt_limit
+- [x] get_att_limit
+- [x] set_att_limit
+- [x] get_low_bat_threshold
+- [x] set_low_bat_threshold
 - [x] __send_time_command **Note: It sends time to the drone, but the response of the drone is not clear.**
 - [ ] __send_start_video
 - [ ] __send_video_mode
@@ -56,25 +57,26 @@ Not all TelloPy capabilities were implemented.
 - [x] left
 - [x] clockwise
 - [x] counter_clockwise
-- [ ] flip_forward
-- [ ] flip_back
-- [ ] flip_right
-- [ ] flip_left
-- [ ] flip_forwardleft
-- [ ] flip_backleft
-- [ ] flip_forwardright
-- [ ] flip_backright
-- [ ] __fix_range
-- [ ] set_throttle
-- [ ] set_yaw
-- [ ] set_pitch
-- [ ] set_roll
-- [ ] toggle_fast_mode
-- [ ] manual_takeoff
+- [x] flip_forward
+- [x] flip_back
+- [x] flip_right
+- [x] flip_left
+- [x] flip_forwardleft
+- [x] flip_backleft
+- [x] flip_forwardright
+- [x] flip_backright
+- [x] __fix_range
+- [x] set_throttle
+- [x] set_yaw
+- [x] set_pitch
+- [x] set_roll
+- [x] toggle_fast_mode
+- [x] manual_takeoff
 - [x] __send_stick_command
 - [x] __send_ack_log
 - [x] send_packet
 - [x] send_packet_data
+- [x] Sending EMERGENCY_CMD **Note: Not really implemented in the TelloPy**
 
 ### Video receiving
 
