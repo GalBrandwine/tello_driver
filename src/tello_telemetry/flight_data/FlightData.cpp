@@ -72,8 +72,7 @@ namespace tello_protocol
             return false;
         }
 
-        
-        std::memcpy(&m_flight_data.height, &data[0], sizeof(short));
+                std::memcpy(&m_flight_data.height, &data[0], sizeof(short));
         // m_logger->warn("data {}", temp);
         // m_flight_data.height = temp;
 
@@ -209,6 +208,8 @@ namespace tello_protocol
     }
     FlightData::~FlightData()
     {
-        m_logger->info(m_logger->name() + "::FlightData Destructing.");
+        m_logger->info(m_logger->name() + " Destructing.");
+        std::this_thread::sleep_for(std::chrono::milliseconds(500));
+        m_logger->info(m_logger->name() + " Destructed.");
     };
 } // namespace tello_protocol

@@ -13,6 +13,27 @@ namespace tello_protocol
         return true;
     }
 
+    void MovementCommandsManager::SetAttitude(AttitudeMovements movement, float amount)
+    {
+        auto fixed_amount = tello_protocol::FixRange(amount);
+        switch (movement)
+        {
+        case AttitudeMovements::THROTTLE:
+            m_SticksDict[tello_protocol::Sticks::LEFT_Y] = fixed_amount;
+            break;
+        case AttitudeMovements::YAW:
+            m_SticksDict[tello_protocol::Sticks::LEFT_X] = fixed_amount;
+            break;
+        case AttitudeMovements::PITCH:
+            m_SticksDict[tello_protocol::Sticks::RIGHT_Y] = fixed_amount;
+            break;
+        case AttitudeMovements::ROLL:
+            m_SticksDict[tello_protocol::Sticks::RIGHT_X] = fixed_amount;
+            break;
+        default:
+            break;
+        }
+    }
 
     bool MovementCommandsManager::SetMovementCommand(Movements movement, float amount)
     {

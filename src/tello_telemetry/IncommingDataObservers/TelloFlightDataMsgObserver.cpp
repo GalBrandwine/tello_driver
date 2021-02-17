@@ -15,15 +15,15 @@ namespace tello_protocol
                 if (!m_flight_data_processor->Update(data))
                 {
                     std::string wrn(__FUNCTION__);
-                    m_logger->warn(wrn + "Data packet didnt math its expected length. dropping");
+                    m_logger->warn(wrn + "Data packet didn't math its expected length. dropping");
                     return;
                 }
-
                 m_flight_data_msg_data_mgr.SetFlightData(m_flight_data_processor);
             }
             catch (const std::out_of_range &e)
             {
-                m_logger->error(e.what());
+                std::string wrn(__FUNCTION__);
+                m_logger->error(wrn + e.what());
                 return;
             }
         }
@@ -37,7 +37,7 @@ namespace tello_protocol
         m_logger->set_level(lvl);
         m_logger->info(m_logger->name() + " Initiated.");
 
-        m_flight_data_processor = std::make_shared<tello_protocol::FlightData>(m_logger);
+        m_flight_data_processor = std::make_shared<tello_protocol::FlightData>(spdlog::stdout_color_mt("FlightData"));
 
         this->m_telemetry.Attach(this);
     }

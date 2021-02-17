@@ -6,16 +6,17 @@
  * 
  * *******************************************/
 
-class Examples : public IPositionVelocityObserver
+class Examples : public IPositionVelocityObserver, IFlightDataObserver
 {
 public:
     /**
      * @brief Must be overriden.
      * 
      */
+    void Update(const tello_protocol::FlightDataStruct &flight_data) override;
     void Update(const tello_protocol::PoseVelData &pos_vel) override;
     void Update(const std::vector<unsigned char> &message_from_subject) override;
-    
+
     /**
      * @brief Scenario1 - No close loop operation. \n
      * 1. Move backward %1 for 1 sec \n
@@ -42,8 +43,19 @@ public:
      * 3. Move Right 1% \n
      * 3. Land
      * 
-     */    
+     */
     void StartScenario3();
+
+    /**
+     * @brief With close-loop operation. \n
+     * - Takeoff \n 
+     *   - wait until mode is tello_protocol::FlyModes::HOLDING_POSITION \n
+     * - SetRoll in a range from 0 -> 0.5 -> 0 -> -0.5 \n
+     * - Land \n
+     *   - wait until mode is tello_protocol::FlyModes::LANDING \n
+     * 
+     */
+    void StartScenario4();
     void StartTakeoffAndLandScenario();
     void StartTakeoffMoveBackwardAndLandScenario();
     Examples(/* args */);
@@ -51,11 +63,13 @@ public:
 
 private:
     TelloDriver m_tello;
+    tello_protocol::FlightDataStruct m_FlightData;
 };
 
 Examples::Examples()
     : m_tello(spdlog::level::info)
 {
+    m_tello.Attach(OBSERVERS::FLIGHT_DATA_MSG, this);
     m_tello.Attach(OBSERVERS::POSITION_VELOCITY_LOG, this);
     m_tello.Attach(OBSERVERS::DJI_LOG_VERSION, this);
 }
@@ -122,7 +136,6 @@ void Examples::StartScenario1()
 
     m_tello.GetLogger()->info("Scenario1 over!");
 }
-
 void Examples::StartScenario2()
 {
     m_tello.Connect();
@@ -164,8 +177,6 @@ void Examples::StartScenario2()
 
     m_tello.GetLogger()->info("Scenario2 over!");
 }
-
-
 void Examples::StartScenario3()
 {
     m_tello.Connect();
@@ -207,6 +218,65 @@ void Examples::StartScenario3()
 
     m_tello.GetLogger()->info("Scenario3 over!");
 }
+void Examples::StartScenario4()
+{
+    m_tello.Connect();
+    m_tello.GetLogger()->info("Starting: " + std::string(__PRETTY_FUNCTION__));
+    if (!m_tello.WaitForConnection(10))
+    {
+        m_tello.GetLogger()->error("Connection error. exiting!");
+        return;
+    }
+
+    m_tello.GetLogger()->info("Sending Takeoff command!");
+    m_tello.Takeoff();
+    while (m_FlightData.fly_mode < tello_protocol::FlyModes::TAKING_OFF)
+    {
+        m_tello.GetLogger()->info("Waiting for takeoff. Current fly_mode: {}", std::to_string(m_FlightData.fly_mode));
+        std::this_thread::sleep_for(std::chrono::milliseconds(50));
+    }
+
+    while (m_FlightData.fly_mode == tello_protocol::FlyModes::TAKING_OFF)
+    {
+        m_tello.GetLogger()->info("Takingoff. Current fly_mode: {}", std::to_string(m_FlightData.fly_mode));
+        std::this_thread::sleep_for(std::chrono::milliseconds(50));
+    }
+    m_tello.GetLogger()->info("{} reached", tello_protocol::FlyModes::ToName(m_FlightData.fly_mode));
+
+    float roll_amount = 0;
+    int timer_ms = 100;
+    while (roll_amount <= 0.5)
+    {
+        m_tello.GetLogger()->info("Sending roll {}", roll_amount);
+        m_tello.SetRoll(roll_amount);
+        roll_amount += 0.1;
+        std::this_thread::sleep_for(std::chrono::milliseconds(timer_ms));
+    }
+
+    while (roll_amount >= -0.5)
+    {
+        m_tello.GetLogger()->info("Sending roll {}", roll_amount);
+        m_tello.SetRoll(roll_amount);
+        roll_amount -= 0.1;
+        std::this_thread::sleep_for(std::chrono::milliseconds(timer_ms));
+    }
+    m_tello.SetRoll(0);
+
+    m_tello.GetLogger()->info("Sending Land command!");
+    m_tello.Land();
+    while (m_FlightData.fly_mode < tello_protocol::FlyModes::LANDING)
+    {
+        m_tello.GetLogger()->info("Waiting for landing. Current fly_mode: {}", std::to_string(m_FlightData.fly_mode));
+        std::this_thread::sleep_for(std::chrono::milliseconds(50));
+    }
+    while (m_FlightData.fly_mode == tello_protocol::FlyModes::LANDING)
+    {
+        m_tello.GetLogger()->info("Landing. Current fly_mode: {}", std::to_string(m_FlightData.fly_mode));
+        std::this_thread::sleep_for(std::chrono::milliseconds(50));
+    }
+
+    m_tello.GetLogger()->info(std::string(__PRETTY_FUNCTION__) + " over!");
+}
 
 void Examples::StartTakeoffAndLandScenario()
 {
@@ -231,6 +301,11 @@ Examples::~Examples()
 {
 }
 
+void Examples::Update(const tello_protocol::FlightDataStruct &flight_data)
+{
+    m_FlightData = flight_data;
+    m_tello.GetLogger()->info("FlightMode: {} [{}]", tello_protocol::FlyModes::ToName(m_FlightData.fly_mode), std::to_string(m_FlightData.fly_mode));
+}
 void Examples::Update(const tello_protocol::PoseVelData &pos_vel)
 {
     auto new_pos_vel = pos_vel;
@@ -248,11 +323,9 @@ int main()
     Examples examples;
 
     // examples.StartScenario1();
-
     // examples.StartScenario2();
-
-    examples.StartScenario3();
-
+    // examples.StartScenario3();
+    examples.StartScenario4();
     // examples.StartTakeoffAndLandScenario();
     // examples.StartTakeoffMoveBackwardAndLandScenario();
 }

@@ -24,7 +24,7 @@ namespace tello_protocol
 
     /**
      * @brief Store and maintain data from Observers.
-     * Apon each new data from an observer do:
+     * Upon each new data from an observer do:
      * * Update these new data (if new)
      * * Notify all attached subscribers to this new data.
      * 
@@ -85,7 +85,7 @@ namespace tello_protocol
 
         /**
          * @brief Set the WifiMsg data.
-         * Overriding IWifiMsgDataManager, so that TelloWifiMsgObserver (which attached to TelloTellemetry) could supply new WifiMsgs.
+         * Overriding IWifiMsgDataManager, so that TelloWifiMsgObserver (which attached to TelloTelemetry) could supply new WifiMsgs.
          * 
          * @param wifi_strength
          */
@@ -125,7 +125,7 @@ namespace tello_protocol
         // void Attach(const OBSERVERS observer_type, IConnectionEstablishedObserver *observer) override;
 
         /**
-         * @brief Check it connection to drone extablished
+         * @brief Check it connection to drone established
          * 
          * @return true 
          * @return false 
@@ -139,6 +139,14 @@ namespace tello_protocol
          */
         ConnectionInformation &GetConnectionInformation() override;
 
+        /**
+         * @brief Get the Flight Data object
+         * 
+         * Make FlightData accesible to Tellodriver.
+         * @return const FlightDataStruct& 
+         */
+        const FlightDataStruct &GetFlightData() const;
+
         DataManager(std::shared_ptr<spdlog::logger> logger, spdlog::level::level_enum lvl = spdlog::level::info);
         ~DataManager();
 
@@ -151,7 +159,7 @@ namespace tello_protocol
          * This is an example of implementing an observer that is an extention of IObserver.
          * 
          * @throw Exception if Wrong observers attached.
-         * @param[out] observer - an attched IPositionVelocityObserver.
+         * @param[out] observer - an attached IPositionVelocityObserver.
          */
         void notify_position_velocity(IObserver *observer);
 
@@ -159,14 +167,14 @@ namespace tello_protocol
          * @brief Expects observer to has interface of IFlightDataObserver
          * 
          * @throw Exception if Wrong observers attached.
-         * @param[out] observer - an attched IFlightDataObserver.
+         * @param[out] observer - an attached IFlightDataObserver.
          */
         void notify_flight_data_received(IObserver *observer);
 
         /**
          * @brief Expects observer to has interface of IFlightDataObserver
          * 
-         * @param[out] observer - an attched IFlightDataObserver.
+         * @param[out] observer - an attached IFlightDataObserver.
          */
         void notify_imu_attitude_received(IObserver *observer);
         void howManyObservers(const OBSERVERS observer_type);

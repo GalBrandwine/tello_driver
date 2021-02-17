@@ -33,7 +33,7 @@ namespace tello_protocol
         m_logger->set_level(lvl);
         m_logger->info(m_logger->name() + " Initiated.");
 
-        m_log_data_processor = std::make_shared<tello_protocol::LogData>(m_logger);
+        m_log_data_processor = std::make_shared<tello_protocol::LogData>(spdlog::stdout_color_mt("LogData"));
 
         this->m_telemetry.Attach(this);
     }

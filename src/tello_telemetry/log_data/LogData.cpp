@@ -81,15 +81,15 @@ namespace tello_protocol
     }
 
     LogData::LogData(std::shared_ptr<spdlog::logger> logger)
-        : m_logger(logger),
-          m_LogMvoFeedback(logger),
-          m_LogImuAtti(logger)
+        : m_logger(logger)
     {
         m_logger->info(m_logger->name() + " Initiated!");
     }
 
     LogData::~LogData()
     {
-        // m_logger->info(m_logger->name() + " Destructing.");
+        m_logger->info(m_logger->name() + " Destructing.");
+        std::this_thread::sleep_for(std::chrono::milliseconds(500));
+        m_logger->info(m_logger->name() + " Destructed.");
     }
 } // namespace tello_protocol

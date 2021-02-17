@@ -59,8 +59,46 @@ public:
     void Backward(int amount);
     void Forward(int amount);
     /**
-     * @brief High level commands
+     * \section Movements-section
+     * @brief Lowlevel movements, involves simple body related movement's
      * 
+     * @brief Controls the vertical up and down motion of the drone.
+     * 
+     * @param throttle float from -1.0 ~ 1.0. (positive value means upward) 
+     */
+    void SetThrottle(float throttle);
+    /**
+     * @brief Controls the left and right rotation of the drone.
+     * 
+     * @param yaw float from -1.0 ~ 1.0. (positive value will make the drone turn to the right)
+     */
+    void SetYaw(float yaw);
+    /**
+     * @brief Controls the forward and backward tilt of the drone.
+     * 
+     * @param pitch float from -1.0 ~ 1.0. (positive value will make the drone move forward)
+     */
+    void SetPitch(float pitch);
+    /**
+     * @brief Controls the the side to side tilt of the drone.
+     * 
+     * @param roll float from -1.0 ~ 1.0. (positive value will make the drone move to the right)
+     */
+    void SetRoll(float roll);
+
+    /**
+     * @brief Hold max 'yaw' and min 'pitch', 'roll', 'throttle' for several seconds
+     */
+    void ManualTakeoff();
+
+    /**
+     * @section High level commands
+     * @brief Send Flip commands to the drone in 8 directions.
+     * DJI calls the 8D flipping, wasted BUZZ word in my opinion.
+     * 
+     * @note Drone will ignore Flip commands if battery below FlightDataStruct::low_battery_threshold.
+     * 
+     * @param direction 
      */
     void Flip(tello_protocol::FlipDirections direction);
     void ThrowAndGo();

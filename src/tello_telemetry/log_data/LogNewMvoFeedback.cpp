@@ -3,8 +3,7 @@
 namespace tello_protocol
 {
 
-    LogNewMvoFeedback::LogNewMvoFeedback(std::shared_ptr<spdlog::logger> logger)
-        : m_logger(logger)
+    LogNewMvoFeedback::LogNewMvoFeedback()
     {
     }
 

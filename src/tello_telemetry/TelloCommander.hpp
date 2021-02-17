@@ -13,6 +13,38 @@ namespace tello_protocol
     class TelloCommander : public ISendAckLog, public ISendStickCommands
     {
     public:
+        /**
+         * \section Movements-section
+         * @brief Lowlevel movements, involves simple body related movement's
+         * 
+         * @brief Controls the vertical up and down motion of the drone.
+         * 
+         * @param throttle float from -1.0 ~ 1.0. (positive value means upward) 
+         */
+        void SetThrottle(float throttle);
+        /**
+         * @brief Controls the left and right rotation of the drone.
+         * 
+         * @param yaw float from -1.0 ~ 1.0. (positive value will make the drone turn to the right)
+         */
+        void SetYaw(float yaw);
+        /**
+         * @brief Controls the forward and backward tilt of the drone.
+         * 
+         * @param pitch float from -1.0 ~ 1.0. (positive value will make the drone move forward)
+         */
+        void SetPitch(float pitch);
+        /**
+         * @brief Controls the the side to side tilt of the drone.
+         * 
+         * @param roll float from -1.0 ~ 1.0. (positive value will make the drone move to the right)
+         */
+        void SetRoll(float roll);
+
+        /**
+         * @brief Hold max 'yaw' and min 'pitch', 'roll', 'throttle' for several seconds
+         */
+        void ManualTakeoff();
 
         /**
          * \section Flip-section
@@ -20,7 +52,7 @@ namespace tello_protocol
          * 
          */
         void Flip(tello_protocol::FlipDirections direction);
-        
+
         /**
          * \section Movements-section
          * \brief This section expose movements commands, as implemented in [TelloPy](https://github.com/hanyazou/TelloPy/blob/develop-0.7.0/tellopy/_internal/tello.py#L328)

@@ -2,7 +2,8 @@
 #include <iostream>
 
 /*******************************************
- * @brief In this example I show how to create an object the contains TelloDriver, and attach itself to TelloDriver.
+ * @brief I use this exectuable to land the drone if in one of the tests the process terminated,
+ * and the drone got stuck up in the air.
  * 
  * *******************************************/
 

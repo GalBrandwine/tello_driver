@@ -291,8 +291,9 @@ TEST(WetTelloCommandTests, SendFlipCommands)
 
     tello.GetLogger()->info(tello_protocol::flip_direction_to_string(tello_protocol::FlipDirections::FlipFront));
     tello.Flip(tello_protocol::FlipDirections::FlipFront);
-    while (dummy.GetFlightData().fly_mode <34)
+    while (dummy.GetFlightData().fly_mode < 34)
     {
+
         tello.GetLogger()->info("In Holding position fly_mode");
         std::this_thread::sleep_for(std::chrono::seconds(1));
     }
@@ -302,12 +303,6 @@ TEST(WetTelloCommandTests, SendFlipCommands)
         tello.GetLogger()->info("In Acrobat fly_mode");
         std::this_thread::sleep_for(std::chrono::seconds(1));
     }
-
-    // while (dummy.GetFlightData().fly_mode == 6)
-    // {
-    //     tello.GetLogger()->info("In Holding position fly_mode");
-    //     std::this_thread::sleep_for(std::chrono::seconds(1));
-    // }
 
     tello.GetLogger()->info(tello_protocol::flip_direction_to_string(tello_protocol::FlipDirections::FlipBack));
     tello.Flip(tello_protocol::FlipDirections::FlipBack);
@@ -324,37 +319,97 @@ TEST(WetTelloCommandTests, SendFlipCommands)
         std::this_thread::sleep_for(std::chrono::seconds(1));
     }
 
-    // while (dummy.GetFlightData().fly_mode == 6)
-    // {
-    //     tello.GetLogger()->info("In Holding position fly_mode");
-    //     std::this_thread::sleep_for(std::chrono::seconds(1));
-    // }
+    tello.GetLogger()->info(tello_protocol::flip_direction_to_string(tello_protocol::FlipDirections::FlipBackLeft));
+    tello.Flip(tello_protocol::FlipDirections::FlipBackLeft);
 
-    // tello.GetLogger()->info(tello_protocol::flip_direction_to_string(tello_protocol::FlipDirections::FlipBackLeft));
-    // tello.Flip(tello_protocol::FlipDirections::FlipBackLeft);
-    // std::this_thread::sleep_for(std::chrono::seconds(2));
+    while (dummy.GetFlightData().fly_mode <= 6)
+    {
+        tello.GetLogger()->info("In Holding position fly_mode");
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+    }
 
-    // tello.GetLogger()->info(tello_protocol::flip_direction_to_string(tello_protocol::FlipDirections::FlipBackRight));
-    // tello.Flip(tello_protocol::FlipDirections::FlipBackRight);
-    // std::this_thread::sleep_for(std::chrono::seconds(2));
+    while (dummy.GetFlightData().fly_mode == 34)
+    {
+        tello.GetLogger()->info("In Acrobat fly_mode");
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+    }
 
-    // tello.GetLogger()->info(tello_protocol::flip_direction_to_string(tello_protocol::FlipDirections::FlipForwardLeft));
-    // tello.Flip(tello_protocol::FlipDirections::FlipForwardLeft);
-    // std::this_thread::sleep_for(std::chrono::seconds(2));
+    tello.GetLogger()->info(tello_protocol::flip_direction_to_string(tello_protocol::FlipDirections::FlipBackRight));
+    tello.Flip(tello_protocol::FlipDirections::FlipBackRight);
 
-    // tello.GetLogger()->info(tello_protocol::flip_direction_to_string(tello_protocol::FlipDirections::FlipForwardRight));
-    // tello.Flip(tello_protocol::FlipDirections::FlipForwardRight);
-    // std::this_thread::sleep_for(std::chrono::seconds(2));
+    while (dummy.GetFlightData().fly_mode <= 6)
+    {
+        tello.GetLogger()->info("In Holding position fly_mode");
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+    }
 
-    // tello.GetLogger()->info(tello_protocol::flip_direction_to_string(tello_protocol::FlipDirections::FlipLeft));
-    // tello.Flip(tello_protocol::FlipDirections::FlipLeft);
-    // std::this_thread::sleep_for(std::chrono::seconds(2));
+    while (dummy.GetFlightData().fly_mode == 34)
+    {
+        tello.GetLogger()->info("In Acrobat fly_mode");
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+    }
 
-    // tello.GetLogger()->info(tello_protocol::flip_direction_to_string(tello_protocol::FlipDirections::FlipRight));
-    // tello.Flip(tello_protocol::FlipDirections::FlipRight);
-    // std::this_thread::sleep_for(std::chrono::seconds(2));
+    tello.GetLogger()->info(tello_protocol::flip_direction_to_string(tello_protocol::FlipDirections::FlipForwardLeft));
+    tello.Flip(tello_protocol::FlipDirections::FlipForwardLeft);
 
-    // std::this_thread::sleep_for(std::chrono::seconds(5));
+    while (dummy.GetFlightData().fly_mode <= 6)
+    {
+        tello.GetLogger()->info("In Holding position fly_mode");
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+    }
+
+    while (dummy.GetFlightData().fly_mode == 34)
+    {
+        tello.GetLogger()->info("In Acrobat fly_mode");
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+    }
+
+    tello.GetLogger()->info(tello_protocol::flip_direction_to_string(tello_protocol::FlipDirections::FlipForwardRight));
+    tello.Flip(tello_protocol::FlipDirections::FlipForwardRight);
+
+    while (dummy.GetFlightData().fly_mode <= 6)
+    {
+        tello.GetLogger()->info("In Holding position fly_mode");
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+    }
+
+    while (dummy.GetFlightData().fly_mode == 34)
+    {
+        tello.GetLogger()->info("In Acrobat fly_mode");
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+    }
+
+    tello.GetLogger()->info(tello_protocol::flip_direction_to_string(tello_protocol::FlipDirections::FlipLeft));
+    tello.Flip(tello_protocol::FlipDirections::FlipLeft);
+
+    while (dummy.GetFlightData().fly_mode <= 6)
+    {
+        tello.GetLogger()->info("In Holding position fly_mode");
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+    }
+
+    while (dummy.GetFlightData().fly_mode == 34)
+    {
+        tello.GetLogger()->info("In Acrobat fly_mode");
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+    }
+
+    tello.GetLogger()->info(tello_protocol::flip_direction_to_string(tello_protocol::FlipDirections::FlipRight));
+    tello.Flip(tello_protocol::FlipDirections::FlipRight);
+
+    while (dummy.GetFlightData().fly_mode <= 6)
+    {
+        tello.GetLogger()->info("In Holding position fly_mode");
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+    }
+
+    while (dummy.GetFlightData().fly_mode == 34)
+    {
+        tello.GetLogger()->info("In Acrobat fly_mode");
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+    }
+
+    tello.GetLogger()->info("Sending Land command");
     tello.Land();
     while (dummy.GetFlightData().fly_mode <= 6)
     {
@@ -368,11 +423,11 @@ TEST(WetTelloCommandTests, SendFlipCommands)
         std::this_thread::sleep_for(std::chrono::seconds(1));
     }
 
-    while (dummy.GetFlightData().fly_mode <= 6)
-    {
-        tello.GetLogger()->info("In Holding position fly_mode");
-        std::this_thread::sleep_for(std::chrono::seconds(1));
-    }
+    // while (dummy.GetFlightData().fly_mode <= 6)
+    // {
+    //     tello.GetLogger()->info("In Holding position fly_mode");
+    //     std::this_thread::sleep_for(std::chrono::seconds(1));
+    // }
 
     // while (dummy.GetFlightData().fly_mode == 1)
     // {

@@ -16,7 +16,7 @@ namespace tello_protocol
     {
     public:
         // const int GetUpdateCounter() const { return m_count; };
-        LogNewMvoFeedback(std::shared_ptr<spdlog::logger>);
+        LogNewMvoFeedback();
         ~LogNewMvoFeedback();
 
         /**
@@ -37,7 +37,6 @@ namespace tello_protocol
         bool GetPosVelIfUpdated(PoseVelData &posVelOut);
 
     private:
-        std::shared_ptr<spdlog::logger> m_logger;
         const std::string m_data;
         int m_count = 0;
         bool m_is_pos_vel_updated = false;

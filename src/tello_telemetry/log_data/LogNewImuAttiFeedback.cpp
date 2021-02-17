@@ -3,8 +3,7 @@
 namespace tello_protocol
 {
 
-    LogImuAtti::LogImuAtti(std::shared_ptr<spdlog::logger> logger)
-        : m_logger(logger)
+    LogImuAtti::LogImuAtti()
     {
     }
 

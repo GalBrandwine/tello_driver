@@ -1,6 +1,32 @@
 #include "TelloCommander.hpp"
 namespace tello_protocol
 {
+    void TelloCommander::ManualTakeoff()
+    {
+        m_logger->debug("Sending {}", std::string(__PRETTY_FUNCTION__));
+
+        SetPitch(-1);
+        SetRoll(-1);
+        SetYaw(1);
+        SetThrottle(-1);
+        SetFastMode(false);
+    }
+    void TelloCommander::SetThrottle(float throttle)
+    {
+        m_MovementCommandsManager.SetAttitude(tello_protocol::AttitudeMovements::THROTTLE, throttle);
+    }
+    void TelloCommander::SetYaw(float yaw)
+    {
+        m_MovementCommandsManager.SetAttitude(tello_protocol::AttitudeMovements::YAW, yaw);
+    }
+    void TelloCommander::SetPitch(float pitch)
+    {
+        m_MovementCommandsManager.SetAttitude(tello_protocol::AttitudeMovements::PITCH, pitch);
+    }
+    void TelloCommander::SetRoll(float roll)
+    {
+        m_MovementCommandsManager.SetAttitude(tello_protocol::AttitudeMovements::ROLL, roll);
+    }
     void TelloCommander::Flip(tello_protocol::FlipDirections direction)
     {
 
@@ -209,7 +235,6 @@ namespace tello_protocol
 
     void TelloCommander::SendEmergencyCmd()
     {
-        // m_logger->info("Sending EMERGENCY_CMD to the drone (cmd=0x{:x})", tello_protocol::EMERGENCY_CMD);
         m_logger->info("Sending EMERGENCY_CMD to the drone");
         auto pkt = tello_protocol::Packet(tello_protocol::EMERGENCY_CMD);
         pkt.AddByte(0x00);

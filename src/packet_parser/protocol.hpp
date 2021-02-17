@@ -3,8 +3,9 @@
 #include <string>
 #include <cstring>
 #include <algorithm>
-#include "utils.hpp"
-#include "crc.hpp"
+#include "utils/utils.hpp"
+#include "utils/crc.hpp"
+#include "utils/commands.hpp"
 #include <iostream>
 #include <memory>
 #include <vector>

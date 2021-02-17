@@ -1,6 +1,10 @@
 #include "DataManager.hpp"
 namespace tello_protocol
 {
+    const FlightDataStruct &DataManager::GetFlightData() const
+    {
+        return m_flightData;
+    }
     ConnectionInformation &DataManager::GetConnectionInformation()
     {
         return m_connection_information;
@@ -11,11 +15,22 @@ namespace tello_protocol
         m_flightData.power_on_timer_info = power_on_timer;
         Notify(OBSERVERS::FLIGHT_DATA_MSG);
     }
-    
+
     void DataManager::SetFlightData(const std::shared_ptr<IFlightDataGetter> flight_data_processor)
     {
-        flight_data_processor->GetFlightData(m_flightData);
-        Notify(OBSERVERS::FLIGHT_DATA_MSG);
+        try
+        {
+            if (flight_data_processor != nullptr)
+            {
+                flight_data_processor->GetFlightData(m_flightData);
+                Notify(OBSERVERS::FLIGHT_DATA_MSG);
+            }
+        }
+        catch (const std::exception &e)
+        {
+            std::cerr << e.what() << '\n';
+            m_logger->error("Couldn't get flight data: {}", e.what());
+        }
     }
 
     void DataManager::SetAttLimit(float att_limit)
@@ -63,6 +78,12 @@ namespace tello_protocol
         if (!m_connection_information.IsConnected)
         {
             SetConnReqAck();
+        }
+
+        if (log_data_processor == nullptr)
+        {
+            m_logger->warn("Received empty log_data_processor. returning");
+            return;
         }
 
         if (log_data_processor->GetLogMvo().GetPosVelIfUpdated(m_posVel))
@@ -114,17 +135,17 @@ namespace tello_protocol
 
     void DataManager::notify_imu_attitude_received(IObserver *observer)
     {
-        auto casted = dynamic_cast<IImuAttitudeObserver *>(observer);
-        if (casted == nullptr)
-        {
-            m_logger->error("Attached Observer does not implement ImuAttitudeObserver. \n \
-            Observer Update() declartation should look like: \n \
-            void ImuAttitudeObserver::Update(const tello_protocol::ImuAttitudeData &imut_attitude_data)");
-            return;
-        }
-
         try
         {
+            auto casted = dynamic_cast<IImuAttitudeObserver *>(observer);
+            if (casted == nullptr)
+            {
+                m_logger->error("Attached Observer does not implement ImuAttitudeObserver. \n \
+            Observer Update() declartation should look like: \n \
+            void ImuAttitudeObserver::Update(const tello_protocol::ImuAttitudeData &imu_attitude_data)");
+                return;
+            }
+
             casted->Update(m_imuAtti);
         }
         catch (const std::exception &e)
@@ -134,17 +155,17 @@ namespace tello_protocol
     }
     void DataManager::notify_flight_data_received(IObserver *observer)
     {
-        auto casted = dynamic_cast<IFlightDataObserver *>(observer);
-        if (casted == nullptr)
-        {
-            m_logger->error("Attached Observer does not implement IFlightDataObserver. \n \
-            Observer Update() declartation should look like: \n \
-            void IFlightDataObserver::Update(const tello_protocol::FlightDataStruct &flight_data)");
-            return;
-        }
-
         try
         {
+            auto casted = dynamic_cast<IFlightDataObserver *>(observer);
+            if (casted == nullptr)
+            {
+                m_logger->error("Attached Observer does not implement IFlightDataObserver. \n \
+            Observer Update() declartation should look like: \n \
+            void IFlightDataObserver::Update(const tello_protocol::FlightDataStruct &flight_data)");
+                return;
+            }
+
             casted->Update(m_flightData);
         }
         catch (const std::exception &e)
@@ -155,32 +176,41 @@ namespace tello_protocol
 
     void DataManager::notify_position_velocity(IObserver *observer)
     {
-        auto casted = dynamic_cast<IPositionVelocityObserver *>(observer);
-        if (casted == nullptr)
-        {
-            m_logger->error("Attached Observer does not implement IPositionVelocityObserver. \n \
-            Observer Update() declartation should look like: \n \
-            void IPositionVelocityObserver::Update(const tello_protocol::PoseVelData &pos_vel)");
-            return;
-        }
-
         try
         {
+            auto casted = dynamic_cast<IPositionVelocityObserver *>(observer);
+            if (casted == nullptr)
+            {
+                m_logger->error("Attached Observer does not implement IPositionVelocityObserver. \n \
+            Observer Update() declartation should look like: \n \
+            void IPositionVelocityObserver::Update(const tello_protocol::PoseVelData &pos_vel)");
+                return;
+            }
+
             casted->Update(m_posVel);
         }
         catch (const std::exception &e)
         {
-            m_logger->error("Cought dynamic_cast exception: {}", e.what());
+            m_logger->error("Caught dynamic_cast exception: {}", e.what());
         }
     }
 
     void DataManager::notify_log_req_received(IObserver *observer)
-    {
-        observer->Update(m_log_header_information.LogId);
+    {  
+        m_logger->info("{}::{}", __PRETTY_FUNCTION__,__LINE__);
+        try
+        {
+            observer->Update(m_log_header_information.LogId);
+        }
+        catch (const std::exception &e)
+        {
+            m_logger->error("{}::Could not update observer: {}", __PRETTY_FUNCTION__, e.what());
+        }
     }
 
     void DataManager::notify_dji_log_version(IObserver *observer)
     {
+        m_logger->info("{}::{}", __PRETTY_FUNCTION__,__LINE__);
         std::vector<unsigned char> data;
         try
         {
@@ -191,7 +221,7 @@ namespace tello_protocol
         catch (const std::exception &e)
         {
             std::string err(__PRETTY_FUNCTION__);
-            m_logger->error(err + "::" + e.what());
+            m_logger->error("Caught dynamic_cast exception: " + err + "::" + e.what());
         }
     }
 
@@ -218,10 +248,6 @@ namespace tello_protocol
             case OBSERVERS::IMU_ATTITUDE_LOG:
                 notify_imu_attitude_received(observer);
                 break;
-            /**
-             * @todo Add support for attached ImuAtti observers.
-             * 
-             */
             default:
                 break;
             }
@@ -261,5 +287,6 @@ namespace tello_protocol
 
     DataManager::~DataManager()
     {
+        m_logger->info(m_logger->name() + " Destructed!");
     }
 } // namespace tello_protocol

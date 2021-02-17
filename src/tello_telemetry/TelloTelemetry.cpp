@@ -36,7 +36,7 @@ namespace tello_protocol
 
         // if (received.GetBuffer().substr(0, 8) == "conn_ack")
         // {
-        
+
         // }
 
         unsigned short cmd;
@@ -235,7 +235,7 @@ namespace tello_protocol
 
     // bool TelloTelemetry::IsConnReqAckReceived() const
     // {
-    
+
     // }
     // bool TelloTelemetry::IsLogHeaderReceived() const
     // {
@@ -317,12 +317,12 @@ namespace tello_protocol
         if (m_Listener.joinable())
             m_Listener.join();
         m_logger->info(m_logger->name() + " thread joined");
-        m_logger->info(m_logger->name() + " Emptying observer list");
+        m_logger->info(m_logger->name() + " Emptying observers list");
         while (!list_observer_.empty())
         {
             list_observer_.pop_back();
         }
-        m_logger->info(m_logger->name() + " Done emptying observer list");
+        m_logger->info(m_logger->name() + " Done emptying observers list");
         m_logger->info(m_logger->name() + " Destructed.");
     }
 

@@ -47,7 +47,7 @@ private:
     bool m_is_bytes_received = false;
     unsigned short m_port = 8889;
     unsigned short droneDataPort = 9000;
-    boost::asio::ip::udp::socket *m_tello_socket;
+    std::shared_ptr<boost::asio::ip::udp::socket> m_tello_socket;
     boost::asio::ip::udp::endpoint m_sender_endpoint;
 
     size_t m_bytes_recvd;

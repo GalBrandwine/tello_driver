@@ -72,7 +72,7 @@ TelloSocket::~TelloSocket()
 
 TelloSocket::TelloSocket(const std::string &droneIp, const short droneCommandPort, const short droneDataPort)
 {
-    m_tello_socket = new boost::asio::ip::udp::socket(work_io_context_, boost::asio::ip::udp::endpoint(boost::asio::ip::udp::v4(), droneDataPort));
+    m_tello_socket = std::make_shared<boost::asio::ip::udp::socket>(work_io_context_, boost::asio::ip::udp::endpoint(boost::asio::ip::udp::v4(), droneDataPort));
     m_sender_endpoint = boost::asio::ip::udp::endpoint(boost::asio::ip::address_v4::from_string(droneIp), droneCommandPort);
 
     m_in_socket_thread = std::thread(std::bind(&TelloSocket::in_data_worker, this));

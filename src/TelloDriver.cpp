@@ -44,10 +44,42 @@ void TelloDriver::Forward(int amount)
     assert(amount >= 0 && amount <= 100);
     m_TelloCommander.Forward(amount);
 }
-
+void TelloDriver::SetThrottle(float amount)
+{
+    m_TelloCommander.SetThrottle(amount);
+}
+void TelloDriver::SetYaw(float amount)
+{
+    m_TelloCommander.SetYaw(amount);
+}
+void TelloDriver::SetPitch(float amount)
+{
+    m_TelloCommander.SetPitch(amount);
+}
+void TelloDriver::SetRoll(float amount)
+{
+    m_TelloCommander.SetRoll(amount);
+}
+/**
+ * @brief Hold max 'yaw' and min 'pitch', 'roll', 'throttle' for several seconds
+ */
+void TelloDriver::ManualTakeoff()
+{
+    m_TelloCommander.ManualTakeoff();
+}
 void TelloDriver::Flip(tello_protocol::FlipDirections direction)
 {
-    m_TelloCommander.Flip(direction);
+    auto current_battery_precentage = m_DataManager.GetFlightData().battery_percentage;
+    auto low_battery_thresh = m_DataManager.GetFlightData().low_battery_threshold;
+
+    if (current_battery_precentage <= low_battery_thresh)
+    {
+        m_BaseLogger->warn("Battery below low_battery_thresh [{}]. Not flipping", low_battery_thresh);
+    }
+    else
+    {
+        m_TelloCommander.Flip(direction);
+    }
 }
 bool TelloDriver::SetFastMode(bool fastMode)
 {
@@ -100,7 +132,6 @@ void TelloDriver::Connect()
     m_TelloCommander.SendConnReq();
     m_TelloTelemetry.StartListening();
 }
-
 bool TelloDriver::WaitForConnection(int timeout)
 {
 

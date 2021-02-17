@@ -11,25 +11,12 @@ namespace tello_protocol
     {
     public:
         bool GetImuAttiIfUpdated(ImuAttitudeData &imuAttiOut);
-        // const int GetUpdateCounter() const { return m_count; };
-        LogImuAtti(std::shared_ptr<spdlog::logger>);
-        ~LogImuAtti();
         void Update(const std::vector<unsigned char> &data, int count = 0);
-        // const Vec3 &GetAcc() const;
-        // const Vec3 &GetGyro() const;
-        // const Vec3 &GetVg() const;
-        // const Vec4 &GetQuat() const;
-        // friend std::ostream &operator<<(std::ostream &os, const LogImuAtti &dt)
-        // {
-        //     os << "ACC: " << dt.m_acc.x << " " << dt.m_acc.y << " " << dt.m_acc.z << " ";
-        //     os << "GYRO: " << dt.m_gyro.x << " " << dt.m_gyro.y << " " << dt.m_gyro.z << " ";
-        //     os << "QUATERNION: " << dt.m_quat.x << " " << dt.m_quat.y << " " << dt.m_quat.z << dt.m_quat.w << " ";
-        //     os << "VG" << dt.m_vg.x << " " << dt.m_vg.y << " " << dt.m_vg.z << '\n';
-        //     return os;
-        // }
+        LogImuAtti();
+        ~LogImuAtti();
 
     private:
-        std::shared_ptr<spdlog::logger> m_logger;
+        // std::shared_ptr<spdlog::logger> m_logger;
         int m_count = 0;
         ImuAttitudeData m_imuAtti;
         bool m_is_imu_atti_updated = false;

@@ -1,4 +1,5 @@
 #pragma once
+#include <vector>
 namespace tello_protocol
 {
     struct Vec3
@@ -19,11 +20,6 @@ namespace tello_protocol
     {
         Vec3 acc, gyro, vg;
         Vec4 quat;
-    };
-
-    enum FlightModes
-    {
-        ON_GROUND = 0
     };
 
     struct PowerOnTimerInfo
@@ -116,4 +112,22 @@ namespace tello_protocol
     {
         std::vector<unsigned char> BuildDate, DJILogVersion, LogId;
     };
+
+    /**
+    * @brief Fix stick ranges when using SetRoll, SetThrottle, SetPitch, SetYaw
+    * 
+    * @param val float - the desired amount
+    * @param min 
+    * @param max 
+    * @return float 
+    */
+    static const float FixRange(float val, float min = -1.0, float max = 1.0)
+    {
+        if (val < min)
+            return min;
+        if (val > max)
+            return max;
+        return val;
+    }
+
 } // namespace tello_protocol
