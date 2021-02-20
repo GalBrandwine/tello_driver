@@ -6,7 +6,7 @@ using namespace std::chrono_literals;
 #include <thread>
 using asio::ip::udp;
 
-// Lowest level testing: test aisio liobrary async capabilities
+// Lowest level testing: test aisio library async capabilities
 TEST(AsioSocketAsyncOperations, TrySendConnReq)
 {
 

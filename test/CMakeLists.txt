@@ -36,13 +36,6 @@ set(WET_TEST_SOURCES
 add_executable(${BINARY}_wet ${WET_TEST_SOURCES})
 target_link_libraries (${BINARY}_wet PUBLIC ${CMAKE_PROJECT_NAME} ${PROJECT_BINARY_DIR}/lib/libgtestd.a pthread)
 
-# add_executable(TelloSocketTest
-#   TelloSocketTest.cpp
-#   ${CMAKE_SOURCE_DIR}/src/tello_telemetry/utils/test/socket_test.cpp
-#   ${CMAKE_SOURCE_DIR}/src/tello_telemetry/utils/async_server/AsyncServer.cpp
-#  )
-# target_link_libraries (TelloSocketTest PUBLIC ${CMAKE_PROJECT_NAME} ${PROJECT_BINARY_DIR}/lib/libgtestd.a pthread)
-
 add_executable(MovementCommandsManagerTest
   ${CMAKE_SOURCE_DIR}/src/tello_telemetry/utils/movement_commands/test/movement_commands_manager_test.cpp
   ${CMAKE_SOURCE_DIR}/src/tello_telemetry/utils/movement_commands/test/MovementCommandsManagerTest.cpp
@@ -56,3 +49,46 @@ add_executable(MovementCommandsManagerTest
  ${CMAKE_SOURCE_DIR}src/packet_parser/
  )
 target_link_libraries (MovementCommandsManagerTest PUBLIC ${CMAKE_PROJECT_NAME} ${PROJECT_BINARY_DIR}/lib/libgtestd.a pthread)
+
+
+################################ TelloVisTest #################################
+find_library(AVUTIL DOC "Using AV util library to parse packages from the drone" avutil)
+find_library(AVCODEC DOC "Using AV codec library to registero our decoder" avcodec)
+find_library(SWSCALE DOC "Using AV codec library to registero our decoder" swscale)
+
+# set( OpenCV_DIR "/usr/share/OpenCV" )
+# set( OpenCV_DIR "/usr/share/OpenCV" )
+# set( PKG_CONFIG_PATH "/usr/lib/pkgconfig" )
+find_package(OpenCV REQUIRED)
+
+add_executable(TelloVisTest
+  ${CMAKE_SOURCE_DIR}/test/TelloVisSocketTest.cpp
+  ${CMAKE_SOURCE_DIR}/src/tello_vis/test/basic_vis_tests.cpp
+  ${CMAKE_SOURCE_DIR}/src/tello_vis/utils/TelloVisSocket.cpp
+
+  ${CMAKE_SOURCE_DIR}/src/tello_vis/lib/h264decoder/h264decoder.cpp
+)
+
+target_include_directories(TelloVisTest PUBLIC
+  ${CMAKE_SOURCE_DIR}/lib/spdlog/include
+  ${CMAKE_SOURCE_DIR}/src/tello_vis/utils
+  ${CMAKE_SOURCE_DIR}/src/tello_vis/lib
+
+  ${OpenCV_INCLUDE_DIRS}
+#  ${CMAKE_SOURCE_DIR}/src/tello_telemetry/utils/movement_commands/test/
+#  ${CMAKE_SOURCE_DIR}/src/tello_telemetry/utils/movement_commands/
+#  ${CMAKE_SOURCE_DIR}src/packet_parser/
+ )
+target_link_libraries (TelloVisTest PUBLIC 
+  ${CMAKE_PROJECT_NAME} 
+  ${AVUTIL}
+  ${AVCODEC}
+  ${SWSCALE}
+  
+  ${OpenCV_LIBS}
+  ${PROJECT_BINARY_DIR}/lib/libgtestd.a 
+  pthread
+)
+
+
+

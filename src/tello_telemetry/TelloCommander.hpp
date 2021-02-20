@@ -151,6 +151,35 @@ namespace tello_protocol
          */
         void PalmLand();
 
+        /**
+         * @section Video setting commands
+         * @brief Set_exposure sets the drone camera exposure level. Valid levels are 0, 1, and 2.
+         * 
+         * @param exposure int.
+         */
+        void SendExposure(int exposure = 0);
+
+        /**
+         * @section Video setting commands
+         * @brief Set_video_encoder_rate sets the drone video encoder rate
+         * 
+         */
+        void SendVideoEncoderRate(int video_encoder_rate = 4);
+
+        /**
+         * @section Video setting commands
+         * @brief Tell the drone whether to capture 960x720 4:3 video, or 1280x720 16:9 zoomed video. \n
+         * 4:3 has a wider field of view (both vertically and horizontally), 16:9 is crisper. 
+         * 
+         * @param zoom bool zoom or not.
+        */
+        void SendVideoZoomMode(bool zoom);
+        /**
+         * @section Video setting commands
+         * @brief Start streaming command.
+         * 
+         */
+        void SendStartVideo();
         void SendTakeoffReq();
 
         /**

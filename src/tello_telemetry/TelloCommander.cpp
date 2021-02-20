@@ -139,8 +139,37 @@ namespace tello_protocol
         pkt.Fixup();
         m_socket->Send(pkt.GetBuffer());
     }
-    void TelloCommander::SendTimeCommand()
 
+    void TelloCommander::SendExposure(int exposure)
+    {
+        assert(-1 < exposure && exposure < 3 && "Valid levels are 0, 1, and 2");
+
+        auto pkt = tello_protocol::Packet(tello_protocol::EXPOSURE_CMD, 0x48);
+        pkt.AddByte(0x00);
+        pkt.Fixup();
+        m_socket->Send(pkt.GetBuffer());
+    }
+    void TelloCommander::SendVideoEncoderRate(int video_encoder_rate)
+    {
+        auto pkt = tello_protocol::Packet(tello_protocol::VIDEO_ENCODER_RATE_CMD, 0x68);
+        pkt.AddByte(video_encoder_rate);
+        pkt.Fixup();
+        m_socket->Send(pkt.GetBuffer());
+    }
+    void TelloCommander::SendVideoZoomMode(bool zoom)
+    {
+        auto pkt = tello_protocol::Packet(tello_protocol::VIDEO_MODE_CMD);
+        pkt.AddByte(int(zoom));
+        m_socket->Send(pkt.GetBuffer());
+    }
+    void TelloCommander::SendStartVideo()
+    {
+        auto pkt = tello_protocol::Packet(tello_protocol::VIDEO_START_CMD, 0x60);
+        pkt.Fixup();
+        m_socket->Send(pkt.GetBuffer());
+    }
+
+    void TelloCommander::SendTimeCommand()
     {
         m_logger->info("Sending TimeCmd to the drone (cmd=0x{:x} seq=0x{:x})", tello_protocol::TIME_CMD, 0x50);
         auto pkt = Packet(tello_protocol::TIME_CMD, 0x50);

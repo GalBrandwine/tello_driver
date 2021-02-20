@@ -285,14 +285,14 @@ namespace tello_protocol
         {
             m_Listener.join();
         }
-        m_logger->info(m_logger->name() + " Listener thread stopped");
+        m_logger->debug(m_logger->name() + " Listener thread stopped");
     }
 
     void TelloTelemetry::StartListening()
     {
         m_keep_receiving = true;
         m_Listener = std::thread(&TelloTelemetry::Listener, this);
-        m_logger->info(m_logger->name() + " Listener thread started");
+        m_logger->debug(m_logger->name() + " Listener thread started");
     }
 
     void TelloTelemetry::SetSocket(std::shared_ptr<IReciever> socket)
