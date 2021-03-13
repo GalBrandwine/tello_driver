@@ -50,7 +50,8 @@ public:
      * @brief With close-loop operation. \n
      * - Takeoff \n 
      *   - wait until mode is tello_protocol::FlyModes::HOLDING_POSITION \n
-     * - SetRoll in a range from 0 -> 0.5 -> 0 -> -0.5 \n
+     * - SetRoll in a range from \f$0 \rightarrow 0.5 \rightarrow 0 \rightarrow -0.5\f$ \n
+     *   Rolling amount measured in \f$ \text{stick}\% \f$
      * - Land \n
      *   - wait until mode is tello_protocol::FlyModes::LANDING \n
      * 

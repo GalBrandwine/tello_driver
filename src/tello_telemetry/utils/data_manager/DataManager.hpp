@@ -79,7 +79,7 @@ namespace tello_protocol
          * This is the official FlightData struct filler function.
          * Other DataManager setters insert complementry data into FlightData struct.
          * 
-         * @param flight_data_processor 
+         * @param flight_data_processor const std::shared_ptr<IFlightDataGetter>
          */
         void SetFlightData(const std::shared_ptr<IFlightDataGetter> flight_data_processor) override;
 
