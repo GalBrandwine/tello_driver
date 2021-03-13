@@ -57,3 +57,6 @@ int main()
     slc.StartScenario1();
     return 0;
 }
+/** \example simple_land.cpp
+ * Adding this footer will make sure that doxygen adds this source file to examples
+*/

@@ -110,3 +110,7 @@ int main()
     Examples examples;
     examples.StartScenario();
 }
+
+/** \example manual_takeoff.cpp
+ * Adding this footer will make sure that doxygen adds this source file to examples
+*/

@@ -113,11 +113,9 @@ TEST(TelloVisSocketBasicTest, SimpleStartStreamingRequestTest)
     // Setup
     auto lvl = spdlog::level::debug;
     tello_protocol::TelloCommander tello_commander(spdlog::stdout_color_mt("tello_commander"), lvl);
-    // tello_protocol::TelloTelemetry tello_telemetry(spdlog::stdout_color_mt("tello_telemetry"), lvl);
 
     auto shared_socket = std::make_shared<TelloSocket>("192.168.10.1", 8889, 9000);
     tello_commander.SetSocket(shared_socket);
-    // tello_telemetry.SetSocket(shared_socket);
 
     bool keep_alive = true;
     // std::unique_ptr<IVisReceiver> tello_vis_socket = std::make_unique<TelloVisSocket>();
@@ -255,6 +253,7 @@ TEST(TelloVisSocketBasicTest, CreatingCVmatOutOfPacketStream)
 
                 next += consumed;
             }
+            // buffer_.clear();
         }
         catch (std::runtime_error e)
         {
@@ -264,6 +263,8 @@ TEST(TelloVisSocketBasicTest, CreatingCVmatOutOfPacketStream)
     };
 
     //Test
+    tello_commander.SendExposure(0);
+    tello_commander.SendVideoEncoderRate();
     tello_commander.SendStartVideo();
     int bytes_received = 0;
 

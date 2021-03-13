@@ -2,6 +2,7 @@
 #include <iostream>
 
 /*******************************************
+ * 
  * @brief This is Manual maneuvers example.
  * It is another example for the usage of the TelloDriver.
  * 
@@ -125,3 +126,7 @@ int main()
     tello.GetLogger()->info("Example is over");
     return 0;
 }
+
+/** \example manual_manouvers.cpp
+ * Adding this footer will make sure that doxygen adds this source file to examples
+*/
